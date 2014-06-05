@@ -14,6 +14,7 @@
 #define __APPHEADERFILE_EFOX8G__
 
 #include "AppConfig.h"
+#include "modules/dRowAudio/dRowAudio.h"
 #include "modules/juce_audio_basics/juce_audio_basics.h"
 #include "modules/juce_audio_devices/juce_audio_devices.h"
 #include "modules/juce_audio_formats/juce_audio_formats.h"

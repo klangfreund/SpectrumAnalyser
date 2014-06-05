@@ -21,11 +21,12 @@
     </GROUP>
   </MAINGROUP>
   <MODULES>
+    <MODULES id="dRowAudio" showAllCode="1" useLocalCopy="0"/>
     <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0"/>
     <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="0"/>
     <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0"/>
     <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0"/>
-    <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="1"/>
+    <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0"/>
     <MODULE id="juce_core" showAllCode="1" useLocalCopy="0"/>
     <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0"/>
     <MODULE id="juce_events" showAllCode="1" useLocalCopy="0"/>
@@ -48,11 +49,12 @@
         <MODULEPATH id="juce_events" path="../HiReMe/JuceLibraryCode/modules"/>
         <MODULEPATH id="juce_data_structures" path="../HiReMe/JuceLibraryCode/modules"/>
         <MODULEPATH id="juce_core" path="../HiReMe/JuceLibraryCode/modules"/>
-        <MODULEPATH id="juce_audio_utils" path="../../../../../res/projects_dev/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../HiReMe/JuceLibraryCode/modules"/>
         <MODULEPATH id="juce_audio_processors" path="../HiReMe/JuceLibraryCode/modules"/>
         <MODULEPATH id="juce_audio_formats" path="../HiReMe/JuceLibraryCode/modules"/>
         <MODULEPATH id="juce_audio_devices" path="../HiReMe/JuceLibraryCode/modules"/>
         <MODULEPATH id="juce_audio_basics" path="../HiReMe/JuceLibraryCode/modules"/>
+        <MODULEPATH id="dRowAudio" path="../HiReMe/JuceLibraryCode/modules"/>
       </MODULEPATHS>
     </XCODE_MAC>
     <VS2013 targetFolder="Builds/VisualStudio2013" toolset="v120_xp">
@@ -75,11 +77,12 @@
         <MODULEPATH id="juce_events" path="../HiReMe/JuceLibraryCode/modules"/>
         <MODULEPATH id="juce_data_structures" path="../HiReMe/JuceLibraryCode/modules"/>
         <MODULEPATH id="juce_core" path="../HiReMe/JuceLibraryCode/modules"/>
-        <MODULEPATH id="juce_audio_utils" path="../../../../../res/projects_dev/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../HiReMe/JuceLibraryCode/modules"/>
         <MODULEPATH id="juce_audio_processors" path="../HiReMe/JuceLibraryCode/modules"/>
         <MODULEPATH id="juce_audio_formats" path="../HiReMe/JuceLibraryCode/modules"/>
         <MODULEPATH id="juce_audio_devices" path="../HiReMe/JuceLibraryCode/modules"/>
         <MODULEPATH id="juce_audio_basics" path="../HiReMe/JuceLibraryCode/modules"/>
+        <MODULEPATH id="dRowAudio" path="../HiReMe/JuceLibraryCode/modules"/>
       </MODULEPATHS>
     </VS2013>
     <LINUX_MAKE targetFolder="Builds/Linux">
@@ -96,13 +99,14 @@
         <MODULEPATH id="juce_events" path="../HiReMe/JuceLibraryCode/modules"/>
         <MODULEPATH id="juce_data_structures" path="../HiReMe/JuceLibraryCode/modules"/>
         <MODULEPATH id="juce_core" path="../HiReMe/JuceLibraryCode/modules"/>
-        <MODULEPATH id="juce_audio_utils" path="../../../../../res/projects_dev/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../HiReMe/JuceLibraryCode/modules"/>
         <MODULEPATH id="juce_audio_processors" path="../HiReMe/JuceLibraryCode/modules"/>
         <MODULEPATH id="juce_audio_formats" path="../HiReMe/JuceLibraryCode/modules"/>
         <MODULEPATH id="juce_audio_devices" path="../HiReMe/JuceLibraryCode/modules"/>
         <MODULEPATH id="juce_audio_basics" path="../HiReMe/JuceLibraryCode/modules"/>
+        <MODULEPATH id="dRowAudio" path="../HiReMe/JuceLibraryCode/modules"/>
       </MODULEPATHS>
     </LINUX_MAKE>
   </EXPORTFORMATS>
-  <JUCEOPTIONS/>
+  <JUCEOPTIONS DROWAUDIO_USE_CURL="disabled"/>
 </JUCERPROJECT>

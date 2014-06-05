@@ -43,6 +43,8 @@
         <MODULEPATH id="juce_audio_formats" path="../../../../../res/projects_dev/JUCE/modules"/>
         <MODULEPATH id="juce_audio_processors" path="../../../../../res/projects_dev/JUCE/modules"/>
         <MODULEPATH id="juce_audio_plugin_client" path="../../../../../res/projects_dev/JUCE/modules"/>
+        <MODULEPATH id="dRowAudio" path="JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../../../../../res/projects_dev/JUCE/modules"/>
       </MODULEPATHS>
     </XCODE_MAC>
     <VS2013 targetFolder="Builds/VisualStudio2013" vstFolder="../../libraries/vstsdk2.4"
@@ -65,15 +67,19 @@
         <MODULEPATH id="juce_audio_formats" path="../../../../../res/projects_dev/JUCE/modules"/>
         <MODULEPATH id="juce_audio_devices" path="../../../../../res/projects_dev/JUCE/modules"/>
         <MODULEPATH id="juce_audio_basics" path="../../../../../res/projects_dev/JUCE/modules"/>
+        <MODULEPATH id="dRowAudio" path="JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../../../../../res/projects_dev/JUCE/modules"/>
       </MODULEPATHS>
     </VS2013>
   </EXPORTFORMATS>
   <MODULES>
+    <MODULES id="dRowAudio" showAllCode="1" useLocalCopy="1"/>
     <MODULES id="juce_audio_basics" showAllCode="1" useLocalCopy="1"/>
     <MODULES id="juce_audio_devices" showAllCode="1" useLocalCopy="1"/>
     <MODULES id="juce_audio_formats" showAllCode="1" useLocalCopy="1"/>
     <MODULES id="juce_audio_plugin_client" showAllCode="1" useLocalCopy="1"/>
     <MODULES id="juce_audio_processors" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_audio_utils" showAllCode="1" useLocalCopy="1"/>
     <MODULES id="juce_core" showAllCode="1" useLocalCopy="1"/>
     <MODULES id="juce_data_structures" showAllCode="1" useLocalCopy="1"/>
     <MODULES id="juce_events" showAllCode="1" useLocalCopy="1"/>
@@ -81,5 +87,5 @@
     <MODULES id="juce_gui_basics" showAllCode="1" useLocalCopy="1"/>
     <MODULES id="juce_gui_extra" showAllCode="1" useLocalCopy="1"/>
   </MODULES>
-  <JUCEOPTIONS JUCE_QUICKTIME="disabled"/>
+  <JUCEOPTIONS JUCE_QUICKTIME="disabled" DROWAUDIO_USE_CURL="disabled"/>
 </JUCERPROJECT>
