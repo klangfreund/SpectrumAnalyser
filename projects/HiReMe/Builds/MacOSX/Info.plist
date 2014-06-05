@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist>
+  <dict>
+    <key>CFBundleExecutable</key>
+    <string>${EXECUTABLE_NAME}</string>
+    <key>CFBundleIconFile</key>
+    <string></string>
+    <key>CFBundleIdentifier</key>
+    <string>com.yourcompany.HiReMe</string>
+    <key>CFBundleName</key>
+    <string>HiReMe</string>
+    <key>CFBundlePackageType</key>
+    <string>TDMw</string>
+    <key>CFBundleSignature</key>
+    <string>PTul</string>
+    <key>CFBundleShortVersionString</key>
+    <string>0.1.0</string>
+    <key>CFBundleVersion</key>
+    <string>0.1.0</string>
+    <key>NSHumanReadableCopyright</key>
+    <string></string>
+    <key>NSHighResolutionCapable</key>
+    <true/>
+    <key>AudioComponents</key>
+    <array>
+      <dict>
+        <key>name</key>
+        <string>klangfreund: HiReMe</string>
+        <key>description</key>
+        <string>HiReMe</string>
+        <key>factoryFunction</key>
+        <string>HiReMeAUFactory</string>
+        <key>manufacturer</key>
+        <string>Klfr</string>
+        <key>type</key>
+        <string>aufx</string>
+        <key>subtype</key>
+        <string>Hire</string>
+        <key>version</key>
+        <integer>256</integer>
+      </dict>
+    </array>
+  </dict>
+</plist>

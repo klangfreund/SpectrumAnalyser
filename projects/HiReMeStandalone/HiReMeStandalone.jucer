@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="efOX8g" name="HiReMeStandalone" projectType="guiapp" version="0.1.0"
+              bundleIdentifier="com.klangfreund.HiReMeStandalone" jucerVersion="3.1.0"
+              companyName="Klangfreund" defines="HIREME_STANDALONE=1" includeBinaryInAppConfig="1">
+  <MAINGROUP id="AO7N4d" name="HiReMeStandalone">
+    <GROUP id="{54DB0834-C391-BB20-D2E8-10BA7ED68A39}" name="Source HiReMe">
+      <FILE id="QZXzlJ" name="HiReMeAudioProcessor.cpp" compile="1" resource="0"
+            file="../HiReMe/Source/HiReMeAudioProcessor.cpp"/>
+      <FILE id="HMgVey" name="HiReMeAudioProcessor.h" compile="0" resource="0"
+            file="../HiReMe/Source/HiReMeAudioProcessor.h"/>
+      <FILE id="eqh1Pr" name="HiReMeAudioProcessorEditor.cpp" compile="1"
+            resource="0" file="../HiReMe/Source/HiReMeAudioProcessorEditor.cpp"/>
+      <FILE id="seN5Ob" name="HiReMeAudioProcessorEditor.h" compile="0" resource="0"
+            file="../HiReMe/Source/HiReMeAudioProcessorEditor.h"/>
+    </GROUP>
+    <GROUP id="{75D50FC4-BF05-8BB7-DFC9-BBA484676D29}" name="Source LUFSMeter Standalone">
+      <FILE id="JJrPHd" name="juce_StandaloneFilterWindow.h" compile="0"
+            resource="0" file="Source/juce_StandaloneFilterWindow.h"/>
+      <FILE id="v5NsX9" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+    </GROUP>
+  </MAINGROUP>
+  <MODULES>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="1"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0"/>
+  </MODULES>
+  <EXPORTFORMATS>
+    <XCODE_MAC targetFolder="Builds/MacOSX">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" osxSDK="default" osxCompatibility="10.4 SDK" osxArchitecture="64BitUniversal"
+                       isDebug="1" optimisation="1" targetName="HiReMeStandalone"/>
+        <CONFIGURATION name="Release" osxSDK="default" osxCompatibility="10.4 SDK" osxArchitecture="64BitUniversal"
+                       isDebug="0" optimisation="2" targetName="HiReMeStandalone"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_gui_extra" path="../HiReMe/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../HiReMe/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_graphics" path="../HiReMe/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_events" path="../HiReMe/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../HiReMe/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_core" path="../HiReMe/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../../../../../res/projects_dev/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../HiReMe/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../HiReMe/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../HiReMe/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../HiReMe/JuceLibraryCode/modules"/>
+      </MODULEPATHS>
+    </XCODE_MAC>
+    <VS2013 targetFolder="Builds/VisualStudio2013" toolset="v120_xp">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug 32bit" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+                       isDebug="1" optimisation="1" targetName="HiReMeStandalone" useRuntimeLibDLL="0"/>
+        <CONFIGURATION name="Release 32bit" winWarningLevel="4" generateManifest="1"
+                       winArchitecture="32-bit" isDebug="0" optimisation="2" targetName="HiReMeStandalone"
+                       useRuntimeLibDLL="0"/>
+        <CONFIGURATION name="Debug 64bit" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
+                       isDebug="1" optimisation="1" targetName="HiReMeStandalone" useRuntimeLibDLL="0"/>
+        <CONFIGURATION name="Release 64bit" winWarningLevel="4" generateManifest="1"
+                       winArchitecture="x64" isDebug="0" optimisation="2" targetName="HiReMeStandalone"
+                       useRuntimeLibDLL="0"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_gui_extra" path="../HiReMe/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../HiReMe/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_graphics" path="../HiReMe/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_events" path="../HiReMe/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../HiReMe/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_core" path="../HiReMe/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../../../../../res/projects_dev/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../HiReMe/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../HiReMe/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../HiReMe/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../HiReMe/JuceLibraryCode/modules"/>
+      </MODULEPATHS>
+    </VS2013>
+    <LINUX_MAKE targetFolder="Builds/Linux">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/" isDebug="1" optimisation="1"
+                       targetName="HiReMeStandalone"/>
+        <CONFIGURATION name="Release" libraryPath="/usr/X11R6/lib/" isDebug="0" optimisation="2"
+                       targetName="HiReMeStandalone"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_gui_extra" path="../HiReMe/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../HiReMe/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_graphics" path="../HiReMe/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_events" path="../HiReMe/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../HiReMe/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_core" path="../HiReMe/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../../../../../res/projects_dev/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../HiReMe/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../HiReMe/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../HiReMe/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../HiReMe/JuceLibraryCode/modules"/>
+      </MODULEPATHS>
+    </LINUX_MAKE>
+  </EXPORTFORMATS>
+  <JUCEOPTIONS/>
+</JUCERPROJECT>
