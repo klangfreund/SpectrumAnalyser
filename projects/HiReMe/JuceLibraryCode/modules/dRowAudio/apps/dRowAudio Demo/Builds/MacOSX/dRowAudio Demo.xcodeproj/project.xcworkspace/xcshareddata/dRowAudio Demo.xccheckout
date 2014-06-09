@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>8D94738E-8817-4268-8542-6DD701F15463</string>
+	<key>IDESourceControlProjectName</key>
+	<string>dRowAudio Demo</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>35E92FA0-0109-4470-BDC2-4DD9920530CD</key>
+		<string>https://github.com/julianstorer/JUCE.git</string>
+		<key>BBF76FF4-2ACA-40D9-8333-AD05A5774BE4</key>
+		<string>https://github.com/drowaudio/drowaudio.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>modules/dRowAudio/apps/dRowAudio Demo/Builds/MacOSX/dRowAudio Demo.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>35E92FA0-0109-4470-BDC2-4DD9920530CD</key>
+		<string>../../../../../../../..</string>
+		<key>BBF76FF4-2ACA-40D9-8333-AD05A5774BE4</key>
+		<string>../../../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/drowaudio/drowaudio.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>35E92FA0-0109-4470-BDC2-4DD9920530CD</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>BBF76FF4-2ACA-40D9-8333-AD05A5774BE4</string>
+			<key>IDESourceControlWCCName</key>
+			<string>dRowAudio</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>35E92FA0-0109-4470-BDC2-4DD9920530CD</string>
+			<key>IDESourceControlWCCName</key>
+			<string>juce</string>
+		</dict>
+	</array>
+</dict>
+</plist>

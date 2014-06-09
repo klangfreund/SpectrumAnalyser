@@ -35,7 +35,7 @@
     <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0"/>
   </MODULES>
   <EXPORTFORMATS>
-    <XCODE_MAC targetFolder="Builds/MacOSX">
+    <XCODE_MAC targetFolder="Builds/MacOSX" extraCompilerFlags="-Wall">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" osxSDK="default" osxCompatibility="10.4 SDK" osxArchitecture="64BitUniversal"
                        isDebug="1" optimisation="1" targetName="HiReMeStandalone"/>

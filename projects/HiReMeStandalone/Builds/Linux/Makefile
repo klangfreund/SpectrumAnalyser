@@ -54,7 +54,7 @@ OBJECTS := \
   $(OBJDIR)/HiReMeAudioProcessor_670175dd.o \
   $(OBJDIR)/HiReMeAudioProcessorEditor_8d2bf6ea.o \
   $(OBJDIR)/Main_90ebc5c2.o \
-  $(OBJDIR)/dRowAudio_47a272f6.o \
+  $(OBJDIR)/dRowAudio_f5e65487.o \
   $(OBJDIR)/juce_audio_basics_7f9e09f6.o \
   $(OBJDIR)/juce_audio_devices_95eeb934.o \
   $(OBJDIR)/juce_audio_formats_c47002d4.o \
@@ -99,7 +99,7 @@ $(OBJDIR)/Main_90ebc5c2.o: ../../Source/Main.cpp
 	@echo "Compiling Main.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/dRowAudio_47a272f6.o: ../../../HiReMe/JuceLibraryCode/modules/dRowAudio/dRowAudio.cpp
+$(OBJDIR)/dRowAudio_f5e65487.o: ../../../HiReMe/JuceLibraryCode/modules/dRowAudio/dRowAudio/dRowAudio.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling dRowAudio.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
