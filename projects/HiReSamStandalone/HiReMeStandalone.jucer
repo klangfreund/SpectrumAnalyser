@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="efOX8g" name="HiReSamStandalone" projectType="guiapp" version="0.1.0"
+              bundleIdentifier="com.klangfreund.HiReSamStandalone" jucerVersion="3.1.0"
+              companyName="Klangfreund" defines="" includeBinaryInAppConfig="1">
+  <MAINGROUP id="AO7N4d" name="HiReSamStandalone">
+    <GROUP id="{54DB0834-C391-BB20-D2E8-10BA7ED68A39}" name="Source HiReMe">
+      <FILE id="Wo1Md4" name="HiReSamAudioProcessor.cpp" compile="1" resource="0"
+            file="../HiReSam/Source/HiReSamAudioProcessor.cpp"/>
+      <FILE id="AqVpAa" name="HiReSamAudioProcessor.h" compile="0" resource="0"
+            file="../HiReSam/Source/HiReSamAudioProcessor.h"/>
+      <FILE id="JGEQXI" name="HiReSamAudioProcessorEditor.cpp" compile="1"
+            resource="0" file="../HiReSam/Source/HiReSamAudioProcessorEditor.cpp"/>
+      <FILE id="tShXNE" name="HiReSamAudioProcessorEditor.h" compile="0"
+            resource="0" file="../HiReSam/Source/HiReSamAudioProcessorEditor.h"/>
+      <FILE id="fQ1Lal" name="HiReSamHeader.h" compile="0" resource="0" file="../HiReSam/Source/HiReSamHeader.h"/>
+    </GROUP>
+    <GROUP id="{75D50FC4-BF05-8BB7-DFC9-BBA484676D29}" name="Source LUFSMeter Standalone">
+      <FILE id="JJrPHd" name="juce_StandaloneFilterWindow.h" compile="0"
+            resource="0" file="Source/juce_StandaloneFilterWindow.h"/>
+      <FILE id="v5NsX9" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+    </GROUP>
+  </MAINGROUP>
+  <MODULES>
+    <MODULES id="dRowAudio" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0"/>
+  </MODULES>
+  <EXPORTFORMATS>
+    <XCODE_MAC targetFolder="Builds/MacOSX" extraCompilerFlags="-Wall">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" osxSDK="default" osxCompatibility="10.4 SDK" osxArchitecture="64BitUniversal"
+                       isDebug="1" optimisation="1" targetName="HiReSamStandalone"/>
+        <CONFIGURATION name="Release" osxSDK="default" osxCompatibility="10.4 SDK" osxArchitecture="64BitUniversal"
+                       isDebug="0" optimisation="2" targetName="HiReSamStandalone"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_gui_extra" path="../HiReSam/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../HiReSam/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_graphics" path="../HiReSam/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_events" path="../HiReSam/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../HiReSam/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_core" path="../HiReSam/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../HiReSam/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../HiReSam/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../HiReSam/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../HiReSam/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../HiReSam/JuceLibraryCode/modules"/>
+        <MODULEPATH id="dRowAudio" path="../HiReSam/JuceLibraryCode/modules"/>
+      </MODULEPATHS>
+    </XCODE_MAC>
+    <VS2013 targetFolder="Builds/VisualStudio2013" toolset="v120_xp">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug 32bit" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+                       isDebug="1" optimisation="1" targetName="HiReSamStandalone" useRuntimeLibDLL="0"/>
+        <CONFIGURATION name="Release 32bit" winWarningLevel="4" generateManifest="1"
+                       winArchitecture="32-bit" isDebug="0" optimisation="2" targetName="HiReSamStandalone"
+                       useRuntimeLibDLL="0"/>
+        <CONFIGURATION name="Debug 64bit" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
+                       isDebug="1" optimisation="1" targetName="HiReSamStandalone" useRuntimeLibDLL="0"/>
+        <CONFIGURATION name="Release 64bit" winWarningLevel="4" generateManifest="1"
+                       winArchitecture="x64" isDebug="0" optimisation="2" targetName="HiReSamStandalone"
+                       useRuntimeLibDLL="0"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_gui_extra" path="../HiReSam/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../HiReSam/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_graphics" path="../HiReSam/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_events" path="../HiReSam/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../HiReSam/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_core" path="../HiReSam/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../HiReSam/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../HiReSam/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../HiReSam/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../HiReSam/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../HiReSam/JuceLibraryCode/modules"/>
+        <MODULEPATH id="dRowAudio" path="../HiReSam/JuceLibraryCode/modules"/>
+      </MODULEPATHS>
+    </VS2013>
+    <LINUX_MAKE targetFolder="Builds/Linux">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/" isDebug="1" optimisation="1"
+                       targetName="HiReSamStandalone"/>
+        <CONFIGURATION name="Release" libraryPath="/usr/X11R6/lib/" isDebug="0" optimisation="2"
+                       targetName="HiReSamStandalone"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_gui_extra" path="../HiReSam/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../HiReSam/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_graphics" path="../HiReSam/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_events" path="../HiReSam/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../HiReSam/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_core" path="../HiReSam/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../HiReSam/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../HiReSam/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../HiReSam/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../HiReSam/JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../HiReSam/JuceLibraryCode/modules"/>
+        <MODULEPATH id="dRowAudio" path="../HiReSam/JuceLibraryCode/modules"/>
+      </MODULEPATHS>
+    </LINUX_MAKE>
+  </EXPORTFORMATS>
+  <JUCEOPTIONS DROWAUDIO_USE_CURL="disabled"/>
+</JUCERPROJECT>
