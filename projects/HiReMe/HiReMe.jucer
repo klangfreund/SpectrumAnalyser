@@ -11,6 +11,7 @@
               pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="3.1.0">
   <MAINGROUP id="oRDNlC" name="HiReMe">
     <GROUP id="{5E261AAC-E07E-0CAB-5A9C-292B360144B1}" name="Source">
+      <FILE id="wTCfl1" name="HiReSamHeader.h" compile="0" resource="0" file="Source/HiReSamHeader.h"/>
       <FILE id="OVjVMG" name="HiReMeAudioProcessor.cpp" compile="1" resource="0"
             file="Source/HiReMeAudioProcessor.cpp"/>
       <FILE id="kZXXwS" name="HiReMeAudioProcessor.h" compile="0" resource="0"

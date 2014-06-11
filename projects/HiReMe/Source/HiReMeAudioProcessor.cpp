@@ -14,6 +14,7 @@
 
 //==============================================================================
 HiReMeAudioProcessor::HiReMeAudioProcessor()
+    : hiReMeAudioProcessorEditor {nullptr}
 {
 }
 
@@ -143,7 +144,10 @@ void HiReMeAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& 
     {
         float* channelData = buffer.getWritePointer (channel);
 
-        // ..do something to the data...
+        if (channel == 0 && hiReMeAudioProcessorEditor != nullptr)
+        {
+            hiReMeAudioProcessorEditor->spectroscope.copySamples(channelData, buffer.getNumSamples());
+        }
     }
 
     // In case we have more outputs than inputs, we'll clear any output
@@ -163,7 +167,8 @@ bool HiReMeAudioProcessor::hasEditor() const
 
 AudioProcessorEditor* HiReMeAudioProcessor::createEditor()
 {
-    return new HiReMeAudioProcessorEditor (this);
+    hiReMeAudioProcessorEditor = new HiReMeAudioProcessorEditor (this);
+    return hiReMeAudioProcessorEditor;
 }
 
 //==============================================================================

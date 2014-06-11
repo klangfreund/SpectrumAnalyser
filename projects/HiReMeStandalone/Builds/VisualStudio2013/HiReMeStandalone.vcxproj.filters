@@ -1632,6 +1632,9 @@
     <ClInclude Include="..\..\..\HiReMe\Source\HiReMeAudioProcessorEditor.h">
       <Filter>HiReMeStandalone\Source HiReMe</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\HiReMe\Source\HiReSamHeader.h">
+      <Filter>HiReMeStandalone\Source HiReMe</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\juce_StandaloneFilterWindow.h">
       <Filter>HiReMeStandalone\Source LUFSMeter Standalone</Filter>
     </ClInclude>

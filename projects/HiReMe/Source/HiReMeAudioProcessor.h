@@ -11,8 +11,9 @@
 #ifndef PLUGINPROCESSOR_H_INCLUDED
 #define PLUGINPROCESSOR_H_INCLUDED
 
-#include "../JuceLibraryCode/JuceHeader.h"
+#include "HiReSamHeader.h"
 
+class HiReMeAudioProcessorEditor;
 
 //==============================================================================
 /**
@@ -68,6 +69,8 @@ public:
 
 private:
     //==============================================================================
+    //std::auto_ptr<
+    HiReMeAudioProcessorEditor* hiReMeAudioProcessorEditor;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HiReMeAudioProcessor)
 };
 

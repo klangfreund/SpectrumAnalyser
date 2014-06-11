@@ -14,23 +14,39 @@
 
 //==============================================================================
 HiReMeAudioProcessorEditor::HiReMeAudioProcessorEditor (HiReMeAudioProcessor* ownerFilter)
-    : AudioProcessorEditor (ownerFilter)
+    : AudioProcessorEditor (ownerFilter),
+      spectroscope(11), // FFT Size of 2^11 = 2048
+      renderThread("FFT Render Thread")
+
 {
     // This is where our plugin's editor size is set.
     setSize (400, 300);
+    
+    spectroscope.setLogFrequencyDisplay(true);
+    addAndMakeVisible (&spectroscope);
+    
+    renderThread.addTimeSliceClient (&spectroscope);
+    renderThread.startThread (3);
 }
 
 HiReMeAudioProcessorEditor::~HiReMeAudioProcessorEditor()
 {
+    renderThread.removeTimeSliceClient (&spectroscope);
+    renderThread.stopThread (500);
 }
 
 //==============================================================================
 void HiReMeAudioProcessorEditor::paint (Graphics& g)
 {
-    g.fillAll (Colours::white);
-    g.setColour (Colours::black);
-    g.setFont (15.0f);
-    g.drawFittedText ("Zviel Arbet? HiRe sam@klangfreund.com!",
-                      0, 0, getWidth(), getHeight(),
-                      Justification::centred, 1);
+//    g.fillAll (Colours::white);
+//    g.setColour (Colours::black);
+//    g.setFont (15.0f);
+//    g.drawFittedText ("Zviel Arbet? HiRe sam@klangfreund.com!",
+//                      0, 0, getWidth(), getHeight(),
+//                      Justification::centred, 1);
+}
+
+void HiReMeAudioProcessorEditor::resized()
+{
+        spectroscope.setBounds (0, 0, getWidth(), getHeight());
 }

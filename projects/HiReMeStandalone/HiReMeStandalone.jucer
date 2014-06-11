@@ -13,6 +13,7 @@
             resource="0" file="../HiReMe/Source/HiReMeAudioProcessorEditor.cpp"/>
       <FILE id="seN5Ob" name="HiReMeAudioProcessorEditor.h" compile="0" resource="0"
             file="../HiReMe/Source/HiReMeAudioProcessorEditor.h"/>
+      <FILE id="ht4Yxw" name="HiReSamHeader.h" compile="0" resource="0" file="../HiReMe/Source/HiReSamHeader.h"/>
     </GROUP>
     <GROUP id="{75D50FC4-BF05-8BB7-DFC9-BBA484676D29}" name="Source LUFSMeter Standalone">
       <FILE id="JJrPHd" name="juce_StandaloneFilterWindow.h" compile="0"

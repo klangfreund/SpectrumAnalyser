@@ -1356,6 +1356,7 @@
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_audio_plugin_client\VST\juce_VST_Wrapper.cpp"/>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\HiReSamHeader.h"/>
     <ClInclude Include="..\..\Source\HiReMeAudioProcessor.h"/>
     <ClInclude Include="..\..\Source\HiReMeAudioProcessorEditor.h"/>
     <ClInclude Include="..\..\JuceLibraryCode\modules\dRowAudio\dRowAudio\audio\dRowAudio_AudioFilePlayer.h"/>

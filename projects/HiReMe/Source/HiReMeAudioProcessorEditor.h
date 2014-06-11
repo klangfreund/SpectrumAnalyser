@@ -11,7 +11,7 @@
 #ifndef PLUGINEDITOR_H_INCLUDED
 #define PLUGINEDITOR_H_INCLUDED
 
-#include "../JuceLibraryCode/JuceHeader.h"
+#include "HiReSamHeader.h"
 #include "HiReMeAudioProcessor.h"
 
 
@@ -27,6 +27,13 @@ public:
     //==============================================================================
     // This is just a standard Juce paint method...
     void paint (Graphics& g);
+    
+    void resized();
+    
+    Spectroscope spectroscope;
+    
+private:
+    TimeSliceThread renderThread;
 };
 
 

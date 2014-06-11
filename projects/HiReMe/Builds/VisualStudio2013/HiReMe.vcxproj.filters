@@ -1683,6 +1683,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\HiReSamHeader.h">
+      <Filter>HiReMe\Source</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\HiReMeAudioProcessor.h">
       <Filter>HiReMe\Source</Filter>
     </ClInclude>

@@ -1440,6 +1440,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\HiReMe\Source\HiReMeAudioProcessor.h"/>
     <ClInclude Include="..\..\..\HiReMe\Source\HiReMeAudioProcessorEditor.h"/>
+    <ClInclude Include="..\..\..\HiReMe\Source\HiReSamHeader.h"/>
     <ClInclude Include="..\..\Source\juce_StandaloneFilterWindow.h"/>
     <ClInclude Include="..\..\..\HiReMe\JuceLibraryCode\modules\dRowAudio\dRowAudio\audio\dRowAudio_AudioFilePlayer.h"/>
     <ClInclude Include="..\..\..\HiReMe\JuceLibraryCode\modules\dRowAudio\dRowAudio\audio\dRowAudio_AudioFilePlayerExt.h"/>
