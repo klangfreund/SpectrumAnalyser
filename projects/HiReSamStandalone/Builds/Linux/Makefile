@@ -53,6 +53,8 @@ endif
 OBJECTS := \
   $(OBJDIR)/HiReSamAudioProcessor_eed54ffb.o \
   $(OBJDIR)/HiReSamAudioProcessorEditor_ec2f4288.o \
+  $(OBJDIR)/PitchDetectorComponent_666b212d.o \
+  $(OBJDIR)/Spectroscope_f2ebca74.o \
   $(OBJDIR)/Main_90ebc5c2.o \
   $(OBJDIR)/dRowAudio_f70bd428.o \
   $(OBJDIR)/juce_audio_basics_cd338cd7.o \
@@ -92,6 +94,16 @@ $(OBJDIR)/HiReSamAudioProcessor_eed54ffb.o: ../../../HiReSam/Source/HiReSamAudio
 $(OBJDIR)/HiReSamAudioProcessorEditor_ec2f4288.o: ../../../HiReSam/Source/HiReSamAudioProcessorEditor.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling HiReSamAudioProcessorEditor.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/PitchDetectorComponent_666b212d.o: ../../../HiReSam/Source/PitchDetectorComponent.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling PitchDetectorComponent.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/Spectroscope_f2ebca74.o: ../../../HiReSam/Source/Spectroscope.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling Spectroscope.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/Main_90ebc5c2.o: ../../Source/Main.cpp

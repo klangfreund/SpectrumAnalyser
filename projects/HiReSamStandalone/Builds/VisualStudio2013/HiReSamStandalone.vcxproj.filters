@@ -5,11 +5,11 @@
     <Filter Include="HiReSamStandalone">
       <UniqueIdentifier>{E5A6E9CE-13BD-44A8-D7FD-08D99CDA28B6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="HiReSamStandalone\Source HiReMe">
-      <UniqueIdentifier>{706DF1BC-D37B-670E-37B4-DF1F35A6E0CC}</UniqueIdentifier>
+    <Filter Include="HiReSamStandalone\Source HiReSam">
+      <UniqueIdentifier>{AB7CD226-CDD2-A67D-152F-1D39DEC251A9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="HiReSamStandalone\Source LUFSMeter Standalone">
-      <UniqueIdentifier>{5377E2BF-320F-4D91-7108-290F117BC4BC}</UniqueIdentifier>
+    <Filter Include="HiReSamStandalone\Source HiReSam Standalone">
+      <UniqueIdentifier>{D110A618-4E6D-D9E8-FB9D-D4206EB6547C}</UniqueIdentifier>
     </Filter>
     <Filter Include="Juce Modules">
       <UniqueIdentifier>{422C46B7-0467-2DB0-BF3C-16DFCAFD69AC}</UniqueIdentifier>
@@ -320,13 +320,19 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\HiReSam\Source\HiReSamAudioProcessor.cpp">
-      <Filter>HiReSamStandalone\Source HiReMe</Filter>
+      <Filter>HiReSamStandalone\Source HiReSam</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\HiReSam\Source\HiReSamAudioProcessorEditor.cpp">
-      <Filter>HiReSamStandalone\Source HiReMe</Filter>
+      <Filter>HiReSamStandalone\Source HiReSam</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\HiReSam\Source\PitchDetectorComponent.cpp">
+      <Filter>HiReSamStandalone\Source HiReSam</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\HiReSam\Source\Spectroscope.cpp">
+      <Filter>HiReSamStandalone\Source HiReSam</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Main.cpp">
-      <Filter>HiReSamStandalone\Source LUFSMeter Standalone</Filter>
+      <Filter>HiReSamStandalone\Source HiReSam Standalone</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\HiReSam\JuceLibraryCode\modules\dRowAudio\dRowAudio\audio\dRowAudio_AudioFilePlayer.cpp">
       <Filter>Juce Modules\dRowAudio\dRowAudio\audio</Filter>
@@ -1627,16 +1633,22 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\HiReSam\Source\HiReSamAudioProcessor.h">
-      <Filter>HiReSamStandalone\Source HiReMe</Filter>
+      <Filter>HiReSamStandalone\Source HiReSam</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\HiReSam\Source\HiReSamAudioProcessorEditor.h">
-      <Filter>HiReSamStandalone\Source HiReMe</Filter>
+      <Filter>HiReSamStandalone\Source HiReSam</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\HiReSam\Source\HiReSamHeader.h">
-      <Filter>HiReSamStandalone\Source HiReMe</Filter>
+      <Filter>HiReSamStandalone\Source HiReSam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\HiReSam\Source\PitchDetectorComponent.h">
+      <Filter>HiReSamStandalone\Source HiReSam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\HiReSam\Source\Spectroscope.h">
+      <Filter>HiReSamStandalone\Source HiReSam</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\juce_StandaloneFilterWindow.h">
-      <Filter>HiReSamStandalone\Source LUFSMeter Standalone</Filter>
+      <Filter>HiReSamStandalone\Source HiReSam Standalone</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\HiReSam\JuceLibraryCode\modules\dRowAudio\dRowAudio\audio\dRowAudio_AudioFilePlayer.h">
       <Filter>Juce Modules\dRowAudio\dRowAudio\audio</Filter>

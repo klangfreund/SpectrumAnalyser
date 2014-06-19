@@ -25,6 +25,9 @@ HiReSamAudioProcessorEditor::HiReSamAudioProcessorEditor (HiReSamAudioProcessor*
     spectroscope.setLogFrequencyDisplay(true);
     addAndMakeVisible (&spectroscope);
     
+    pitchDetector.setSampleRate(44100);
+    addAndMakeVisible(&pitchDetector);
+    
     renderThread.addTimeSliceClient (&spectroscope);
     renderThread.startThread (3);
 }
@@ -48,5 +51,6 @@ void HiReSamAudioProcessorEditor::paint (Graphics& g)
 
 void HiReSamAudioProcessorEditor::resized()
 {
-        spectroscope.setBounds (0, 0, getWidth(), getHeight());
+    spectroscope.setBounds (0, 0, getWidth(), getHeight());
+    pitchDetector.setBounds(spectroscope.getBounds());
 }

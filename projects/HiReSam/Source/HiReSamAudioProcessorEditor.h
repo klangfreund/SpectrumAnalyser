@@ -13,6 +13,8 @@
 
 #include "HiReSamHeader.h"
 #include "HiReSamAudioProcessor.h"
+#include "Spectroscope.h"
+#include "PitchDetectorComponent.h"
 
 
 //==============================================================================
@@ -31,6 +33,7 @@ public:
     void resized();
     
     Spectroscope spectroscope;
+    PitchDetectorComponent pitchDetector;
     
 private:
     TimeSliceThread renderThread;

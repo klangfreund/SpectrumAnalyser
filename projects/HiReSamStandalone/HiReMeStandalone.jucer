@@ -4,7 +4,7 @@
               bundleIdentifier="com.klangfreund.HiReSamStandalone" jucerVersion="3.1.0"
               companyName="Klangfreund" defines="" includeBinaryInAppConfig="1">
   <MAINGROUP id="AO7N4d" name="HiReSamStandalone">
-    <GROUP id="{54DB0834-C391-BB20-D2E8-10BA7ED68A39}" name="Source HiReMe">
+    <GROUP id="{54DB0834-C391-BB20-D2E8-10BA7ED68A39}" name="Source HiReSam">
       <FILE id="Wo1Md4" name="HiReSamAudioProcessor.cpp" compile="1" resource="0"
             file="../HiReSam/Source/HiReSamAudioProcessor.cpp"/>
       <FILE id="AqVpAa" name="HiReSamAudioProcessor.h" compile="0" resource="0"
@@ -14,8 +14,15 @@
       <FILE id="tShXNE" name="HiReSamAudioProcessorEditor.h" compile="0"
             resource="0" file="../HiReSam/Source/HiReSamAudioProcessorEditor.h"/>
       <FILE id="fQ1Lal" name="HiReSamHeader.h" compile="0" resource="0" file="../HiReSam/Source/HiReSamHeader.h"/>
+      <FILE id="E8DCRn" name="PitchDetectorComponent.cpp" compile="1" resource="0"
+            file="../HiReSam/Source/PitchDetectorComponent.cpp"/>
+      <FILE id="gMLmpc" name="PitchDetectorComponent.h" compile="0" resource="0"
+            file="../HiReSam/Source/PitchDetectorComponent.h"/>
+      <FILE id="H1McvA" name="Spectroscope.cpp" compile="1" resource="0"
+            file="../HiReSam/Source/Spectroscope.cpp"/>
+      <FILE id="WPg7Ko" name="Spectroscope.h" compile="0" resource="0" file="../HiReSam/Source/Spectroscope.h"/>
     </GROUP>
-    <GROUP id="{75D50FC4-BF05-8BB7-DFC9-BBA484676D29}" name="Source LUFSMeter Standalone">
+    <GROUP id="{75D50FC4-BF05-8BB7-DFC9-BBA484676D29}" name="Source HiReSam Standalone">
       <FILE id="JJrPHd" name="juce_StandaloneFilterWindow.h" compile="0"
             resource="0" file="Source/juce_StandaloneFilterWindow.h"/>
       <FILE id="v5NsX9" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>

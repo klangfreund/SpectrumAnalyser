@@ -241,6 +241,8 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\HiReSam\Source\HiReSamAudioProcessor.cpp"/>
     <ClCompile Include="..\..\..\HiReSam\Source\HiReSamAudioProcessorEditor.cpp"/>
+    <ClCompile Include="..\..\..\HiReSam\Source\PitchDetectorComponent.cpp"/>
+    <ClCompile Include="..\..\..\HiReSam\Source\Spectroscope.cpp"/>
     <ClCompile Include="..\..\Source\Main.cpp"/>
     <ClCompile Include="..\..\..\HiReSam\JuceLibraryCode\modules\dRowAudio\dRowAudio\audio\dRowAudio_AudioFilePlayer.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
@@ -1441,6 +1443,8 @@
     <ClInclude Include="..\..\..\HiReSam\Source\HiReSamAudioProcessor.h"/>
     <ClInclude Include="..\..\..\HiReSam\Source\HiReSamAudioProcessorEditor.h"/>
     <ClInclude Include="..\..\..\HiReSam\Source\HiReSamHeader.h"/>
+    <ClInclude Include="..\..\..\HiReSam\Source\PitchDetectorComponent.h"/>
+    <ClInclude Include="..\..\..\HiReSam\Source\Spectroscope.h"/>
     <ClInclude Include="..\..\Source\juce_StandaloneFilterWindow.h"/>
     <ClInclude Include="..\..\..\HiReSam\JuceLibraryCode\modules\dRowAudio\dRowAudio\audio\dRowAudio_AudioFilePlayer.h"/>
     <ClInclude Include="..\..\..\HiReSam\JuceLibraryCode\modules\dRowAudio\dRowAudio\audio\dRowAudio_AudioFilePlayerExt.h"/>

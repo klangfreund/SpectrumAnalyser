@@ -13,7 +13,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
-using namespace drow;
+// using namespace drow;
 
 
 #endif  // HIRESAMHEADER_H_INCLUDED
