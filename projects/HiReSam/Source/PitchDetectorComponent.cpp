@@ -20,6 +20,8 @@ PitchDetectorComponent::PitchDetectorComponent()
     addAndMakeVisible (&pitchLabel);
     pitchLabel.setColour (Label::textColourId, Colour::greyLevel (0.9f));
     
+    pitchDetector.setMinMaxFrequency(20, 20000);
+    
     startTimer (25);
 }
 

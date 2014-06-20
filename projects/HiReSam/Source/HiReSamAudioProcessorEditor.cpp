@@ -26,6 +26,7 @@ HiReSamAudioProcessorEditor::HiReSamAudioProcessorEditor (HiReSamAudioProcessor*
     addAndMakeVisible (&spectroscope);
     
     pitchDetector.setSampleRate(44100);
+    pitchDetector.setLogFrequencyDisplay(true);
     addAndMakeVisible(&pitchDetector);
     
     renderThread.addTimeSliceClient (&spectroscope);
