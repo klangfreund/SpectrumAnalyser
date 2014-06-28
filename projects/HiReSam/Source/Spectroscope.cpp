@@ -34,8 +34,9 @@
 #if JUCE_MAC || JUCE_IOS || DROWAUDIO_USE_FFTREAL
 
 Spectroscope::Spectroscope (int fftSizeLog2)
-:	fftEngine       (fftSizeLog2),
-	needsRepaint    (true),
+:   sampleRate      {44100.0},
+    fftEngine       (fftSizeLog2),
+    needsRepaint    {true},
 	tempBlock       (fftEngine.getFFTSize()),
 	circularBuffer  (fftEngine.getMagnitudesBuffer().getSize() * 4)
 {
@@ -67,6 +68,11 @@ void Spectroscope::paint(Graphics& g)
 }
 
 //==============================================================================
+void Spectroscope::setSampleRate (double newSampleRate)
+{
+    sampleRate = newSampleRate;
+}
+
 void Spectroscope::copySamples (const float* samples, int numSamples)
 {
 	circularBuffer.writeSamples (samples, numSamples);
@@ -125,11 +131,10 @@ void Spectroscope::renderScopeImage()
         static const int frequenciesToDrawALine[] = {10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 20000};
         static const int numberOfFrequencyLines = 29;
         
-// TODO: GET THE SAMPLE RATE
         for (int i = 0; i < numberOfFrequencyLines; ++i)
         {
             const double frequency = frequenciesToDrawALine[i];
-            const double proportion = frequency / (44100.0 * 0.5);
+            const double proportion = frequency / (sampleRate * 0.5);
             int xPos = logTransformInRange0to1 (proportion) * getWidth();
             g.drawVerticalLine(xPos, 0.0f, getHeight());
         }

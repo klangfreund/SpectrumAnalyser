@@ -64,6 +64,8 @@ public:
 	void paint (Graphics &g);
 
     //==============================================================================
+    void setSampleRate (double newSampleRate);
+    
 	/** Copy a set of samples, ready to be processed.
         Your audio callback should continually call this method to pass it its
         audio data. When the scope has enough samples to perform an fft it will do
@@ -82,6 +84,7 @@ public:
 
 private:
     //==============================================================================
+    double sampleRate;
     drow::FFTEngine fftEngine;
 	int numBins;
 	bool needsRepaint;

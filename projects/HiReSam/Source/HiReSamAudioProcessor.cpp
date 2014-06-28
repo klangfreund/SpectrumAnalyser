@@ -14,7 +14,8 @@
 
 //==============================================================================
 HiReSamAudioProcessor::HiReSamAudioProcessor()
-    : hiReSamAudioProcessorEditor {nullptr}
+    : sampleRate {44100.0},
+      hiReSamAudioProcessorEditor {nullptr}
 {
 }
 
@@ -124,16 +125,12 @@ void HiReSamAudioProcessor::changeProgramName (int index, const String& newName)
 }
 
 //==============================================================================
-void HiReSamAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
+void HiReSamAudioProcessor::prepareToPlay (double newSampleRate, int samplesPerBlock)
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
     
-//TODO: This info needs to go to the editor (as soon as it will be created)
-    if (hiReSamAudioProcessorEditor != nullptr)
-    {
-        hiReSamAudioProcessorEditor->pitchDetector.setSampleRate(sampleRate);
-    }
+    sampleRate = newSampleRate;
 }
 
 void HiReSamAudioProcessor::releaseResources()
@@ -150,7 +147,8 @@ void HiReSamAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer&
     {
         float* channelData = buffer.getWritePointer (channel);
 
-        if (channel == 0 && hiReSamAudioProcessorEditor != nullptr)
+        if (hiReSamAudioProcessorEditor != nullptr
+            && channel == 0)
         {
             hiReSamAudioProcessorEditor->spectroscope.copySamples(channelData, buffer.getNumSamples());
             hiReSamAudioProcessorEditor->pitchDetector.processBlock (channelData, buffer.getNumSamples());

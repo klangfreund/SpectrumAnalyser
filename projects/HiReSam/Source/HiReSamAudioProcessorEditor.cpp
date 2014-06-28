@@ -19,21 +19,27 @@ HiReSamAudioProcessorEditor::HiReSamAudioProcessorEditor (HiReSamAudioProcessor*
       renderThread("FFT Render Thread")
 
 {
-    // This is where our plugin's editor size is set.
+    // The plugin's initial editor size.
     setSize (900, 500);
     
-    addAndMakeVisible (&spectroscope);
-    
-// TODO, set sampleRate appropriate
-    pitchDetector.setSampleRate(44100);
-    addAndMakeVisible(&pitchDetector);
+    getProcessor()->sampleRate.addListener (this);
+    // The sampleRate has already been set in the HiReSamAudioProcessor before
+    // the creation of the HiReSamAudioProcessorEditor.
+    // Because of this, the valueChanged is enforced here, such that the
+    // sampleRate is also initially transmitted to everyone who needs to know.
+    valueChanged (getProcessor()->sampleRate);
     
     renderThread.addTimeSliceClient (&spectroscope);
     renderThread.startThread (3);
+    
+    addAndMakeVisible (&spectroscope);
+    addAndMakeVisible (&pitchDetector);
 }
 
 HiReSamAudioProcessorEditor::~HiReSamAudioProcessorEditor()
 {
+    getProcessor()->sampleRate.removeListener (this);
+    
     renderThread.removeTimeSliceClient (&spectroscope);
     renderThread.stopThread (500);
 }
@@ -53,4 +59,18 @@ void HiReSamAudioProcessorEditor::resized()
 {
     spectroscope.setBounds (0, 0, getWidth(), getHeight());
     pitchDetector.setBounds(spectroscope.getBounds());
+}
+
+void HiReSamAudioProcessorEditor::valueChanged (Value & value)
+{
+    if (value.refersToSameSourceAs (getProcessor()->sampleRate))
+    {
+        spectroscope.setSampleRate (getProcessor()->sampleRate.getValue());
+        pitchDetector.setSampleRate (getProcessor()->sampleRate.getValue());
+    }
+}
+
+HiReSamAudioProcessor* HiReSamAudioProcessorEditor::getProcessor() const
+{
+    return static_cast <HiReSamAudioProcessor*> (getAudioProcessor());
 }

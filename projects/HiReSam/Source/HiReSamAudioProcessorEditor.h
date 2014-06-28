@@ -20,7 +20,8 @@
 //==============================================================================
 /**
 */
-class HiReSamAudioProcessorEditor  : public AudioProcessorEditor
+class HiReSamAudioProcessorEditor  : public AudioProcessorEditor,
+                                     public Value::Listener
 {
 public:
     HiReSamAudioProcessorEditor (HiReSamAudioProcessor* ownerFilter);
@@ -32,10 +33,17 @@ public:
     
     void resized();
     
+    /** The value listener method. */
+    void valueChanged (Value & value);
+    
+    // They are public because the HiReSamAudioProcessor needs to access them in
+    // its processBlock to transfer the samples.
     Spectroscope spectroscope;
     PitchDetectorComponent pitchDetector;
     
 private:
+    HiReSamAudioProcessor* getProcessor() const;
+    
     TimeSliceThread renderThread;
 };
 
