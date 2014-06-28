@@ -54,7 +54,7 @@ void PitchDetectorComponent::timerCallback()
 
     const double proportion = pitch / (sampleRate / 2);
     const int w = getWidth();
-    pitchXCoord = roundToInt ((displayLogFrequency ? drow::logBase10Scale (proportion, 1.0, 40.0) : proportion) * w);
+    pitchXCoord = roundToInt ((displayLogFrequency ? logTransformInRange0to1 (proportion) : proportion) * w);
 
     if (! pitchXCoord.areEqual())
     {
