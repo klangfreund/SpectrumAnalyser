@@ -22,11 +22,10 @@ HiReSamAudioProcessorEditor::HiReSamAudioProcessorEditor (HiReSamAudioProcessor*
     // This is where our plugin's editor size is set.
     setSize (900, 500);
     
-    spectroscope.setLogFrequencyDisplay(true);
     addAndMakeVisible (&spectroscope);
     
+// TODO, set sampleRate appropriate
     pitchDetector.setSampleRate(44100);
-    pitchDetector.setLogFrequencyDisplay(true);
     addAndMakeVisible(&pitchDetector);
     
     renderThread.addTimeSliceClient (&spectroscope);

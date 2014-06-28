@@ -12,8 +12,7 @@
 
 //==============================================================================
 PitchDetectorComponent::PitchDetectorComponent()
-    : displayLogFrequency (false),
-      sampleRate (44100.0),
+    : sampleRate (44100.0),
       pitch (0.0),
       sampleBuffer (1, 512)
 {
@@ -27,12 +26,6 @@ PitchDetectorComponent::PitchDetectorComponent()
 
 PitchDetectorComponent::~PitchDetectorComponent()
 {
-}
-
-void PitchDetectorComponent::setLogFrequencyDisplay (bool shouldDisplayLogFrequency)
-{
-    displayLogFrequency = shouldDisplayLogFrequency;
-    repaint();
 }
 
 void PitchDetectorComponent::paint (Graphics& g)
@@ -54,7 +47,7 @@ void PitchDetectorComponent::timerCallback()
 
     const double proportion = pitch / (sampleRate / 2);
     const int w = getWidth();
-    pitchXCoord = roundToInt ((displayLogFrequency ? logTransformInRange0to1 (proportion) : proportion) * w);
+    pitchXCoord = roundToInt (logTransformInRange0to1 (proportion) * w);
 
     if (! pitchXCoord.areEqual())
     {

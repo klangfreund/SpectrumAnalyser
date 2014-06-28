@@ -62,15 +62,6 @@ public:
 	
     /** @internal */
 	void paint (Graphics &g);
-	
-    //==============================================================================
-    /** Sets the scope to display in log or normal mode.
-     */
-	void setLogFrequencyDisplay (bool shouldDisplayLog);
-	
-    /** Returns true if the scope is being displayed in log mode.
-     */
-	inline bool getLogFrequencyDisplay() const      {   return logFrequency;	}
 
     //==============================================================================
 	/** Copy a set of samples, ready to be processed.
@@ -97,7 +88,6 @@ private:
 	HeapBlock<float> tempBlock;			
     drow::FifoBuffer<float> circularBuffer;
 	
-	bool logFrequency;
     Image scopeImage;
     
     void renderScopeImage();

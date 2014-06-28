@@ -25,8 +25,6 @@ public:
 
     ~PitchDetectorComponent();
 
-    void setLogFrequencyDisplay (bool shouldDisplayLogFrequency);
-    
     void paint (Graphics&);
     
     void resized();
@@ -40,7 +38,6 @@ public:
 
 private:
 	//==============================================================================
-    bool displayLogFrequency;
     double sampleRate, pitch;
     AudioSampleBuffer sampleBuffer;
     drow::PitchDetector pitchDetector;
