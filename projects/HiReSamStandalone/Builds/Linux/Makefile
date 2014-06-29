@@ -51,6 +51,7 @@ ifeq ($(CONFIG),Release)
 endif
 
 OBJECTS := \
+  $(OBJDIR)/FrequencyCaption_36f568e0.o \
   $(OBJDIR)/HiReSamAudioProcessor_eed54ffb.o \
   $(OBJDIR)/HiReSamAudioProcessorEditor_ec2f4288.o \
   $(OBJDIR)/PitchDetectorComponent_666b212d.o \
@@ -85,6 +86,11 @@ clean:
 strip:
 	@echo Stripping HiReSamStandalone
 	-@strip --strip-unneeded $(OUTDIR)/$(TARGET)
+
+$(OBJDIR)/FrequencyCaption_36f568e0.o: ../../../HiReSam/Source/FrequencyCaption.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling FrequencyCaption.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/HiReSamAudioProcessor_eed54ffb.o: ../../../HiReSam/Source/HiReSamAudioProcessor.cpp
 	-@mkdir -p $(OBJDIR)

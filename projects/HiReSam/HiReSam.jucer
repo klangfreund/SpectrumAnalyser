@@ -11,6 +11,10 @@
               pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="3.1.0">
   <MAINGROUP id="oRDNlC" name="HiReSam">
     <GROUP id="{5E261AAC-E07E-0CAB-5A9C-292B360144B1}" name="Source">
+      <FILE id="rXAY9T" name="FrequencyCaption.cpp" compile="1" resource="0"
+            file="Source/FrequencyCaption.cpp"/>
+      <FILE id="n3aoab" name="FrequencyCaption.h" compile="0" resource="0"
+            file="Source/FrequencyCaption.h"/>
       <FILE id="OVjVMG" name="HiReSamAudioProcessor.cpp" compile="1" resource="0"
             file="Source/HiReSamAudioProcessor.cpp"/>
       <FILE id="kZXXwS" name="HiReSamAudioProcessor.h" compile="0" resource="0"
@@ -20,6 +24,13 @@
       <FILE id="wJj8Ok" name="HiReSamAudioProcessorEditor.h" compile="0"
             resource="0" file="Source/HiReSamAudioProcessorEditor.h"/>
       <FILE id="wTCfl1" name="HiReSamHeader.h" compile="0" resource="0" file="Source/HiReSamHeader.h"/>
+      <FILE id="AnTyrC" name="PitchDetectorComponent.cpp" compile="1" resource="0"
+            file="Source/PitchDetectorComponent.cpp"/>
+      <FILE id="jGz2Ej" name="PitchDetectorComponent.h" compile="0" resource="0"
+            file="Source/PitchDetectorComponent.h"/>
+      <FILE id="utRyoO" name="Spectroscope.cpp" compile="1" resource="0"
+            file="Source/Spectroscope.cpp"/>
+      <FILE id="PTgSw5" name="Spectroscope.h" compile="0" resource="0" file="Source/Spectroscope.h"/>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>

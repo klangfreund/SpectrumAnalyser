@@ -84,6 +84,9 @@ public:
 
 private:
     //==============================================================================
+    static const int frequenciesToPlot[];
+    static const int numberOfFrequenciesToPlot;
+    
     double sampleRate;
     drow::FFTEngine fftEngine;
 	int numBins;

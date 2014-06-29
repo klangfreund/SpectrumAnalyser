@@ -337,10 +337,19 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\FrequencyCaption.cpp">
+      <Filter>HiReSam\Source</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\HiReSamAudioProcessor.cpp">
       <Filter>HiReSam\Source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\HiReSamAudioProcessorEditor.cpp">
+      <Filter>HiReSam\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\PitchDetectorComponent.cpp">
+      <Filter>HiReSam\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Spectroscope.cpp">
       <Filter>HiReSam\Source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\JuceLibraryCode\modules\dRowAudio\dRowAudio\audio\dRowAudio_AudioFilePlayer.cpp">
@@ -1683,6 +1692,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\FrequencyCaption.h">
+      <Filter>HiReSam\Source</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\HiReSamAudioProcessor.h">
       <Filter>HiReSam\Source</Filter>
     </ClInclude>
@@ -1690,6 +1702,12 @@
       <Filter>HiReSam\Source</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\HiReSamHeader.h">
+      <Filter>HiReSam\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\PitchDetectorComponent.h">
+      <Filter>HiReSam\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Spectroscope.h">
       <Filter>HiReSam\Source</Filter>
     </ClInclude>
     <ClInclude Include="..\..\JuceLibraryCode\modules\dRowAudio\dRowAudio\audio\dRowAudio_AudioFilePlayer.h">

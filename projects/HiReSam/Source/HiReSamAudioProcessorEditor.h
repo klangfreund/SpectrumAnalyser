@@ -15,6 +15,7 @@
 #include "HiReSamAudioProcessor.h"
 #include "Spectroscope.h"
 #include "PitchDetectorComponent.h"
+#include "FrequencyCaption.h"
 
 
 //==============================================================================
@@ -44,6 +45,7 @@ public:
 private:
     HiReSamAudioProcessor* getProcessor() const;
     
+    FrequencyCaption frequencyCaptions;
     TimeSliceThread renderThread;
 };
 

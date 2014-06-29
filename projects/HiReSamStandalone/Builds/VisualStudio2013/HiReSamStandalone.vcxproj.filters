@@ -319,6 +319,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\HiReSam\Source\FrequencyCaption.cpp">
+      <Filter>HiReSamStandalone\Source HiReSam</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\HiReSam\Source\HiReSamAudioProcessor.cpp">
       <Filter>HiReSamStandalone\Source HiReSam</Filter>
     </ClCompile>
@@ -1632,6 +1635,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\HiReSam\Source\FrequencyCaption.h">
+      <Filter>HiReSamStandalone\Source HiReSam</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\HiReSam\Source\HiReSamAudioProcessor.h">
       <Filter>HiReSamStandalone\Source HiReSam</Filter>
     </ClInclude>

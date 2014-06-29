@@ -139,8 +139,11 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\FrequencyCaption.cpp"/>
     <ClCompile Include="..\..\Source\HiReSamAudioProcessor.cpp"/>
     <ClCompile Include="..\..\Source\HiReSamAudioProcessorEditor.cpp"/>
+    <ClCompile Include="..\..\Source\PitchDetectorComponent.cpp"/>
+    <ClCompile Include="..\..\Source\Spectroscope.cpp"/>
     <ClCompile Include="..\..\JuceLibraryCode\modules\dRowAudio\dRowAudio\audio\dRowAudio_AudioFilePlayer.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
@@ -1356,9 +1359,12 @@
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_audio_plugin_client\VST\juce_VST_Wrapper.cpp"/>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\FrequencyCaption.h"/>
     <ClInclude Include="..\..\Source\HiReSamAudioProcessor.h"/>
     <ClInclude Include="..\..\Source\HiReSamAudioProcessorEditor.h"/>
     <ClInclude Include="..\..\Source\HiReSamHeader.h"/>
+    <ClInclude Include="..\..\Source\PitchDetectorComponent.h"/>
+    <ClInclude Include="..\..\Source\Spectroscope.h"/>
     <ClInclude Include="..\..\JuceLibraryCode\modules\dRowAudio\dRowAudio\audio\dRowAudio_AudioFilePlayer.h"/>
     <ClInclude Include="..\..\JuceLibraryCode\modules\dRowAudio\dRowAudio\audio\dRowAudio_AudioFilePlayerExt.h"/>
     <ClInclude Include="..\..\JuceLibraryCode\modules\dRowAudio\dRowAudio\audio\dRowAudio_AudioSampleBufferAudioFormat.h"/>

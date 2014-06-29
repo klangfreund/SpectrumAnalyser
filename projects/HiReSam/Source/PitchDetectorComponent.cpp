@@ -17,7 +17,7 @@ PitchDetectorComponent::PitchDetectorComponent()
       sampleBuffer (1, 512)
 {
     addAndMakeVisible (&pitchLabel);
-    pitchLabel.setColour (Label::textColourId, Colour::greyLevel (0.9f));
+    pitchLabel.setColour (Label::textColourId, Colours::green);
     
     pitchDetector.setMinMaxFrequency(20, 20000);
     
@@ -36,7 +36,7 @@ void PitchDetectorComponent::paint (Graphics& g)
 
 void PitchDetectorComponent::resized()
 {
-    pitchLabel.setBounds (getLocalBounds().removeFromTop (20).removeFromRight (200));
+    pitchLabel.setBounds (getLocalBounds().removeFromTop (20).removeFromRight (150));
 }
 
 void PitchDetectorComponent::timerCallback()

@@ -33,6 +33,13 @@
 
 #if JUCE_MAC || JUCE_IOS || DROWAUDIO_USE_FFTREAL
 
+// static member initialisation
+// ============================
+
+const int Spectroscope::frequenciesToPlot[] = {10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 20000};
+const int Spectroscope::numberOfFrequenciesToPlot = 29;
+
+//==============================================================================
 Spectroscope::Spectroscope (int fftSizeLog2)
 :   sampleRate      {44100.0},
     fftEngine       (fftSizeLog2),
@@ -128,13 +135,9 @@ void Spectroscope::renderScopeImage()
         // -------------------------
         g.setColour (Colours::darkgreen.darker().darker());
         
-        static const int frequenciesToDrawALine[] = {10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 20000};
-        static const int numberOfFrequencyLines = 29;
-        
-        for (int i = 0; i < numberOfFrequencyLines; ++i)
+        for (int i = 0; i < numberOfFrequenciesToPlot; ++i)
         {
-            const double frequency = frequenciesToDrawALine[i];
-            const double proportion = frequency / (sampleRate * 0.5);
+            const double proportion = frequenciesToPlot[i] / (sampleRate * 0.5);
             int xPos = logTransformInRange0to1 (proportion) * getWidth();
             g.drawVerticalLine(xPos, 0.0f, getHeight());
         }
@@ -146,12 +149,16 @@ void Spectroscope::renderScopeImage()
         const int numBins = fftEngine.getMagnitudesBuffer().getSize() - 1;
         const float* data = fftEngine.getMagnitudesBuffer().getData();
         
-        float y2, y1 = jlimit (0.0f, 1.0f, float (1 + (drow::toDecibels (data[0]) / 100.0f)));
+// NOTE TO DAVE96: The jlimit is not needed. Puts the load off the CPU by 1-2%.
+// Original line:
+//      float y2, y1 = jlimit (0.0f, 1.0f, float (1 + (drow::toDecibels (data[0]) / 100.0f)));
+        float y2, y1 = float (1 + (drow::toDecibels (data[0]) / 100.0f));
         float x2, x1 = 0;
         
         for (int i = 0; i < numBins; ++i)
         {
-            y2 = jlimit (0.0f, 1.0f, float (1 + (drow::toDecibels (data[i]) / 100.0f)));
+// NOTE TO DAVE96: Same as above.
+            y2 = float (1 + (drow::toDecibels (data[i]) / 100.0f));
             x2 = logTransformInRange0to1 ((i + 1.0f) / numBins) * w;
             
             g.drawLine (x1, h - h * y1,
