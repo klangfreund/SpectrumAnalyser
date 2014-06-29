@@ -45,8 +45,8 @@ FrequencyCaption::FrequencyCaption()
         frequencyLabel->setColour (Label::textColourId, Colours::white);
         const int textWidth = labelFont.getStringWidth (frequencyLabel->getText());
         const int textHeight = labelFont.getHeight();
-        frequencyLabel->setBorderSize (BorderSize<int>(0,0,0,0));
-        frequencyLabel->setSize(textWidth, textHeight);
+        frequencyLabel->setBorderSize (BorderSize<int>(0,1,0,1));
+        frequencyLabel->setSize(textWidth + 2, textHeight);
         
         frequencyLabels.add(frequencyLabel);
         addAndMakeVisible(frequencyLabel);
@@ -63,19 +63,45 @@ void FrequencyCaption::paint (Graphics& g)
     // ----------
     g.fillAll (Colours::black); // Clear the background
     
-    // Lines and the labels
-    // --------------------
+    // Labels and lines
+    // ----------------
     static float lineLength = 5.0f;
     g.setColour (Colours::white);
     
-    for (int i = 0; i < numberOfFrequenciesToPlot; ++i)
+    for (int i = numberOfFrequenciesToPlot - 1; i >= 0; --i)
     {
+        // Figure out the line position...
         const double proportion = frequenciesToPlot[i] / (sampleRate * 0.5);
-        int xPos = logTransformInRange0to1 (proportion) * getWidth();
-        g.drawVerticalLine(xPos, 0.0f, lineLength);
+        int xPosOfLine = logTransformInRange0to1 (proportion) * getWidth();
         
+        // ...and the label position.
         const int widthOfLabel = frequencyLabels[i]->getWidth();
-        frequencyLabels[i]->setTopLeftPosition(xPos - widthOfLabel / 2, lineLength);
+        frequencyLabels[i]->setTopLeftPosition(xPosOfLine - widthOfLabel / 2, lineLength);
+        
+        // Do labels overlap? Hide if neccessary
+        frequencyLabels[i]->setVisible (true);
+        for (int j = i+1; j < numberOfFrequenciesToPlot; ++j)
+        {
+            if (frequencyLabels[j]->isVisible()
+                && frequencyLabels[j]->getX() <= frequencyLabels[i]->getX() + frequencyLabels[i]->getWidth())
+            {
+                frequencyLabels[i]->setVisible(false);
+                break;
+            }
+        }
+        // Only show the 20K label if it isn't truncated by the border of the whole component.
+        if (i == numberOfFrequenciesToPlot - 1)
+        {
+            if (frequencyLabels[i]->getX() + frequencyLabels[i]->getWidth() > getWidth())
+            {
+                frequencyLabels[i]->setVisible(false);
+            }
+        }
+        
+        if (frequencyLabels[i]->isVisible())
+        {
+            g.drawVerticalLine(xPosOfLine, 0.0f, lineLength);
+        }
     }
 //
 //    g.setColour (Colours::lightblue);
