@@ -150,10 +150,14 @@ void Spectroscope::renderScopeImage()
         const float* data = fftEngine.getMagnitudesBuffer().getData();
         
 // NOTE TO DAVE96: The jlimit is not needed. Puts the load off the CPU by 1-2%.
-// Original line:
-//      float y2, y1 = jlimit (0.0f, 1.0f, float (1 + (drow::toDecibels (data[0]) / 100.0f)));
+// Original line:      float y2, y1 = jlimit (0.0f, 1.0f, float (1 + (drow::toDecibels (data[0]) / 100.0f)));
         float y2, y1 = float (1 + (drow::toDecibels (data[0]) / 100.0f));
         float x2, x1 = 0;
+        
+        // The path which will be the border of the filled area.
+        Path spectrumPath;
+        // Add the top left point.
+        spectrumPath.startNewSubPath(x1, h - h * y1);
         
         for (int i = 0; i < numBins; ++i)
         {
@@ -161,12 +165,31 @@ void Spectroscope::renderScopeImage()
             y2 = float (1 + (drow::toDecibels (data[i]) / 100.0f));
             x2 = logTransformInRange0to1 ((i + 1.0f) / numBins) * w;
             
-            g.drawLine (x1, h - h * y1,
-                        x2, h - h * y2);
+            spectrumPath.lineTo(x2, h - h * y2);
             
-            y1 = y2;
-            x1 = x2;
+//            g.drawLine (x1, h - h * y1,
+//                        x2, h - h * y2);
+//            
+//            y1 = y2;
+//            x1 = x2;
         }
+        
+        g.setColour (Colours::darkgreen);
+        float lineThickness = 1.0f;
+        g.strokePath (spectrumPath, PathStrokeType(lineThickness));
+        
+        // Bottom right point.
+        spectrumPath.lineTo(x2, getHeight());
+        // Bottom left point.
+        spectrumPath.lineTo(x1, getHeight());
+        spectrumPath.closeSubPath();
+        
+        // Draw the graph.
+        ColourGradient gradient (Colours::darkgreen, 0.0f, 0.8f * getHeight(), Colours::black, 0.0f, getHeight(), false);
+        g.setGradientFill(gradient);
+        g.setOpacity(0.6f);
+        //g.setColour (Colours::green.withAlpha(0.8f));
+        g.fillPath(spectrumPath);
 		
 		needsRepaint = false;
         
