@@ -239,7 +239,6 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\HiReSam\Source\FrequencyCaption.cpp"/>
     <ClCompile Include="..\..\..\HiReSam\Source\HiReSamAudioProcessor.cpp"/>
     <ClCompile Include="..\..\..\HiReSam\Source\HiReSamAudioProcessorEditor.cpp"/>
     <ClCompile Include="..\..\..\HiReSam\Source\PitchDetectorComponent.cpp"/>
@@ -1441,7 +1440,6 @@
     <ClCompile Include="..\..\..\HiReSam\JuceLibraryCode\modules\juce_gui_extra\juce_gui_extra.cpp"/>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\HiReSam\Source\FrequencyCaption.h"/>
     <ClInclude Include="..\..\..\HiReSam\Source\HiReSamAudioProcessor.h"/>
     <ClInclude Include="..\..\..\HiReSam\Source\HiReSamAudioProcessorEditor.h"/>
     <ClInclude Include="..\..\..\HiReSam\Source\HiReSamHeader.h"/>

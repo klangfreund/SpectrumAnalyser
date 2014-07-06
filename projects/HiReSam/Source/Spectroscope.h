@@ -72,6 +72,8 @@ public:
         so on a background thread and redraw itself.
      */
 	void copySamples (const float* samples, int numSamples);
+    
+    int getHeightOfFrequencyCaption();
 
     /** @internal */
 	void timerCallback();
@@ -93,6 +95,30 @@ private:
 	bool needsRepaint;
 	HeapBlock<float> tempBlock;			
     drow::FifoBuffer<float> circularBuffer;
+    
+    //==============================================================================
+    /*  The numbers below the graph, indication the frequency.
+     */
+    class FrequencyCaption    : public Component
+    {
+    public:
+        FrequencyCaption();
+        ~FrequencyCaption();
+        
+        void paint (Graphics&);
+        void resized();
+        
+        void setSampleRate (double newSampleRate);
+        
+    private:
+        OwnedArray<Label> frequencyLabels;
+        
+        double sampleRate;
+    };
+    //==============================================================================
+    
+    FrequencyCaption frequencyCaption;
+    int heightForFrequencyCaption;
 	
     Image scopeImage;
     

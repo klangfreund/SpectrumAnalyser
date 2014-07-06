@@ -21,5 +21,11 @@ Value pattern
 Change the pattern according to http://www.juce.com/forum/topic/value
 
 estimate: 20m
-needed: 
+needed: 17.75
 
+
+Make the FrequencyCaption a subclass of the Spectroscope.
+---------------------------------------------------------
+
+estimate: 30m
+needed: 50m

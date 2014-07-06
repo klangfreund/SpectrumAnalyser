@@ -16,12 +16,6 @@ Open issues / Roadmap
 =====================
 
 
-Make the FrequencyCaption a subclass of the Spectroscope.
----------------------------------------------------------
-
-estimate: 20m
-
-
 Add the name of the plugin on top of its interface
 --------------------------------------------------
 
@@ -38,3 +32,11 @@ Mouse -> Frequency in the balloon
 ---------------------------------
 
 estimate: 2h
+
+
+Buffer the gradient to fill the spectroscope in an image
+--------------------------------------------------------
+
+Hint: Search for setGradientFill in the JuceDemo
+
+estimate: 40m

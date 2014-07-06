@@ -35,7 +35,6 @@ HiReSamAudioProcessorEditor::HiReSamAudioProcessorEditor (HiReSamAudioProcessor*
     
     addAndMakeVisible (&spectroscope);
     addAndMakeVisible (&pitchDetector);
-    addAndMakeVisible (&frequencyCaptions);
 }
 
 HiReSamAudioProcessorEditor::~HiReSamAudioProcessorEditor()
@@ -57,11 +56,8 @@ void HiReSamAudioProcessorEditor::paint (Graphics& g)
 
 void HiReSamAudioProcessorEditor::resized()
 {
-    int heightForFrequencyCaptions = 20;
-    spectroscope.setBounds (0, 0, getWidth(), getHeight() - heightForFrequencyCaptions);
-    pitchDetector.setBounds (spectroscope.getBounds());
-    frequencyCaptions.setBounds (0, getHeight() - heightForFrequencyCaptions,
-                                 getWidth(), heightForFrequencyCaptions);
+    spectroscope.setBounds (0, 0, getWidth(), getHeight());
+    pitchDetector.setBounds (0, 0, getWidth(), getHeight() - spectroscope.getHeightOfFrequencyCaption());
 }
 
 void HiReSamAudioProcessorEditor::valueChanged (Value & value)
@@ -70,7 +66,6 @@ void HiReSamAudioProcessorEditor::valueChanged (Value & value)
     {
         spectroscope.setSampleRate (sampleRate.getValue());
         pitchDetector.setSampleRate (sampleRate.getValue());
-        frequencyCaptions.setSampleRate (sampleRate.getValue());
     }
 }
 

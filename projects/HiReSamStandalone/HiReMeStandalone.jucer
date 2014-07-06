@@ -5,10 +5,6 @@
               companyName="Klangfreund" defines="" includeBinaryInAppConfig="1">
   <MAINGROUP id="AO7N4d" name="HiReSamStandalone">
     <GROUP id="{54DB0834-C391-BB20-D2E8-10BA7ED68A39}" name="Source HiReSam">
-      <FILE id="Oy8kxk" name="FrequencyCaption.cpp" compile="1" resource="0"
-            file="../HiReSam/Source/FrequencyCaption.cpp"/>
-      <FILE id="bG3XvI" name="FrequencyCaption.h" compile="0" resource="0"
-            file="../HiReSam/Source/FrequencyCaption.h"/>
       <FILE id="Wo1Md4" name="HiReSamAudioProcessor.cpp" compile="1" resource="0"
             file="../HiReSam/Source/HiReSamAudioProcessor.cpp"/>
       <FILE id="AqVpAa" name="HiReSamAudioProcessor.h" compile="0" resource="0"

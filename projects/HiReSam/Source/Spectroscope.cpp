@@ -41,12 +41,14 @@ const int Spectroscope::numberOfFrequenciesToPlot = 29;
 
 //==============================================================================
 Spectroscope::Spectroscope (int fftSizeLog2)
-:   sampleRate      {44100.0},
-    fftEngine       (fftSizeLog2),
-    needsRepaint    {true},
-	tempBlock       (fftEngine.getFFTSize()),
-	circularBuffer  (fftEngine.getMagnitudesBuffer().getSize() * 4)
+:   sampleRate                {44100.0},
+    fftEngine                 {fftSizeLog2},
+    needsRepaint              {true},
+	tempBlock                 (fftEngine.getFFTSize()),
+	circularBuffer            (fftEngine.getMagnitudesBuffer().getSize() * 4),
+    heightForFrequencyCaption {20}
 {
+// TODO: Should be false!
 	setOpaque (true);
 
 	fftEngine.setWindowType (drow::Window::Hann);
@@ -58,6 +60,8 @@ Spectroscope::Spectroscope (int fftSizeLog2)
                         100, 100,
                         false);
     scopeImage.clear (scopeImage.getBounds(), Colours::black);
+    
+    addAndMakeVisible (&frequencyCaption);
 }
 
 Spectroscope::~Spectroscope()
@@ -66,7 +70,10 @@ Spectroscope::~Spectroscope()
 
 void Spectroscope::resized()
 {
-    scopeImage = scopeImage.rescaled (jmax (1, getWidth()), jmax (1, getHeight()));
+    scopeImage = scopeImage.rescaled (jmax (1, getWidth()), jmax (1, getHeight() - heightForFrequencyCaption));
+
+    frequencyCaption.setBounds (0, getHeight() - heightForFrequencyCaption,
+                                 getWidth(), heightForFrequencyCaption);
 }
 
 void Spectroscope::paint(Graphics& g)
@@ -78,12 +85,18 @@ void Spectroscope::paint(Graphics& g)
 void Spectroscope::setSampleRate (double newSampleRate)
 {
     sampleRate = newSampleRate;
+    frequencyCaption.setSampleRate (newSampleRate);
 }
 
 void Spectroscope::copySamples (const float* samples, int numSamples)
 {
 	circularBuffer.writeSamples (samples, numSamples);
 	needToProcess = true;
+}
+
+int Spectroscope::getHeightOfFrequencyCaption()
+{
+    return heightForFrequencyCaption;
 }
 
 void Spectroscope::timerCallback()
@@ -193,8 +206,107 @@ void Spectroscope::renderScopeImage()
 		
 		needsRepaint = false;
         
-        repaint();
+        repaint(0, 0, scopeImage.getWidth(), scopeImage.getHeight());
 	}
+}
+
+
+//==============================================================================
+//==============================================================================
+Spectroscope::FrequencyCaption::FrequencyCaption()
+: sampleRate {44100.0}
+{
+    for (int i = 0; i < numberOfFrequenciesToPlot; ++i)
+    {
+        // Generate the frequencyString...
+        const int frequency = frequenciesToPlot[i];
+        String frequencyString;
+        if (frequency % 1000 == 0)
+        {
+            frequencyString = String (frequency/1000) + "K";
+        }
+        else
+        {
+            frequencyString = String (frequency);
+        }
+        
+        // ... and put it into a new Label.
+        Label* frequencyLabel = new Label();
+        frequencyLabel->setText(frequencyString, dontSendNotification);
+        
+        // Figuring out the width and height of the text and setting the Label accordingly.
+        Font labelFont = Font(12.0f);
+        frequencyLabel->setFont(labelFont);
+        frequencyLabel->setColour (Label::textColourId, Colours::white);
+        const int textWidth = labelFont.getStringWidth (frequencyLabel->getText());
+        const int textHeight = labelFont.getHeight();
+        frequencyLabel->setBorderSize (BorderSize<int>(0,1,0,1));
+        frequencyLabel->setSize(textWidth + 2, textHeight);
+        
+        frequencyLabels.add(frequencyLabel);
+        addAndMakeVisible(frequencyLabel);
+    }
+}
+
+Spectroscope::FrequencyCaption::~FrequencyCaption()
+{
+}
+
+void Spectroscope::FrequencyCaption::paint (Graphics& g)
+{
+    // Background
+    // ----------
+    g.fillAll (Colours::black); // Clear the background
+    
+    // Labels and lines
+    // ----------------
+    static float lineLength = 5.0f;
+    g.setColour (Colours::white);
+    
+    for (int i = numberOfFrequenciesToPlot - 1; i >= 0; --i)
+    {
+        // Figure out the line position...
+        const double proportion = frequenciesToPlot[i] / (sampleRate * 0.5);
+        int xPosOfLine = logTransformInRange0to1 (proportion) * getWidth();
+        
+        // ...and the label position.
+        const int widthOfLabel = frequencyLabels[i]->getWidth();
+        frequencyLabels[i]->setTopLeftPosition(xPosOfLine - widthOfLabel / 2, lineLength);
+        
+        // Do labels overlap? Hide if neccessary
+        frequencyLabels[i]->setVisible (true);
+        for (int j = i+1; j < numberOfFrequenciesToPlot; ++j)
+        {
+            if (frequencyLabels[j]->isVisible()
+                && frequencyLabels[j]->getX() <= frequencyLabels[i]->getX() + frequencyLabels[i]->getWidth())
+            {
+                frequencyLabels[i]->setVisible(false);
+                break;
+            }
+        }
+        // Only show the 20K label if it isn't truncated by the border of the whole component.
+        if (i == numberOfFrequenciesToPlot - 1)
+        {
+            if (frequencyLabels[i]->getX() + frequencyLabels[i]->getWidth() > getWidth())
+            {
+                frequencyLabels[i]->setVisible(false);
+            }
+        }
+        
+        if (frequencyLabels[i]->isVisible())
+        {
+            g.drawVerticalLine(xPosOfLine, 0.0f, lineLength);
+        }
+    }
+}
+
+void Spectroscope::FrequencyCaption::resized()
+{
+}
+
+void Spectroscope::FrequencyCaption::setSampleRate (double newSampleRate)
+{
+    sampleRate = newSampleRate;
 }
 
 #endif // JUCE_MAC || JUCE_IOS || DROWAUDIO_USE_FFTREAL
