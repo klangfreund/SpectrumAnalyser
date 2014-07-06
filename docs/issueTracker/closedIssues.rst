@@ -13,3 +13,13 @@ In reversed chronological order.
 
 Closed issues
 =============
+
+
+Value pattern
+-------------
+
+Change the pattern according to http://www.juce.com/forum/topic/value
+
+estimate: 20m
+needed: 
+

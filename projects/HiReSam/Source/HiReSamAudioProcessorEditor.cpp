@@ -22,12 +22,13 @@ HiReSamAudioProcessorEditor::HiReSamAudioProcessorEditor (HiReSamAudioProcessor*
     // The plugin's initial editor size.
     setSize (900, 500);
     
-    getProcessor()->sampleRate.addListener (this);
+    sampleRate.addListener (this);
     // The sampleRate has already been set in the HiReSamAudioProcessor before
     // the creation of the HiReSamAudioProcessorEditor.
-    // Because of this, the valueChanged is enforced here, such that the
-    // sampleRate is also initially transmitted to everyone who needs to know.
-    valueChanged (getProcessor()->sampleRate);
+    // Because of this it is important to have the referTo call after the
+    // addListener. Only in this order the valueChanged member function
+    // will be called implicitly.
+    sampleRate.referTo (getProcessor()->sampleRate);
     
     renderThread.addTimeSliceClient (&spectroscope);
     renderThread.startThread (3);
@@ -39,8 +40,6 @@ HiReSamAudioProcessorEditor::HiReSamAudioProcessorEditor (HiReSamAudioProcessor*
 
 HiReSamAudioProcessorEditor::~HiReSamAudioProcessorEditor()
 {
-    getProcessor()->sampleRate.removeListener (this);
-    
     renderThread.removeTimeSliceClient (&spectroscope);
     renderThread.stopThread (500);
 }
@@ -67,11 +66,11 @@ void HiReSamAudioProcessorEditor::resized()
 
 void HiReSamAudioProcessorEditor::valueChanged (Value & value)
 {
-    if (value.refersToSameSourceAs (getProcessor()->sampleRate))
+    if (value.refersToSameSourceAs (sampleRate))
     {
-        spectroscope.setSampleRate (getProcessor()->sampleRate.getValue());
-        pitchDetector.setSampleRate (getProcessor()->sampleRate.getValue());
-        frequencyCaptions.setSampleRate (getProcessor()->sampleRate.getValue());
+        spectroscope.setSampleRate (sampleRate.getValue());
+        pitchDetector.setSampleRate (sampleRate.getValue());
+        frequencyCaptions.setSampleRate (sampleRate.getValue());
     }
 }
 

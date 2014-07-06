@@ -16,14 +16,6 @@ Open issues / Roadmap
 =====================
 
 
-Value pattern
--------------
-
-Change the pattern according to http://www.juce.com/forum/topic/value
-
-estimate: 20m
-
-
 Make the FrequencyCaption a subclass of the Spectroscope.
 ---------------------------------------------------------
 

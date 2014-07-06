@@ -46,6 +46,7 @@ private:
     HiReSamAudioProcessor* getProcessor() const;
     
     FrequencyCaption frequencyCaptions;
+    Value sampleRate;
     TimeSliceThread renderThread;
 };
 
