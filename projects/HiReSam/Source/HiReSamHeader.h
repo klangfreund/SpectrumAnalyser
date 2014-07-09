@@ -13,11 +13,20 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
-// Switches
-// --------
+// Preprocessor business
+// ---------------------
 
-#ifndef    JUCE_ENABLE_LIVE_CONSTANT_EDITOR
-#define JUCE_ENABLE_LIVE_CONSTANT_EDITOR 1
+// The DEBUG flag enables JUCE_DEBUG.
+// JUCE_DEBUG enables JUCE_ENABLE_LIVE_CONSTANT_EDITOR.
+// Therefore you can't turn off the live constant editor in debug mode
+// by not defining JUCE_ENABLE_LIVE_CONSTANT_EDITOR.
+//
+// An ugly hack (= redefinition) to disable the LIVE_CONSTANT_EDITOR
+#define JUCE_LIVE_CONSTANT(initialValue) \
+initialValue
+
+#ifndef    JUCE_ENABLE_REPAINT_DEBUGGING
+  //#define JUCE_ENABLE_REPAINT_DEBUGGING 1
 #endif
 
 // Helper Functions
