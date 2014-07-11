@@ -45,6 +45,7 @@ private:
     Value sampleRate;
     Label header;
     TimeSliceThread renderThread;
+    Path bubblePath;
     
     HiReSamAudioProcessor* getProcessor() const;
 };

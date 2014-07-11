@@ -56,8 +56,17 @@ void HiReSamAudioProcessorEditor::paint (Graphics& g)
 {
     g.fillAll (Colours::black);
     
-    const int imageHeightPlusBorder = 150 + 10;
-    g.drawImage(ImageCache::getFromMemory (BinaryData::Samuel_Gaehwiler_png, BinaryData::Samuel_Gaehwiler_pngSize), spectroscope.getWidth(), getHeight() - imageHeightPlusBorder, 150, 150, 0, 0, 300, 300);
+    // bubble
+    g.setColour (Colours::white);
+    g.fillPath (bubblePath);
+    g.setColour (Colour (0xff6f6f6f));
+    g.strokePath (bubblePath, PathStrokeType (5.200f));
+    
+    // image
+    const int border = 10;
+    const int imageHeight = 150;
+    const int imageWidth = 150;
+    g.drawImage(ImageCache::getFromMemory (BinaryData::Samuel_Gaehwiler_png, BinaryData::Samuel_Gaehwiler_pngSize), getWidth() - imageWidth - border, getHeight() - imageHeight - border, imageWidth, imageHeight, 0, 0, 300, 300);
 //    g.setColour (Colours::black);
 //    g.setFont (15.0f);
 //    g.drawFittedText ("Zviel Arbet? HiRe sam@klangfreund.com!",
@@ -69,9 +78,31 @@ void HiReSamAudioProcessorEditor::resized()
 {
     header.setBounds(0, 0, getWidth(), 24);
     
-    const int widthOfImageAndBubble = 160;
-    spectroscope.setBounds (0, header.getHeight(), getWidth() - widthOfImageAndBubble, getHeight() - header.getHeight());
+    const int widthForImageAndBubble = 320;
+    spectroscope.setBounds (0, header.getHeight(), getWidth() - widthForImageAndBubble, getHeight() - header.getHeight());
     pitchDetector.setBounds (0, header.getHeight(), spectroscope.getWidth(), getHeight() - header.getHeight() - spectroscope.getHeightOfFrequencyCaption());
+    
+    bubblePath.clear();
+//    bubblePath.startNewSubPath (136.0f, 80.0f);
+//    bubblePath.quadraticTo (176.0f, 24.0f, 328.0f, 32.0f);
+//    bubblePath.quadraticTo (472.0f, 40.0f, 472.0f, 104.0f);
+//    bubblePath.quadraticTo (472.0f, 192.0f, 232.0f, 176.0f);
+//    bubblePath.lineTo (184.0f, 216.0f);
+//    bubblePath.lineTo (200.0f, 168.0f);
+//    bubblePath.quadraticTo (96.0f, 136.0f, 136.0f, 80.0f);
+//    bubblePath.closeSubPath();
+    float mostRight = getWidth() - 10.0f;
+    float width = getWidth() - spectroscope.getWidth() - 30.0f; // 336
+    bubblePath.startNewSubPath (mostRight - width, 80.0f);
+    bubblePath.quadraticTo (mostRight - 0.881f * width, 24.0f, mostRight - 0.429f * width, 32.0f);
+    bubblePath.quadraticTo (mostRight, 40.0f, mostRight, 104.0f);
+    bubblePath.quadraticTo (mostRight, 192.0f, mostRight - 0.714f * width, 176.0f);
+    //bubblePath.lineTo (mostRight - 0.857f * width, 216.0f); // the tip of the bubble
+    bubblePath.lineTo (mostRight - 0.69f * width, 216.0f); // the tip of the bubble
+    bubblePath.lineTo (mostRight - 0.810f * width, 168.0f);
+    bubblePath.quadraticTo (mostRight - 1.119f * width, 136.0f, mostRight - width, 80.0f);
+    bubblePath.closeSubPath();
+
 }
 
 void HiReSamAudioProcessorEditor::valueChanged (Value & value)
