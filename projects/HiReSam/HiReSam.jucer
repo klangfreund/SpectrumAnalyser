@@ -10,6 +10,10 @@
               pluginAUExportPrefix="HiReSamAU" pluginRTASCategory="" aaxIdentifier="com.klangfreund.HiReSam"
               pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="3.1.0">
   <MAINGROUP id="oRDNlC" name="HiReSam">
+    <GROUP id="{9B255AF0-ECB2-496B-3E36-21437FCA54DF}" name="Resources">
+      <FILE id="qxh07k" name="Samuel_Gaehwiler.png" compile="0" resource="1"
+            file="Resources/Samuel_Gaehwiler.png"/>
+    </GROUP>
     <GROUP id="{5E261AAC-E07E-0CAB-5A9C-292B360144B1}" name="Source">
       <FILE id="OVjVMG" name="HiReSamAudioProcessor.cpp" compile="1" resource="0"
             file="Source/HiReSamAudioProcessor.cpp"/>

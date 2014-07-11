@@ -5,6 +5,9 @@
     <Filter Include="HiReSamStandalone">
       <UniqueIdentifier>{E5A6E9CE-13BD-44A8-D7FD-08D99CDA28B6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="HiReSamStandalone\Resources HiReSam">
+      <UniqueIdentifier>{000520F8-8315-B151-588F-69395AC02BF7}</UniqueIdentifier>
+    </Filter>
     <Filter Include="HiReSamStandalone\Source HiReSam">
       <UniqueIdentifier>{AB7CD226-CDD2-A67D-152F-1D39DEC251A9}</UniqueIdentifier>
     </Filter>
@@ -1594,6 +1597,9 @@
     <ClCompile Include="..\..\..\HiReSam\JuceLibraryCode\modules\juce_gui_extra\native\juce_win32_WebBrowserComponent.cpp">
       <Filter>Juce Modules\juce_gui_extra\native</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\JuceLibraryCode\BinaryData.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\HiReSam\JuceLibraryCode\modules\dRowAudio\dRowAudio\dRowAudio.cpp">
       <Filter>Juce Library Code</Filter>
     </ClCompile>
@@ -3093,11 +3099,17 @@
     <ClInclude Include="..\..\JuceLibraryCode\AppConfig.h">
       <Filter>Juce Library Code</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\JuceLibraryCode\BinaryData.h">
+      <Filter>Juce Library Code</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h">
       <Filter>Juce Library Code</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\HiReSam\Resources\Samuel_Gaehwiler.png">
+      <Filter>HiReSamStandalone\Resources HiReSam</Filter>
+    </None>
     <None Include="..\..\..\HiReSam\JuceLibraryCode\modules\dRowAudio\juce_module_info">
       <Filter>Juce Modules\dRowAudio</Filter>
     </None>

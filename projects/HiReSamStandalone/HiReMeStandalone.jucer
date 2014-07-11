@@ -4,6 +4,10 @@
               bundleIdentifier="com.klangfreund.HiReSamStandalone" jucerVersion="3.1.0"
               companyName="Klangfreund" defines="" includeBinaryInAppConfig="1">
   <MAINGROUP id="AO7N4d" name="HiReSamStandalone">
+    <GROUP id="{D890D75C-F095-15C8-EE08-64AFA3E8E73C}" name="Resources HiReSam">
+      <FILE id="fGnEfj" name="Samuel_Gaehwiler.png" compile="0" resource="1"
+            file="../HiReSam/Resources/Samuel_Gaehwiler.png"/>
+    </GROUP>
     <GROUP id="{54DB0834-C391-BB20-D2E8-10BA7ED68A39}" name="Source HiReSam">
       <FILE id="Wo1Md4" name="HiReSamAudioProcessor.cpp" compile="1" resource="0"
             file="../HiReSam/Source/HiReSamAudioProcessor.cpp"/>

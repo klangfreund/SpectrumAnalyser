@@ -54,7 +54,10 @@ HiReSamAudioProcessorEditor::~HiReSamAudioProcessorEditor()
 //==============================================================================
 void HiReSamAudioProcessorEditor::paint (Graphics& g)
 {
-//    g.fillAll (Colours::white);
+    g.fillAll (Colours::black);
+    
+    const int imageHeightPlusBorder = 150 + 10;
+    g.drawImage(ImageCache::getFromMemory (BinaryData::Samuel_Gaehwiler_png, BinaryData::Samuel_Gaehwiler_pngSize), spectroscope.getWidth(), getHeight() - imageHeightPlusBorder, 150, 150, 0, 0, 300, 300);
 //    g.setColour (Colours::black);
 //    g.setFont (15.0f);
 //    g.drawFittedText ("Zviel Arbet? HiRe sam@klangfreund.com!",
@@ -65,9 +68,10 @@ void HiReSamAudioProcessorEditor::paint (Graphics& g)
 void HiReSamAudioProcessorEditor::resized()
 {
     header.setBounds(0, 0, getWidth(), 24);
-    int spectroscopeY = header.getHeight();
-    spectroscope.setBounds (0, spectroscopeY, getWidth(), getHeight() - spectroscopeY);
-    pitchDetector.setBounds (0, spectroscopeY, getWidth(), getHeight() - spectroscopeY - spectroscope.getHeightOfFrequencyCaption());
+    
+    const int widthOfImageAndBubble = 160;
+    spectroscope.setBounds (0, header.getHeight(), getWidth() - widthOfImageAndBubble, getHeight() - header.getHeight());
+    pitchDetector.setBounds (0, header.getHeight(), spectroscope.getWidth(), getHeight() - header.getHeight() - spectroscope.getHeightOfFrequencyCaption());
 }
 
 void HiReSamAudioProcessorEditor::valueChanged (Value & value)

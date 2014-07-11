@@ -56,6 +56,7 @@ OBJECTS := \
   $(OBJDIR)/PitchDetectorComponent_666b212d.o \
   $(OBJDIR)/Spectroscope_f2ebca74.o \
   $(OBJDIR)/Main_90ebc5c2.o \
+  $(OBJDIR)/BinaryData_ce4232d4.o \
   $(OBJDIR)/dRowAudio_f70bd428.o \
   $(OBJDIR)/juce_audio_basics_cd338cd7.o \
   $(OBJDIR)/juce_audio_devices_d42f07d5.o \
@@ -109,6 +110,11 @@ $(OBJDIR)/Spectroscope_f2ebca74.o: ../../../HiReSam/Source/Spectroscope.cpp
 $(OBJDIR)/Main_90ebc5c2.o: ../../Source/Main.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling Main.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/BinaryData_ce4232d4.o: ../../JuceLibraryCode/BinaryData.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling BinaryData.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/dRowAudio_f70bd428.o: ../../../HiReSam/JuceLibraryCode/modules/dRowAudio/dRowAudio/dRowAudio.cpp
