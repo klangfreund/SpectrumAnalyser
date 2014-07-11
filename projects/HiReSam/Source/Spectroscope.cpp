@@ -33,6 +33,7 @@
 
 #if JUCE_MAC || JUCE_IOS || DROWAUDIO_USE_FFTREAL
 
+
 // static member initialisation
 // ============================
 
@@ -164,21 +165,29 @@ void Spectroscope::renderScopeImage()
         
 // NOTE TO DAVE96: The jlimit is not needed. Puts the load off the CPU by 1-2%.
 // Original line:      float y2, y1 = jlimit (0.0f, 1.0f, float (1 + (drow::toDecibels (data[0]) / 100.0f)));
-        float y2, y1 = float (1 + (drow::toDecibels (data[0]) / 100.0f));
-        float x2, x1 = 0;
+        float x = 0;
+        float y = 0;
         
         // The path which will be the border of the filled area.
         Path spectrumPath;
         // Add the top left point.
-        spectrumPath.startNewSubPath(x1, h - h * y1);
+        const float yInPercent = float (1 + (drow::toDecibels (data[0]) / 100.0f));
+        y = h - h * yInPercent;
+        // No coordinate should be NaN
+        jassert (x == x && y == y);
+        spectrumPath.startNewSubPath(x, y);
         
         for (int i = 0; i < numBins; ++i)
         {
 // NOTE TO DAVE96: Same as above.
-            y2 = float (1 + (drow::toDecibels (data[i]) / 100.0f));
-            x2 = logTransformInRange0to1 ((i + 1.0f) / numBins) * w;
+            x = logTransformInRange0to1 ((i + 1.0f) / numBins) * w;
+            const float yInPercent = float (1 + (drow::toDecibels (data[i]) / 100.0f));
+            y = h - h * yInPercent;
             
-            spectrumPath.lineTo(x2, h - h * y2);
+            // No coordinate should be NaN
+            jassert (x == x && y == y);
+            
+            spectrumPath.lineTo(x, y);
             
 //            g.drawLine (x1, h - h * y1,
 //                        x2, h - h * y2);
@@ -188,13 +197,13 @@ void Spectroscope::renderScopeImage()
         }
         
         g.setColour (Colours::darkgreen);
-        float lineThickness = 1.0f;
+        float lineThickness = 0.75f;
         g.strokePath (spectrumPath, PathStrokeType(lineThickness));
         
         // Bottom right point.
-        spectrumPath.lineTo(x2, getHeight());
+        spectrumPath.lineTo(x, getHeight());
         // Bottom left point.
-        spectrumPath.lineTo(x1, getHeight());
+        spectrumPath.lineTo(0, getHeight());
         spectrumPath.closeSubPath();
         
         // Draw the graph.
@@ -237,7 +246,7 @@ Spectroscope::FrequencyCaption::FrequencyCaption()
         // Figuring out the width and height of the text and setting the Label accordingly.
         Font labelFont = Font(12.0f);
         frequencyLabel->setFont(labelFont);
-        frequencyLabel->setColour (Label::textColourId, Colours::white);
+        frequencyLabel->setColour (Label::textColourId, Colours::lightgoldenrodyellow);
         const int textWidth = labelFont.getStringWidth (frequencyLabel->getText());
         const int textHeight = labelFont.getHeight();
         frequencyLabel->setBorderSize (BorderSize<int>(0,1,0,1));
@@ -261,7 +270,7 @@ void Spectroscope::FrequencyCaption::paint (Graphics& g)
     // Labels and lines
     // ----------------
     static float lineLength = 5.0f;
-    g.setColour (Colours::white);
+    g.setColour (Colours::lightgoldenrodyellow);
     
     for (int i = numberOfFrequenciesToPlot - 1; i >= 0; --i)
     {

@@ -139,7 +139,6 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Source\FrequencyCaption.cpp"/>
     <ClCompile Include="..\..\Source\HiReSamAudioProcessor.cpp"/>
     <ClCompile Include="..\..\Source\HiReSamAudioProcessorEditor.cpp"/>
     <ClCompile Include="..\..\Source\PitchDetectorComponent.cpp"/>
@@ -1359,7 +1358,6 @@
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_audio_plugin_client\VST\juce_VST_Wrapper.cpp"/>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Source\FrequencyCaption.h"/>
     <ClInclude Include="..\..\Source\HiReSamAudioProcessor.h"/>
     <ClInclude Include="..\..\Source\HiReSamAudioProcessorEditor.h"/>
     <ClInclude Include="..\..\Source\HiReSamHeader.h"/>

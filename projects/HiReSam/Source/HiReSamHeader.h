@@ -21,7 +21,7 @@
 // Therefore you can't turn off the live constant editor in debug mode
 // by not defining JUCE_ENABLE_LIVE_CONSTANT_EDITOR.
 //
-// An ugly hack (= redefinition) to disable the LIVE_CONSTANT_EDITOR
+// An ugly hack (= redefinition) to disable the LIVE_CONSTANT_EDITOR.
 #define JUCE_LIVE_CONSTANT(initialValue) \
 initialValue
 

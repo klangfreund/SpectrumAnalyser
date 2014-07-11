@@ -337,9 +337,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Source\FrequencyCaption.cpp">
-      <Filter>HiReSam\Source</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\HiReSamAudioProcessor.cpp">
       <Filter>HiReSam\Source</Filter>
     </ClCompile>
@@ -1692,9 +1689,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Source\FrequencyCaption.h">
-      <Filter>HiReSam\Source</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\HiReSamAudioProcessor.h">
       <Filter>HiReSam\Source</Filter>
     </ClInclude>

@@ -33,6 +33,14 @@ HiReSamAudioProcessorEditor::HiReSamAudioProcessorEditor (HiReSamAudioProcessor*
     renderThread.addTimeSliceClient (&spectroscope);
     renderThread.startThread (3);
     
+    header.setText("High Resolution Spectrum Analyse Meter", dontSendNotification);
+    Font headerFont = Font (18.0f);
+    header.setFont (headerFont);
+    header.setJustificationType(Justification::centred);
+    header.setColour (Label::textColourId, Colours::lightgoldenrodyellow);
+    header.setColour (Label::backgroundColourId, Colours::black);
+    
+    addAndMakeVisible (&header);
     addAndMakeVisible (&spectroscope);
     addAndMakeVisible (&pitchDetector);
 }
@@ -56,8 +64,10 @@ void HiReSamAudioProcessorEditor::paint (Graphics& g)
 
 void HiReSamAudioProcessorEditor::resized()
 {
-    spectroscope.setBounds (0, 0, getWidth(), getHeight());
-    pitchDetector.setBounds (0, 0, getWidth(), getHeight() - spectroscope.getHeightOfFrequencyCaption());
+    header.setBounds(0, 0, getWidth(), 24);
+    int spectroscopeY = header.getHeight();
+    spectroscope.setBounds (0, spectroscopeY, getWidth(), getHeight() - spectroscopeY);
+    pitchDetector.setBounds (0, spectroscopeY, getWidth(), getHeight() - spectroscopeY - spectroscope.getHeightOfFrequencyCaption());
 }
 
 void HiReSamAudioProcessorEditor::valueChanged (Value & value)

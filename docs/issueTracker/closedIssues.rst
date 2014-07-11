@@ -15,6 +15,12 @@ Closed issues
 =============
 
 
+Add the name of the plugin on top of its interface
+--------------------------------------------------
+
+Estimate: 40m
+
+
 Value pattern
 -------------
 
@@ -28,4 +34,4 @@ Make the FrequencyCaption a subclass of the Spectroscope.
 ---------------------------------------------------------
 
 estimate: 30m
-needed: 50m
+needed: 55m

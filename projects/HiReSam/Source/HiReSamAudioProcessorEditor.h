@@ -43,6 +43,7 @@ public:
     
 private:
     Value sampleRate;
+    Label header;
     TimeSliceThread renderThread;
     
     HiReSamAudioProcessor* getProcessor() const;

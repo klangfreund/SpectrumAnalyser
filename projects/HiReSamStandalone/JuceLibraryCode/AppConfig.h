@@ -34,7 +34,7 @@
 #endif
  */
 #ifndef  JucePlugin_Name
-#define JucePlugin_Name                   "HiReS Standalone"
+#define JucePlugin_Name                   "HiReSam Standalone"
 #endif
 /*
 #ifndef  JucePlugin_Desc
