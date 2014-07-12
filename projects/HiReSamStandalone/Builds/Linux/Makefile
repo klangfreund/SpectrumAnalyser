@@ -54,6 +54,7 @@ OBJECTS := \
   $(OBJDIR)/HiReSamAudioProcessor_eed54ffb.o \
   $(OBJDIR)/HiReSamAudioProcessorEditor_ec2f4288.o \
   $(OBJDIR)/PitchDetectorComponent_666b212d.o \
+  $(OBJDIR)/SamWithBubble_b793d5c5.o \
   $(OBJDIR)/Spectroscope_f2ebca74.o \
   $(OBJDIR)/Main_90ebc5c2.o \
   $(OBJDIR)/BinaryData_ce4232d4.o \
@@ -100,6 +101,11 @@ $(OBJDIR)/HiReSamAudioProcessorEditor_ec2f4288.o: ../../../HiReSam/Source/HiReSa
 $(OBJDIR)/PitchDetectorComponent_666b212d.o: ../../../HiReSam/Source/PitchDetectorComponent.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling PitchDetectorComponent.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/SamWithBubble_b793d5c5.o: ../../../HiReSam/Source/SamWithBubble.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling SamWithBubble.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/Spectroscope_f2ebca74.o: ../../../HiReSam/Source/Spectroscope.cpp

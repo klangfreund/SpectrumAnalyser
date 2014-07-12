@@ -13,8 +13,9 @@
 
 #include "HiReSamHeader.h"
 #include "HiReSamAudioProcessor.h"
-#include "Spectroscope.h"
 #include "PitchDetectorComponent.h"
+#include "SamWithBubble.h"
+#include "Spectroscope.h"
 
 
 //==============================================================================
@@ -45,7 +46,7 @@ private:
     Value sampleRate;
     Label header;
     TimeSliceThread renderThread;
-    Path bubblePath;
+    SamWithBubble samWithBubble;
     
     HiReSamAudioProcessor* getProcessor() const;
 };

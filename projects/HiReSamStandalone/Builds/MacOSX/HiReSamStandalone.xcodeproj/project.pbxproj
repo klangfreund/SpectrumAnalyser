@@ -20,6 +20,7 @@
 		369B64C507B9A683031B5F11 = {isa = PBXBuildFile; fileRef = 72336D42608A2720B5D8E1E7; };
 		2B9F735C01C419BB1373217E = {isa = PBXBuildFile; fileRef = F196E01CF60299E7A9DB98F0; };
 		931BE7491495B80C986A32B1 = {isa = PBXBuildFile; fileRef = F1E48BD494D24235E3740FB5; };
+		D2F6A7DFFE73975BD627D7D3 = {isa = PBXBuildFile; fileRef = 249598E25D5D85DC105057B9; };
 		B0A7CC2E4BFF9299E0654D32 = {isa = PBXBuildFile; fileRef = AB015D05580CA1F738E7CA5E; };
 		FA28A3ABADCCE438680C65D4 = {isa = PBXBuildFile; fileRef = 96B07A1F0F2619B9E312BD41; };
 		28C9D85835EFD4200C11179F = {isa = PBXBuildFile; fileRef = 0E75EE9A5D65EAD29C031DA4; };
@@ -164,6 +165,7 @@
 		233338C15B5FA20BD4AEDD16 = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = "juce_ApplicationCommandManager.cpp"; path = "../../../HiReSam/JuceLibraryCode/modules/juce_gui_basics/commands/juce_ApplicationCommandManager.cpp"; sourceTree = "SOURCE_ROOT"; };
 		2364D5DFC5D6BCC8E337AD14 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_ImageConvolutionKernel.h"; path = "../../../HiReSam/JuceLibraryCode/modules/juce_graphics/images/juce_ImageConvolutionKernel.h"; sourceTree = "SOURCE_ROOT"; };
 		23E458D38281A38C9A4F582C = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_MenuBarModel.h"; path = "../../../HiReSam/JuceLibraryCode/modules/juce_gui_basics/menus/juce_MenuBarModel.h"; sourceTree = "SOURCE_ROOT"; };
+		249598E25D5D85DC105057B9 = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = SamWithBubble.cpp; path = ../../../HiReSam/Source/SamWithBubble.cpp; sourceTree = "SOURCE_ROOT"; };
 		24BBAC323F5DD525AD9BAD61 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_RelativeParallelogram.h"; path = "../../../HiReSam/JuceLibraryCode/modules/juce_gui_basics/positioning/juce_RelativeParallelogram.h"; sourceTree = "SOURCE_ROOT"; };
 		24F31A495D8E32B385A69C62 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_win32_ComSmartPtr.h"; path = "../../../HiReSam/JuceLibraryCode/modules/juce_core/native/juce_win32_ComSmartPtr.h"; sourceTree = "SOURCE_ROOT"; };
 		2503233E2B33C8526F435CB3 = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = "juce_mac_SystemStats.mm"; path = "../../../HiReSam/JuceLibraryCode/modules/juce_core/native/juce_mac_SystemStats.mm"; sourceTree = "SOURCE_ROOT"; };
@@ -783,6 +785,7 @@
 		CD50D2983C81C059FEE2D623 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_win32_HiddenMessageWindow.h"; path = "../../../HiReSam/JuceLibraryCode/modules/juce_events/native/juce_win32_HiddenMessageWindow.h"; sourceTree = "SOURCE_ROOT"; };
 		CD89AAA9700ADA57AD5901F7 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_MACAddress.h"; path = "../../../HiReSam/JuceLibraryCode/modules/juce_core/network/juce_MACAddress.h"; sourceTree = "SOURCE_ROOT"; };
 		CDD04A806FF31A910F9BB1D2 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "juce_data_structures.h"; path = "../../../HiReSam/JuceLibraryCode/modules/juce_data_structures/juce_data_structures.h"; sourceTree = "SOURCE_ROOT"; };
+		CE0BB705F79547316DF86240 = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SamWithBubble.h; path = ../../../HiReSam/Source/SamWithBubble.h; sourceTree = "SOURCE_ROOT"; };
 		CE4D0096A48660D43F12DA2F = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = "juce_ImageFileFormat.cpp"; path = "../../../HiReSam/JuceLibraryCode/modules/juce_graphics/images/juce_ImageFileFormat.cpp"; sourceTree = "SOURCE_ROOT"; };
 		CE893DC8F03DC8D976F6EEF0 = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = "juce_android_Messaging.cpp"; path = "../../../HiReSam/JuceLibraryCode/modules/juce_events/native/juce_android_Messaging.cpp"; sourceTree = "SOURCE_ROOT"; };
 		CE93AC0617679876A1388A25 = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = "dRowAudio_SoundTouchAudioSource.cpp"; path = "../../../HiReSam/JuceLibraryCode/modules/dRowAudio/dRowAudio/audio/dRowAudio_SoundTouchAudioSource.cpp"; sourceTree = "SOURCE_ROOT"; };
@@ -998,6 +1001,8 @@
 					409B28F024074780BA9ACBA6,
 					F1E48BD494D24235E3740FB5,
 					E474E5A8789402D8EAE1F2C2,
+					249598E25D5D85DC105057B9,
+					CE0BB705F79547316DF86240,
 					AB015D05580CA1F738E7CA5E,
 					EF1215909D043E9F1DB637F7, ); name = "Source HiReSam"; sourceTree = "<group>"; };
 		93880B471F27F78F913526BB = {isa = PBXGroup; children = (
@@ -2249,6 +2254,7 @@
 					369B64C507B9A683031B5F11,
 					2B9F735C01C419BB1373217E,
 					931BE7491495B80C986A32B1,
+					D2F6A7DFFE73975BD627D7D3,
 					B0A7CC2E4BFF9299E0654D32,
 					FA28A3ABADCCE438680C65D4,
 					28C9D85835EFD4200C11179F,

@@ -22,6 +22,9 @@
             file="../HiReSam/Source/PitchDetectorComponent.cpp"/>
       <FILE id="gMLmpc" name="PitchDetectorComponent.h" compile="0" resource="0"
             file="../HiReSam/Source/PitchDetectorComponent.h"/>
+      <FILE id="SEvMqt" name="SamWithBubble.cpp" compile="1" resource="0"
+            file="../HiReSam/Source/SamWithBubble.cpp"/>
+      <FILE id="b8n5YF" name="SamWithBubble.h" compile="0" resource="0" file="../HiReSam/Source/SamWithBubble.h"/>
       <FILE id="H1McvA" name="Spectroscope.cpp" compile="1" resource="0"
             file="../HiReSam/Source/Spectroscope.cpp"/>
       <FILE id="WPg7Ko" name="Spectroscope.h" compile="0" resource="0" file="../HiReSam/Source/Spectroscope.h"/>
