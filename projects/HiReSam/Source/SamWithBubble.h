@@ -24,9 +24,11 @@ public:
 
     void paint (Graphics&);
     void resized();
+    void referToFrequencyTextValue (const Value & valueToReferTo);
 
 private:
     Path bubblePath;
+    Label pitchLabel;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SamWithBubble)
 };

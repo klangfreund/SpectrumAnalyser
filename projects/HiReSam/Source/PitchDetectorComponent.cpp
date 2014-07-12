@@ -12,14 +12,12 @@
 
 //==============================================================================
 PitchDetectorComponent::PitchDetectorComponent()
-    : sampleRate (44100.0),
-      pitch (0.0),
-      sampleBuffer (1, 512)
+    : sampleRate {44100.0},
+      pitch {0},
+      sampleBuffer (1, 512),
+      pitchTextValue ("0 Hz ()")
 {
-    addAndMakeVisible (&pitchLabel);
-    pitchLabel.setColour (Label::textColourId, Colours::green);
-    
-    pitchDetector.setMinMaxFrequency(20, 20000);
+    pitchDetector.setMinMaxFrequency (20, 20000);
     
     startTimer (25);
 }
@@ -36,16 +34,15 @@ void PitchDetectorComponent::paint (Graphics& g)
 
 void PitchDetectorComponent::resized()
 {
-    pitchLabel.setBounds (getLocalBounds().removeFromTop (20).removeFromRight (150));
 }
 
 void PitchDetectorComponent::timerCallback()
 {
-    pitchString = String (pitch, 2);
+    pitchString = String (pitch);
     pitchString << " Hz" << " (" << drow::Pitch::fromFrequency (pitch).getMidiNoteName() << ")";
-    pitchLabel.setText (pitchString, dontSendNotification);
+    pitchTextValue = pitchString;
 
-    const double proportion = pitch / (sampleRate / 2);
+    const double proportion = pitch / (sampleRate / 2.0);
     const int w = getWidth();
     pitchXCoord = roundToInt (logTransformInRange0to1 (proportion) * w);
 
@@ -70,4 +67,9 @@ void PitchDetectorComponent::processBlock (const float* inputChannelData, int nu
     const ScopedLock sl (detectorLock);
     pitchDetector.processSamples (inputChannelData, numSamples);
     pitch = pitchDetector.getPitch();
+}
+
+Value& PitchDetectorComponent::getPitchTextValue()
+{
+    return pitchTextValue;
 }

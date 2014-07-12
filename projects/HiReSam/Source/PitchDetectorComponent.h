@@ -35,16 +35,19 @@ public:
     void setSampleRate (double newSampleRate);
     
     void processBlock (const float* inputChannelData, int numSamples);
+    
+    Value& getPitchTextValue();
 
 private:
 	//==============================================================================
-    double sampleRate, pitch;
+    double sampleRate;
+    int pitch;
     AudioSampleBuffer sampleBuffer;
     drow::PitchDetector pitchDetector;
 
     drow::StateVariable<int> pitchXCoord;
     String pitchString;
-    Label pitchLabel;
+    Value pitchTextValue;
     
     CriticalSection detectorLock;
     

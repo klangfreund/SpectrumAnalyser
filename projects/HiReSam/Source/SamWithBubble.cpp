@@ -14,9 +14,12 @@
 //==============================================================================
 SamWithBubble::SamWithBubble()
 {
-    // In your constructor, you should add any child components, and
-    // initialise any special settings that your component needs.
-
+    pitchLabel.setColour (Label::textColourId, Colours::lightgoldenrodyellow);
+//    pitchLabel.setColour (Label::backgroundColourId, Colours::red);
+    Font pitchLabelFont = Font (18.0f);
+    pitchLabel.setFont (pitchLabelFont);
+    pitchLabel.setJustificationType(Justification::horizontallyCentred);
+    addAndMakeVisible (&pitchLabel);
 }
 
 SamWithBubble::~SamWithBubble()
@@ -40,14 +43,17 @@ void SamWithBubble::paint (Graphics& g)
     g.strokePath (bubblePath, PathStrokeType (5.200f));
 
     // bubble text
+    pitchLabel.setBounds (40, 60, getWidth() - 80, 20);
+    
     g.setColour (Colours::lightgoldenrodyellow);
     g.setFont (17.0f);
     Rectangle<int> bubblePathBounds = bubblePath.getBounds().getSmallestIntegerContainer();
-    bubblePathBounds.removeFromTop (40);
-    bubblePathBounds.removeFromLeft(20);
-    const int maximumNumberOfLines = 5;
-    const String bubbleText = String("todo\n\n") + "Zu viel Arbeit? Ich kann helfen.\n" + "078 624 68 64\n" + "sam@klangfreund.com";
+    bubblePathBounds.removeFromTop (80);
+    bubblePathBounds.removeFromLeft (20);
+    const int maximumNumberOfLines = 3;
+    const String bubbleText = String("Zu viel Arbeit? Ich helfe gerne.\n") + "078 624 68 64\n" + "sam@klangfreund.com";
     g.drawFittedText(bubbleText, bubblePathBounds, Justification::horizontallyCentred, maximumNumberOfLines);
+
     
     //    g.setColour (Colours::black);
     //    g.setFont (15.0f);
@@ -78,7 +84,7 @@ void SamWithBubble::resized()
     //    bubblePath.quadraticTo (96.0f, 136.0f, 136.0f, 80.0f);
     //    bubblePath.closeSubPath();
     float mostRight = getWidth() - 10.0f;
-    float width = getWidth() - 30.0f; // 336
+    float width = getWidth() - 30.0f;
     bubblePath.startNewSubPath (mostRight - width, 80.0f);
     bubblePath.quadraticTo (mostRight - 0.881f * width, 24.0f, mostRight - 0.429f * width, 32.0f);
     bubblePath.quadraticTo (mostRight, 40.0f, mostRight, 104.0f);
@@ -87,4 +93,9 @@ void SamWithBubble::resized()
     bubblePath.lineTo (mostRight - 0.810f * width, 168.0f);
     bubblePath.quadraticTo (mostRight - 1.119f * width, 136.0f, mostRight - width, 80.0f);
     bubblePath.closeSubPath();
+}
+
+void SamWithBubble::referToFrequencyTextValue (const Value & valueToReferTo)
+{
+    pitchLabel.getTextValue().referTo(valueToReferTo);
 }

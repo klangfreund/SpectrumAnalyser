@@ -40,6 +40,8 @@ HiReSamAudioProcessorEditor::HiReSamAudioProcessorEditor (HiReSamAudioProcessor*
     header.setColour (Label::textColourId, Colours::lightgoldenrodyellow);
     header.setColour (Label::backgroundColourId, Colours::black);
     
+    samWithBubble.referToFrequencyTextValue (pitchDetector.getPitchTextValue());
+    
     addAndMakeVisible (&header);
     addAndMakeVisible (&spectroscope);
     addAndMakeVisible (&pitchDetector);
