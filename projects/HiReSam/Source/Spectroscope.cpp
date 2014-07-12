@@ -171,7 +171,8 @@ void Spectroscope::renderScopeImage()
         // The path which will be the border of the filled area.
         Path spectrumPath;
         // Add the top left point.
-        const float yInPercent = float (1 + (drow::toDecibels (data[0]) / 100.0f));
+// NOTE TO DAVE96: Ensure that only values > 0 are passed to your drow::toDecibels().
+        const float yInPercent = data[0]>0 ? float (1 + (drow::toDecibels (data[0]) / 100.0f)) : -0.01;
         y = h - h * yInPercent;
         // No coordinate should be NaN
         jassert (x == x && y == y);
@@ -181,11 +182,8 @@ void Spectroscope::renderScopeImage()
         {
 // NOTE TO DAVE96: Same as above.
             x = logTransformInRange0to1 ((i + 1.0f) / numBins) * w;
-            const float yInPercent = float (1 + (drow::toDecibels (data[i]) / 100.0f));
+            const float yInPercent = data[i]>0 ? float (1 + (drow::toDecibels (data[i]) / 100.0f)) : -0.01;
             y = h - h * yInPercent;
-            
-            // No coordinate should be NaN
-            jassert (x == x && y == y);
             
             spectrumPath.lineTo(x, y);
             
