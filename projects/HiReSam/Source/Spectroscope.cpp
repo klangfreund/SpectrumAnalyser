@@ -47,7 +47,9 @@ Spectroscope::Spectroscope (int fftSizeLog2)
     needsRepaint              {true},
 	tempBlock                 (fftEngine.getFFTSize()),
 	circularBuffer            (fftEngine.getMagnitudesBuffer().getSize() * 4),
-    heightForFrequencyCaption {20}
+    heightForFrequencyCaption {20},
+    gradientImage             (Image::RGB, 100, 100, false),
+    scopeImage                (Image::RGB, 100, 100, false)
 {
 // TODO: Is this ok?
 	setOpaque (true);
@@ -57,9 +59,7 @@ Spectroscope::Spectroscope (int fftSizeLog2)
     
     circularBuffer.reset();
     
-    scopeImage = Image (Image::RGB,
-                        100, 100,
-                        false);
+    gradientImage.clear (scopeImage.getBounds(), Colours::black);
     scopeImage.clear (scopeImage.getBounds(), Colours::black);
     
     addAndMakeVisible (&frequencyCaption);
@@ -71,6 +71,9 @@ Spectroscope::~Spectroscope()
 
 void Spectroscope::resized()
 {
+    gradientImage = gradientImage.rescaled (jmax (1, getWidth()), jmax (1, getHeight() - heightForFrequencyCaption));
+    createGradientImage();
+    
     scopeImage = scopeImage.rescaled (jmax (1, getWidth()), jmax (1, getHeight() - heightForFrequencyCaption));
 
     frequencyCaption.setBounds (0, getHeight() - heightForFrequencyCaption,
@@ -133,6 +136,14 @@ void Spectroscope::flagForRepaint()
 }
 
 //==============================================================================
+void Spectroscope::createGradientImage()
+{
+    Graphics g (gradientImage);
+    ColourGradient gradient (Colours::darkgreen, 0.0f, 0.8f * gradientImage.getHeight(), Colours::black, 0.0f, gradientImage.getHeight(), false);
+    g.setGradientFill(gradient);
+    g.fillAll();
+}
+
 void Spectroscope::renderScopeImage()
 {
     if (needsRepaint)
@@ -205,10 +216,8 @@ void Spectroscope::renderScopeImage()
         spectrumPath.closeSubPath();
         
         // Draw the graph.
-        ColourGradient gradient (Colours::darkgreen, 0.0f, 0.8f * getHeight(), Colours::black, 0.0f, getHeight(), false);
-        g.setGradientFill(gradient);
-        g.setOpacity(0.6f);
-        //g.setColour (Colours::green.withAlpha(0.8f));
+        const float opacity = 0.6f;
+        g.setTiledImageFill(gradientImage, 0, 0, opacity);
         g.fillPath(spectrumPath);
 		
 		needsRepaint = false;

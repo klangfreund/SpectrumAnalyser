@@ -40,7 +40,7 @@ void SamWithBubble::paint (Graphics& g)
     g.fillPath (bubblePath);
 //    g.setColour (Colour (0xff6f6f6f));
     g.setColour (Colours::lightgoldenrodyellow);
-    g.strokePath (bubblePath, PathStrokeType (5.200f));
+    g.strokePath (bubblePath, PathStrokeType (3.500f));
 
     // bubble text
     pitchLabel.setBounds (40, 60, getWidth() - 80, 20);

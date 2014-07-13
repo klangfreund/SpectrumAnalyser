@@ -6,6 +6,34 @@ HiReSam - closed issues
 Closed issues
 =============
 
+Buffer the gradient to fill the spectroscope in an image
+--------------------------------------------------------
+
+Hint: Search for setGradientFill in the JuceDemo
+
+Estimated: 3600s
+
+
+Display the frequency in the balloon when the mouse is over the Spectroscope
+----------------------------------------------------------------------------
+
+Estimated: 1h
+Measured: 3005s
+
+
+Draw a vertical line when the mouse is over the Spectroscope
+------------------------------------------------------------
+
+Estimate: 1800
+Measured: 3578
+
+I tried to add it to the Spectroscope, but strangely, mouseMove
+is never called. S.t. in its base class drow::GraphicalComponent
+might prevent this call.
+-> Ask Dave.
+It is now implemented in the PitchDetectorComponent.
+
+
 Move the pitch detector label to the bubble.
 --------------------------------------------
 

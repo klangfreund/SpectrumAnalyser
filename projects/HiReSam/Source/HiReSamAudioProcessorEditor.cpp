@@ -20,7 +20,7 @@ HiReSamAudioProcessorEditor::HiReSamAudioProcessorEditor (HiReSamAudioProcessor*
 
 {
     // The plugin's initial editor size.
-    setSize (900, 500);
+    setSize (1000, 400);
     
     sampleRate.addListener (this);
     // The sampleRate has already been set in the HiReSamAudioProcessor before

@@ -120,8 +120,10 @@ private:
     FrequencyCaption frequencyCaption;
     int heightForFrequencyCaption;
 	
+    Image gradientImage;
     Image scopeImage;
     
+    void createGradientImage();
     void renderScopeImage();
     
     //==============================================================================
