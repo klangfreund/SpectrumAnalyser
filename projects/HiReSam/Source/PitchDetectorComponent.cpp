@@ -110,8 +110,9 @@ void PitchDetectorComponent::setPitchTextValue (int pitch)
 {
     pitchString = String (pitch);
     pitchString << " Hz";
-    if (pitch > 0)
+    if (pitch > 7) // At 7 Hz, the function below returns "-1" where a letter in front of it is missing.
     {
+// TO DAVE: At 7 Hz, the function below returns "-1" where a letter in front of it is missing.
         pitchString << " (" << drow::Pitch::fromFrequency (pitch).getMidiNoteName() << ")";
     }
     pitchTextValue = pitchString;
