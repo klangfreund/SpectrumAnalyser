@@ -10,7 +10,7 @@ Open issues / Roadmap
 Mouse -> Frequency in the balloon
 ---------------------------------
 
-Estimated: 2h
+Estimated: 1h
 Measured: 
 
 

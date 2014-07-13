@@ -54,10 +54,12 @@ private:
     drow::StateVariable<int> pitchXCoord;
     String pitchString;
     Value pitchTextValue;
-    bool drawMousePosition;
+    bool mouseMode;
     int mouseXPosition;
     
     CriticalSection detectorLock;
+    
+    void inline setPitchTextValue (int pitch);
     
 	//==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PitchDetectorComponent)
