@@ -25,7 +25,7 @@ public:
     void paint (Graphics&);
     void resized();
     void referToFrequencyTextValue (const Value & valueToReferTo);
-
+    
 private:
     Path bubblePath;
     Label pitchLabel;

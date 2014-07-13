@@ -49,7 +49,7 @@ Spectroscope::Spectroscope (int fftSizeLog2)
 	circularBuffer            (fftEngine.getMagnitudesBuffer().getSize() * 4),
     heightForFrequencyCaption {20}
 {
-// TODO: Should be false!
+// TODO: Is this ok?
 	setOpaque (true);
 
 	fftEngine.setWindowType (drow::Window::Hann);

@@ -37,6 +37,12 @@ public:
     void processBlock (const float* inputChannelData, int numSamples);
     
     Value& getPitchTextValue();
+    
+    void mouseEnter (const MouseEvent &event) override;
+    
+    void mouseMove (const MouseEvent &event) override;
+    
+    void mouseExit (const MouseEvent &event) override;
 
 private:
 	//==============================================================================
@@ -48,6 +54,8 @@ private:
     drow::StateVariable<int> pitchXCoord;
     String pitchString;
     Value pitchTextValue;
+    bool drawMousePosition;
+    int mouseXPosition;
     
     CriticalSection detectorLock;
     

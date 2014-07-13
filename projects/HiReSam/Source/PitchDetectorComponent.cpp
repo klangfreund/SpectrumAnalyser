@@ -15,7 +15,9 @@ PitchDetectorComponent::PitchDetectorComponent()
     : sampleRate {44100.0},
       pitch {0},
       sampleBuffer (1, 512),
-      pitchTextValue ("0 Hz ()")
+      pitchTextValue ("0 Hz ()"),
+      drawMousePosition {true},
+      mouseXPosition {0}
 {
     pitchDetector.setMinMaxFrequency (20, 20000);
     
@@ -30,6 +32,13 @@ void PitchDetectorComponent::paint (Graphics& g)
 {
     g.setColour (Colours::green);
     g.drawVerticalLine (pitchXCoord.getCurrent(), 0.0f, (float) getHeight());
+    
+    // Draw a vertical line at the mouse position
+    if (drawMousePosition)
+    {
+        g.setColour (Colours::lightgoldenrodyellow);
+        g.drawVerticalLine(mouseXPosition, 0, getHeight());
+    }
 }
 
 void PitchDetectorComponent::resized()
@@ -72,4 +81,19 @@ void PitchDetectorComponent::processBlock (const float* inputChannelData, int nu
 Value& PitchDetectorComponent::getPitchTextValue()
 {
     return pitchTextValue;
+}
+
+void PitchDetectorComponent::mouseEnter (const MouseEvent &event)
+{
+    drawMousePosition = true;
+}
+
+void PitchDetectorComponent::mouseMove (const MouseEvent &event)
+{
+    mouseXPosition = event.getPosition().getX();
+}
+
+void PitchDetectorComponent::mouseExit (const MouseEvent &event)
+{
+    drawMousePosition = false;
 }

@@ -58,10 +58,10 @@ public:
 	~Spectroscope();
 	
     /** @internal */
-	void resized();
+	void resized() override;
 	
     /** @internal */
-	void paint (Graphics &g);
+	void paint (Graphics &g) override;
 
     //==============================================================================
     void setSampleRate (double newSampleRate);
@@ -76,7 +76,7 @@ public:
     int getHeightOfFrequencyCaption();
 
     /** @internal */
-	void timerCallback();
+	void timerCallback() override;
 	
     /** @internal */
 	void process();
