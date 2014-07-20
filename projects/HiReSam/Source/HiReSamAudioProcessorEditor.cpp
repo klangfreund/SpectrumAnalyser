@@ -62,6 +62,13 @@ void HiReSamAudioProcessorEditor::paint (Graphics& g)
 
 void HiReSamAudioProcessorEditor::resized()
 {
+    const int minWidth = 360;
+    const int minHeight = 320;
+    if (getWidth() < minWidth || getHeight() < minHeight)
+    {
+        setSize (jmax (minWidth, getWidth()), jmax (minHeight, getHeight()));
+    }
+    
     header.setBounds(0, 0, getWidth(), 24);
     
     const int minimalWithForSpectroscope = 120;

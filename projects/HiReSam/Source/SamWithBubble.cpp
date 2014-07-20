@@ -51,7 +51,7 @@ void SamWithBubble::paint (Graphics& g)
     bubblePathBounds.removeFromTop (80);
     bubblePathBounds.removeFromLeft (20);
     const int maximumNumberOfLines = 3;
-    const String bubbleText = String("Zu viel Arbeit? Ich helfe gerne.\n") + "078 624 68 64\n" + "sam@klangfreund.com";
+    const String bubbleText = String("Zu viel Arbeit? Plugin Ideen?\n") + "078 624 68 64\n" + "sam@klangfreund.com";
     g.drawFittedText(bubbleText, bubblePathBounds, Justification::horizontallyCentred, maximumNumberOfLines);
 
     
