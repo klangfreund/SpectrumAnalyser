@@ -11,23 +11,25 @@
 #ifndef HIRESAMHEADER_H_INCLUDED
 #define HIRESAMHEADER_H_INCLUDED
 
-#include "../JuceLibraryCode/JuceHeader.h"
+// Preprocessor definitions
+// ------------------------
+// Must be placed before the inclusion of the Juce header, because e.g.
+// JUCE_ENABLE_LIVE_CONSTANT_EDITOR will be defined there if not already
+// defined.
 
-// Preprocessor business
-// ---------------------
-
-// The DEBUG flag enables JUCE_DEBUG.
-// JUCE_DEBUG enables JUCE_ENABLE_LIVE_CONSTANT_EDITOR.
-// Therefore you can't turn off the live constant editor in debug mode
-// by not defining JUCE_ENABLE_LIVE_CONSTANT_EDITOR.
-//
-// An ugly hack (= redefinition) to disable the LIVE_CONSTANT_EDITOR.
-#define JUCE_LIVE_CONSTANT(initialValue) \
-initialValue
+#ifndef    JUCE_ENABLE_LIVE_CONSTANT_EDITOR
+  #define JUCE_ENABLE_LIVE_CONSTANT_EDITOR 0
+#endif
 
 #ifndef    JUCE_ENABLE_REPAINT_DEBUGGING
   //#define JUCE_ENABLE_REPAINT_DEBUGGING 1
 #endif
+
+//==============================================================================
+
+#include "../JuceLibraryCode/JuceHeader.h"
+
+//==============================================================================
 
 // Helper Functions
 // ----------------
@@ -52,8 +54,6 @@ inline float expTransformInRange0to1 (const float between0and1)
     const float maximum = JUCE_LIVE_CONSTANT (1000.0f);
     return (pow(maximum, between0and1) - minimum) / (maximum - minimum);
 }
-
-
 
 
 #endif  // HIRESAMHEADER_H_INCLUDED

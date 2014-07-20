@@ -12,6 +12,7 @@ Buffer the gradient to fill the spectroscope in an image
 Hint: Search for setGradientFill in the JuceDemo
 
 Estimated: 3600s
+Measured:  1380s
 
 
 Display the frequency in the balloon when the mouse is over the Spectroscope

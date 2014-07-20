@@ -349,6 +349,9 @@
     <ClCompile Include="..\..\Source\PitchDetectorComponent.cpp">
       <Filter>HiReSam\Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\SamWithBubble.cpp">
+      <Filter>HiReSam\Source</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\Spectroscope.cpp">
       <Filter>HiReSam\Source</Filter>
     </ClCompile>
@@ -1705,6 +1708,9 @@
       <Filter>HiReSam\Source</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\PitchDetectorComponent.h">
+      <Filter>HiReSam\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\SamWithBubble.h">
       <Filter>HiReSam\Source</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Spectroscope.h">

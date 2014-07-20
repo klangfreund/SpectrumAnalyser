@@ -28,6 +28,9 @@
             file="Source/PitchDetectorComponent.cpp"/>
       <FILE id="jGz2Ej" name="PitchDetectorComponent.h" compile="0" resource="0"
             file="Source/PitchDetectorComponent.h"/>
+      <FILE id="Dt1MEh" name="SamWithBubble.cpp" compile="1" resource="0"
+            file="Source/SamWithBubble.cpp"/>
+      <FILE id="LrN9Zp" name="SamWithBubble.h" compile="0" resource="0" file="Source/SamWithBubble.h"/>
       <FILE id="utRyoO" name="Spectroscope.cpp" compile="1" resource="0"
             file="Source/Spectroscope.cpp"/>
       <FILE id="PTgSw5" name="Spectroscope.h" compile="0" resource="0" file="Source/Spectroscope.h"/>
