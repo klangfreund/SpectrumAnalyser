@@ -15,7 +15,7 @@
 #include "HiReSamAudioProcessor.h"
 #include "PitchDetectorComponent.h"
 #include "SamWithBubble.h"
-#include "Spectroscope.h"
+#include "SpectrumViewer.h"
 
 
 //==============================================================================
@@ -25,7 +25,9 @@ class HiReSamAudioProcessorEditor  : public AudioProcessorEditor,
                                      public Value::Listener
 {
 public:
-    HiReSamAudioProcessorEditor (HiReSamAudioProcessor* ownerFilter);
+    HiReSamAudioProcessorEditor (HiReSamAudioProcessor* ownerFilter,
+                                 Value& repaintSpectrumViewerValue,
+                                 drow::Buffer& spectrumMagnitudeBuffer);
     ~HiReSamAudioProcessorEditor();
 
     //==============================================================================
@@ -37,15 +39,14 @@ public:
     /** The value listener method. */
     void valueChanged (Value & value);
     
-    // They are public because the HiReSamAudioProcessor needs to access them in
+    // Public because the HiReSamAudioProcessor needs to access them in
     // its processBlock to transfer the samples.
-    Spectroscope spectroscope;
     PitchDetectorComponent pitchDetector;
     
 private:
+    SpectrumViewer spectrumViewer;
     Value sampleRate;
     Label header;
-    TimeSliceThread renderThread;
     SamWithBubble samWithBubble;
     
     HiReSamAudioProcessor* getProcessor() const;

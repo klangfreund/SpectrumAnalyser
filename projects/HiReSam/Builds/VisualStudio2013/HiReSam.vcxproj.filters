@@ -352,7 +352,10 @@
     <ClCompile Include="..\..\Source\SamWithBubble.cpp">
       <Filter>HiReSam\Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Spectroscope.cpp">
+    <ClCompile Include="..\..\Source\SpectrumProcessor.cpp">
+      <Filter>HiReSam\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\SpectrumViewer.cpp">
       <Filter>HiReSam\Source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\JuceLibraryCode\modules\dRowAudio\dRowAudio\audio\dRowAudio_AudioFilePlayer.cpp">
@@ -1713,7 +1716,10 @@
     <ClInclude Include="..\..\Source\SamWithBubble.h">
       <Filter>HiReSam\Source</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Spectroscope.h">
+    <ClInclude Include="..\..\Source\SpectrumProcessor.h">
+      <Filter>HiReSam\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\SpectrumViewer.h">
       <Filter>HiReSam\Source</Filter>
     </ClInclude>
     <ClInclude Include="..\..\JuceLibraryCode\modules\dRowAudio\dRowAudio\audio\dRowAudio_AudioFilePlayer.h">

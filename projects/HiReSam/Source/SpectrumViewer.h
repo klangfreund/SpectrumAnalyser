@@ -29,8 +29,8 @@
   ==============================================================================
 */
 
-#ifndef __SPECTROSCOPE_H__
-#define __SPECTROSCOPE_H__
+#ifndef SPECTRUM_VIEWER_H__
+#define SPECTRUM_VIEWER_H__
 
 #include "HiReSamHeader.h"
 
@@ -44,7 +44,8 @@
     with a TimeSliceThread, make sure its running and then continually call the
     copySamples() method. The FFT itself will be performed on a background thread.
  */
-class Spectroscope : public drow::GraphicalComponent
+class SpectrumViewer :  public Component,
+                        public Timer
 {
 public:
     //==============================================================================
@@ -52,10 +53,11 @@ public:
         Note that the fft size given here is log2 of the FFT size so for example,
         a 1024 size fft use 10.
      */
-	Spectroscope (int fftSizeLog2);
+	SpectrumViewer (Value& repaintViewerValue,
+                    drow::Buffer& magnitudeBuffer);
 	
     /** Destructor. */
-	~Spectroscope();
+	~SpectrumViewer();
 	
     /** @internal */
 	void resized() override;
@@ -66,23 +68,11 @@ public:
     //==============================================================================
     void setSampleRate (double newSampleRate);
     
-	/** Copy a set of samples, ready to be processed.
-        Your audio callback should continually call this method to pass it its
-        audio data. When the scope has enough samples to perform an fft it will do
-        so on a background thread and redraw itself.
-     */
-	void copySamples (const float* samples, int numSamples);
-    
     int getHeightOfFrequencyCaption();
 
     /** @internal */
 	void timerCallback() override;
 	
-    /** @internal */
-	void process();
-	
-    /** @internal */
-	void flagForRepaint();
 
 private:
     //==============================================================================
@@ -90,11 +80,8 @@ private:
     static const int numberOfFrequenciesToPlot;
     
     double sampleRate;
-    drow::FFTEngine fftEngine;
-	int numBins;
-	bool needsRepaint;
-	HeapBlock<float> tempBlock;			
-    drow::FifoBuffer<float> circularBuffer;
+    Value repaintViewer;
+    drow::Buffer& fftMagnitudeBuffer;
     
     //==============================================================================
     /*  The numbers below the graph, indication the frequency.
@@ -127,8 +114,8 @@ private:
     void renderScopeImage();
     
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Spectroscope);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SpectrumViewer);
 };
 
 #endif
-#endif  // __DROWAUDIO_SPECTROSCOPE_H__
+#endif  // SPECTRUM_VIEWER_H__

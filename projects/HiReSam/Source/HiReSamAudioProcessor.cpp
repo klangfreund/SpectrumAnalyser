@@ -14,13 +14,18 @@
 
 //==============================================================================
 HiReSamAudioProcessor::HiReSamAudioProcessor()
-    : sampleRate {44100.0},
-      hiReSamAudioProcessorEditor {nullptr}
+  : sampleRate {44100.0},
+    renderThread("FFT Render Thread"),
+    spectrumProcessor(11) // FFT Size of 2^11 = 2048
 {
+    renderThread.addTimeSliceClient (&spectrumProcessor);
+    renderThread.startThread (3);
 }
 
 HiReSamAudioProcessor::~HiReSamAudioProcessor()
 {
+    renderThread.removeTimeSliceClient (&spectrumProcessor);
+    renderThread.stopThread (500);
 }
 
 //==============================================================================
@@ -127,10 +132,8 @@ void HiReSamAudioProcessor::changeProgramName (int index, const String& newName)
 //==============================================================================
 void HiReSamAudioProcessor::prepareToPlay (double newSampleRate, int samplesPerBlock)
 {
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
-    
     sampleRate = newSampleRate;
+    spectrumProcessor.setSampleRate (newSampleRate);
 }
 
 void HiReSamAudioProcessor::releaseResources()
@@ -141,17 +144,15 @@ void HiReSamAudioProcessor::releaseResources()
 
 void HiReSamAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
     for (int channel = 0; channel < getNumInputChannels(); ++channel)
     {
         float* channelData = buffer.getWritePointer (channel);
 
-        if (hiReSamAudioProcessorEditor != nullptr
+        // Only proceed if the editor is visible.
+        if (getActiveEditor() != nullptr
             && channel == 0)
         {
-            hiReSamAudioProcessorEditor->spectroscope.copySamples(channelData, buffer.getNumSamples());
-            hiReSamAudioProcessorEditor->pitchDetector.processBlock (channelData, buffer.getNumSamples());
+            spectrumProcessor.copySamples(channelData, buffer.getNumSamples());
         }
     }
 
@@ -172,8 +173,9 @@ bool HiReSamAudioProcessor::hasEditor() const
 
 AudioProcessorEditor* HiReSamAudioProcessor::createEditor()
 {
-    hiReSamAudioProcessorEditor = new HiReSamAudioProcessorEditor (this);
-    return hiReSamAudioProcessorEditor;
+    return new HiReSamAudioProcessorEditor (this,
+                                            spectrumProcessor.getRepaintViewerValue(),
+                                            spectrumProcessor.getMagnitudesBuffer());
 }
 
 //==============================================================================

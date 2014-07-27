@@ -1,10 +1,8 @@
-HiReSam - closed issues
-***********************
-
 .. author: Samuel Gaehwiler (klangfreund.com)
 
-Closed issues
-=============
+HiReSam - Closed issues
+=======================
+
 
 Buffer the gradient to fill the spectroscope in an image
 --------------------------------------------------------

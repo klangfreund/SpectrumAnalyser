@@ -3,7 +3,7 @@
 <JUCERPROJECT id="cGKuIL" name="HiReSam" projectType="audioplug" version="0.1.0"
               bundleIdentifier="com.yourcompany.HiReMe" includeBinaryInAppConfig="1"
               buildVST="1" buildVST3="1" buildAU="1" buildRTAS="0" buildAAX="0"
-              pluginName="HiReSam" pluginDesc="HiReSam" pluginManufacturer="klangfreund"
+              pluginName="HiReSam" pluginDesc="HiReSam" pluginManufacturer="Klangfreund"
               pluginManufacturerCode="Klfr" pluginCode="Hire" pluginChannelConfigs="{1, 1}"
               pluginIsSynth="0" pluginWantsMidiIn="0" pluginProducesMidiOut="0"
               pluginSilenceInIsSilenceOut="1" pluginEditorRequiresKeys="0"
@@ -31,9 +31,14 @@
       <FILE id="Dt1MEh" name="SamWithBubble.cpp" compile="1" resource="0"
             file="Source/SamWithBubble.cpp"/>
       <FILE id="LrN9Zp" name="SamWithBubble.h" compile="0" resource="0" file="Source/SamWithBubble.h"/>
-      <FILE id="utRyoO" name="Spectroscope.cpp" compile="1" resource="0"
-            file="Source/Spectroscope.cpp"/>
-      <FILE id="PTgSw5" name="Spectroscope.h" compile="0" resource="0" file="Source/Spectroscope.h"/>
+      <FILE id="oALTkH" name="SpectrumProcessor.cpp" compile="1" resource="0"
+            file="Source/SpectrumProcessor.cpp"/>
+      <FILE id="FdNPi6" name="SpectrumProcessor.h" compile="0" resource="0"
+            file="Source/SpectrumProcessor.h"/>
+      <FILE id="utRyoO" name="SpectrumViewer.cpp" compile="1" resource="0"
+            file="Source/SpectrumViewer.cpp"/>
+      <FILE id="PTgSw5" name="SpectrumViewer.h" compile="0" resource="0"
+            file="Source/SpectrumViewer.h"/>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>

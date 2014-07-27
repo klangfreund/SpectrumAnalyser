@@ -29,7 +29,7 @@
   ==============================================================================
 */
 
-#include "Spectroscope.h"
+#include "SpectrumViewer.h"
 
 #if JUCE_MAC || JUCE_IOS || DROWAUDIO_USE_FFTREAL
 
@@ -37,39 +37,37 @@
 // static member initialisation
 // ============================
 
-const int Spectroscope::frequenciesToPlot[] = {10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 20000};
-const int Spectroscope::numberOfFrequenciesToPlot = 29;
+const int SpectrumViewer::frequenciesToPlot[] = {10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 20000};
+const int SpectrumViewer::numberOfFrequenciesToPlot = 29;
 
 //==============================================================================
-Spectroscope::Spectroscope (int fftSizeLog2)
+SpectrumViewer::SpectrumViewer (Value& repaintViewerValue,
+                                drow::Buffer& magnitudeBuffer)
 :   sampleRate                {44100.0},
-    fftEngine                 {fftSizeLog2},
-    needsRepaint              {true},
-	tempBlock                 (fftEngine.getFFTSize()),
-	circularBuffer            (fftEngine.getMagnitudesBuffer().getSize() * 4),
+    repaintViewer             (var(false)),
+    fftMagnitudeBuffer        {magnitudeBuffer},
     heightForFrequencyCaption {20},
     gradientImage             (Image::RGB, 100, 100, false),
     scopeImage                (Image::RGB, 100, 100, false)
 {
 // TODO: Is this ok?
 	setOpaque (true);
+    
+    repaintViewer.referTo (repaintViewerValue);
 
-	fftEngine.setWindowType (drow::Window::Hann);
-	numBins = fftEngine.getFFTProperties().fftSizeHalved;
-    
-    circularBuffer.reset();
-    
     gradientImage.clear (scopeImage.getBounds(), Colours::black);
     scopeImage.clear (scopeImage.getBounds(), Colours::black);
     
     addAndMakeVisible (&frequencyCaption);
+    
+    startTimer (30);
 }
 
-Spectroscope::~Spectroscope()
+SpectrumViewer::~SpectrumViewer()
 {
 }
 
-void Spectroscope::resized()
+void SpectrumViewer::resized()
 {
     gradientImage = gradientImage.rescaled (jmax (1, getWidth()), jmax (1, getHeight() - heightForFrequencyCaption));
     createGradientImage();
@@ -80,33 +78,28 @@ void Spectroscope::resized()
                                  getWidth(), heightForFrequencyCaption);
 }
 
-void Spectroscope::paint(Graphics& g)
+void SpectrumViewer::paint(Graphics& g)
 {
     g.drawImageAt (scopeImage, 0, 0, false);
 }
 
 //==============================================================================
-void Spectroscope::setSampleRate (double newSampleRate)
+void SpectrumViewer::setSampleRate (double newSampleRate)
 {
     sampleRate = newSampleRate;
     frequencyCaption.setSampleRate (newSampleRate);
 }
 
-void Spectroscope::copySamples (const float* samples, int numSamples)
-{
-	circularBuffer.writeSamples (samples, numSamples);
-	needToProcess = true;
-}
 
-int Spectroscope::getHeightOfFrequencyCaption()
+int SpectrumViewer::getHeightOfFrequencyCaption()
 {
     return heightForFrequencyCaption;
 }
 
-void Spectroscope::timerCallback()
+void SpectrumViewer::timerCallback()
 {
-	const int magnitudeBufferSize = fftEngine.getMagnitudesBuffer().getSize();
-	float* magnitudeBuffer = fftEngine.getMagnitudesBuffer().getData();
+	const int magnitudeBufferSize = fftMagnitudeBuffer.getSize();
+	float* magnitudeBuffer = fftMagnitudeBuffer.getData();
 
     renderScopeImage();
 
@@ -115,28 +108,9 @@ void Spectroscope::timerCallback()
 		magnitudeBuffer[i] *= JUCE_LIVE_CONSTANT (0.707f);
 }
 
-void Spectroscope::process()
-{
-    jassert (circularBuffer.getNumFree() != 0); // buffer is too small!
-    
-    while (circularBuffer.getNumAvailable() > fftEngine.getFFTSize())
-	{
-		circularBuffer.readSamples (tempBlock.getData(), fftEngine.getFFTSize());
-		fftEngine.performFFT (tempBlock);
-		fftEngine.updateMagnitudesIfBigger();
-		
-		needsRepaint = true;
-	}
-}
-
-void Spectroscope::flagForRepaint()
-{	
-    needsRepaint = true;
-    repaint();
-}
 
 //==============================================================================
-void Spectroscope::createGradientImage()
+void SpectrumViewer::createGradientImage()
 {
     Graphics g (gradientImage);
     ColourGradient gradient (Colours::darkgreen, 0.0f, 0.8f * gradientImage.getHeight(), Colours::black, 0.0f, gradientImage.getHeight(), false);
@@ -144,9 +118,9 @@ void Spectroscope::createGradientImage()
     g.fillAll();
 }
 
-void Spectroscope::renderScopeImage()
+void SpectrumViewer::renderScopeImage()
 {
-    if (needsRepaint)
+    if (repaintViewer == true)
 	{
         Graphics g (scopeImage);
         
@@ -171,8 +145,8 @@ void Spectroscope::renderScopeImage()
         // -----------------------------------
 		g.setColour (Colours::white);
 		
-        const int numBins = fftEngine.getMagnitudesBuffer().getSize() - 1;
-        const float* data = fftEngine.getMagnitudesBuffer().getData();
+        const int numBins = fftMagnitudeBuffer.getSize() - 1;
+        const float* data = fftMagnitudeBuffer.getData();
         
 // NOTE TO DAVE96: The jlimit is not needed. Puts the load off the CPU by 1-2%.
 // Original line:      float y2, y1 = jlimit (0.0f, 1.0f, float (1 + (drow::toDecibels (data[0]) / 100.0f)));
@@ -220,7 +194,7 @@ void Spectroscope::renderScopeImage()
         g.setTiledImageFill(gradientImage, 0, 0, opacity);
         g.fillPath(spectrumPath);
 		
-		needsRepaint = false;
+		repaintViewer = false;
         
         repaint(0, 0, scopeImage.getWidth(), scopeImage.getHeight());
 	}
@@ -229,7 +203,7 @@ void Spectroscope::renderScopeImage()
 
 //==============================================================================
 //==============================================================================
-Spectroscope::FrequencyCaption::FrequencyCaption()
+SpectrumViewer::FrequencyCaption::FrequencyCaption()
 : sampleRate {44100.0}
 {
     for (int i = 0; i < numberOfFrequenciesToPlot; ++i)
@@ -264,11 +238,11 @@ Spectroscope::FrequencyCaption::FrequencyCaption()
     }
 }
 
-Spectroscope::FrequencyCaption::~FrequencyCaption()
+SpectrumViewer::FrequencyCaption::~FrequencyCaption()
 {
 }
 
-void Spectroscope::FrequencyCaption::paint (Graphics& g)
+void SpectrumViewer::FrequencyCaption::paint (Graphics& g)
 {
     // Background
     // ----------
@@ -316,11 +290,11 @@ void Spectroscope::FrequencyCaption::paint (Graphics& g)
     }
 }
 
-void Spectroscope::FrequencyCaption::resized()
+void SpectrumViewer::FrequencyCaption::resized()
 {
 }
 
-void Spectroscope::FrequencyCaption::setSampleRate (double newSampleRate)
+void SpectrumViewer::FrequencyCaption::setSampleRate (double newSampleRate)
 {
     sampleRate = newSampleRate;
 }

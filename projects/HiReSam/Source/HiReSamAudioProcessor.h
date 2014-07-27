@@ -12,6 +12,7 @@
 #define PLUGINPROCESSOR_H_INCLUDED
 
 #include "HiReSamHeader.h"
+#include "SpectrumProcessor.h"
 
 class HiReSamAudioProcessorEditor;
 
@@ -70,9 +71,9 @@ public:
     Value sampleRate;
 
 private:
+    TimeSliceThread renderThread;
+    SpectrumProcessor spectrumProcessor;
     //==============================================================================
-    //std::auto_ptr<
-    HiReSamAudioProcessorEditor* hiReSamAudioProcessorEditor;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HiReSamAudioProcessor)
 };
 

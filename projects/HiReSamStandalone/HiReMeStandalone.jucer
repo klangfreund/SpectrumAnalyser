@@ -25,9 +25,14 @@
       <FILE id="SEvMqt" name="SamWithBubble.cpp" compile="1" resource="0"
             file="../HiReSam/Source/SamWithBubble.cpp"/>
       <FILE id="b8n5YF" name="SamWithBubble.h" compile="0" resource="0" file="../HiReSam/Source/SamWithBubble.h"/>
-      <FILE id="H1McvA" name="Spectroscope.cpp" compile="1" resource="0"
-            file="../HiReSam/Source/Spectroscope.cpp"/>
-      <FILE id="WPg7Ko" name="Spectroscope.h" compile="0" resource="0" file="../HiReSam/Source/Spectroscope.h"/>
+      <FILE id="YBkdnv" name="SpectrumProcessor.cpp" compile="1" resource="0"
+            file="../HiReSam/Source/SpectrumProcessor.cpp"/>
+      <FILE id="u4PfLz" name="SpectrumProcessor.h" compile="0" resource="0"
+            file="../HiReSam/Source/SpectrumProcessor.h"/>
+      <FILE id="QeM69l" name="SpectrumViewer.cpp" compile="1" resource="0"
+            file="../HiReSam/Source/SpectrumViewer.cpp"/>
+      <FILE id="xq4GVk" name="SpectrumViewer.h" compile="0" resource="0"
+            file="../HiReSam/Source/SpectrumViewer.h"/>
     </GROUP>
     <GROUP id="{75D50FC4-BF05-8BB7-DFC9-BBA484676D29}" name="Source HiReSam Standalone">
       <FILE id="JJrPHd" name="juce_StandaloneFilterWindow.h" compile="0"

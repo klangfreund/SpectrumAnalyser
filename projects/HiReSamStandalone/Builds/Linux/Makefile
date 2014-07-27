@@ -55,7 +55,8 @@ OBJECTS := \
   $(OBJDIR)/HiReSamAudioProcessorEditor_ec2f4288.o \
   $(OBJDIR)/PitchDetectorComponent_666b212d.o \
   $(OBJDIR)/SamWithBubble_b793d5c5.o \
-  $(OBJDIR)/Spectroscope_f2ebca74.o \
+  $(OBJDIR)/SpectrumProcessor_52cba3d5.o \
+  $(OBJDIR)/SpectrumViewer_56ae58f9.o \
   $(OBJDIR)/Main_90ebc5c2.o \
   $(OBJDIR)/BinaryData_ce4232d4.o \
   $(OBJDIR)/dRowAudio_f70bd428.o \
@@ -108,9 +109,14 @@ $(OBJDIR)/SamWithBubble_b793d5c5.o: ../../../HiReSam/Source/SamWithBubble.cpp
 	@echo "Compiling SamWithBubble.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/Spectroscope_f2ebca74.o: ../../../HiReSam/Source/Spectroscope.cpp
+$(OBJDIR)/SpectrumProcessor_52cba3d5.o: ../../../HiReSam/Source/SpectrumProcessor.cpp
 	-@mkdir -p $(OBJDIR)
-	@echo "Compiling Spectroscope.cpp"
+	@echo "Compiling SpectrumProcessor.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/SpectrumViewer_56ae58f9.o: ../../../HiReSam/Source/SpectrumViewer.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling SpectrumViewer.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/Main_90ebc5c2.o: ../../Source/Main.cpp

@@ -334,7 +334,10 @@
     <ClCompile Include="..\..\..\HiReSam\Source\SamWithBubble.cpp">
       <Filter>HiReSamStandalone\Source HiReSam</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\HiReSam\Source\Spectroscope.cpp">
+    <ClCompile Include="..\..\..\HiReSam\Source\SpectrumProcessor.cpp">
+      <Filter>HiReSamStandalone\Source HiReSam</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\HiReSam\Source\SpectrumViewer.cpp">
       <Filter>HiReSamStandalone\Source HiReSam</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Main.cpp">
@@ -1656,7 +1659,10 @@
     <ClInclude Include="..\..\..\HiReSam\Source\SamWithBubble.h">
       <Filter>HiReSamStandalone\Source HiReSam</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\HiReSam\Source\Spectroscope.h">
+    <ClInclude Include="..\..\..\HiReSam\Source\SpectrumProcessor.h">
+      <Filter>HiReSamStandalone\Source HiReSam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\HiReSam\Source\SpectrumViewer.h">
       <Filter>HiReSamStandalone\Source HiReSam</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\juce_StandaloneFilterWindow.h">

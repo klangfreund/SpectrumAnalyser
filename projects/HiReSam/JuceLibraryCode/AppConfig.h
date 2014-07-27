@@ -214,7 +214,7 @@
  #define JucePlugin_Desc                   "HiReSam"
 #endif
 #ifndef  JucePlugin_Manufacturer
- #define JucePlugin_Manufacturer           "klangfreund"
+ #define JucePlugin_Manufacturer           "Klangfreund"
 #endif
 #ifndef  JucePlugin_ManufacturerWebsite
  #define JucePlugin_ManufacturerWebsite    ""
