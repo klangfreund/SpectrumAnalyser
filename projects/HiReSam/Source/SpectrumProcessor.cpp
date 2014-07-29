@@ -11,25 +11,27 @@
 #include "SpectrumProcessor.h"
 
 SpectrumProcessor::SpectrumProcessor (int fftSizeLog2)
-  : sampleRate      {41000},
-    fftEngine       {fftSizeLog2},
+  : fftEngine       {fftSizeLog2},
     tempBlock       (fftEngine.getFFTSize()),
     circularBuffer  (fftEngine.getMagnitudesBuffer().getSize() * 4),
     needToProcess   {false},
+    pitch           {var(0)},
     repaintViewer   (var(false))
 {
     fftEngine.setWindowType (drow::Window::Hann);
     
     circularBuffer.reset();
+    
+    pitchDetector.setMinMaxFrequency (20, 20000);
 }
 
 SpectrumProcessor::~SpectrumProcessor()
 {
 }
 
-void SpectrumProcessor::setSampleRate (double newSampleRate)
+void SpectrumProcessor::setSampleRate (double sampleRate)
 {
-    sampleRate = newSampleRate;
+    pitchDetector.setSampleRate (sampleRate);
 }
 
 void SpectrumProcessor::copySamples (const float* samples, int numSamples)
@@ -67,6 +69,9 @@ void SpectrumProcessor::process()
 		circularBuffer.readSamples (tempBlock.getData(), fftEngine.getFFTSize());
 		fftEngine.performFFT (tempBlock);
 		fftEngine.updateMagnitudesIfBigger();
+        
+        pitchDetector.processSamples(tempBlock.getData(), fftEngine.getFFTSize());
+        pitch = pitchDetector.getPitch();
 		
 		repaintViewer = true;
 	}
@@ -81,4 +86,9 @@ Value& SpectrumProcessor::getRepaintViewerValue()
 drow::Buffer& SpectrumProcessor::getMagnitudesBuffer()
 {
     return fftEngine.getMagnitudesBuffer();
+}
+
+Value& SpectrumProcessor::getPitchValue()
+{
+    return pitch;
 }

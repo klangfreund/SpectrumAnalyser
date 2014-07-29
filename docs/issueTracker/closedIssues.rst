@@ -4,6 +4,13 @@ HiReSam - Closed issues
 =======================
 
 
+Split the Spectroscope into a processing and a component unit
+-------------------------------------------------------------
+
+Estimated: 7200s
+Measured: 13100s
+
+
 Buffer the gradient to fill the spectroscope in an image
 --------------------------------------------------------
 

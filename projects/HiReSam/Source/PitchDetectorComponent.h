@@ -8,8 +8,8 @@
   ==============================================================================
 */
 
-#ifndef __PITCHDETECTORCOMPONENT_H_FCCBFF40__
-#define __PITCHDETECTORCOMPONENT_H_FCCBFF40__
+#ifndef PITCH_DETECTOR_COMPONENT_H
+#define PITCH_DETECTOR_COMPONENT_H
 
 #include "HiReSamHeader.h"
 
@@ -48,7 +48,6 @@ private:
 	//==============================================================================
     double sampleRate;
     int pitch;
-    AudioSampleBuffer sampleBuffer;
     drow::PitchDetector pitchDetector;
 
     drow::StateVariable<int> pitchXCoord;
@@ -66,4 +65,4 @@ private:
 };
 
 
-#endif  // __PITCHDETECTORCOMPONENT_H_FCCBFF40__
+#endif  // PITCH_DETECTOR_COMPONENT_H

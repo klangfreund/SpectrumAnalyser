@@ -15,7 +15,8 @@
 //==============================================================================
 HiReSamAudioProcessorEditor::HiReSamAudioProcessorEditor (HiReSamAudioProcessor* ownerFilter,
                                                           Value& repaintSpectrumViewerValue,
-                                                          drow::Buffer& spectrumMagnitudeBuffer)
+                                                          drow::Buffer& spectrumMagnitudeBuffer,
+                                                          Value& pitchValue)
     : AudioProcessorEditor (ownerFilter),
       spectrumViewer (repaintSpectrumViewerValue, spectrumMagnitudeBuffer)
 {
@@ -37,7 +38,7 @@ HiReSamAudioProcessorEditor::HiReSamAudioProcessorEditor (HiReSamAudioProcessor*
     header.setColour (Label::textColourId, Colours::lightgoldenrodyellow);
     header.setColour (Label::backgroundColourId, Colours::black);
     
-    samWithBubble.referToFrequencyTextValue (pitchDetector.getPitchTextValue());
+    samWithBubble.referToFrequencyTextValue (pitchValue);
     
     addAndMakeVisible (&header);
     addAndMakeVisible (&spectrumViewer);

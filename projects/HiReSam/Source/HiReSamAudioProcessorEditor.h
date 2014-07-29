@@ -27,7 +27,8 @@ class HiReSamAudioProcessorEditor  : public AudioProcessorEditor,
 public:
     HiReSamAudioProcessorEditor (HiReSamAudioProcessor* ownerFilter,
                                  Value& repaintSpectrumViewerValue,
-                                 drow::Buffer& spectrumMagnitudeBuffer);
+                                 drow::Buffer& spectrumMagnitudeBuffer,
+                                 Value& pitchValue);
     ~HiReSamAudioProcessorEditor();
 
     //==============================================================================

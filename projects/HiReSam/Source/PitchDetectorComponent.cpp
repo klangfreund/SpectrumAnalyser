@@ -14,7 +14,6 @@
 PitchDetectorComponent::PitchDetectorComponent()
     : sampleRate {44100.0},
       pitch {0},
-      sampleBuffer (1, 512),
       pitchTextValue ("0 Hz ()"),
       mouseMode {false},
       mouseXPosition {0}

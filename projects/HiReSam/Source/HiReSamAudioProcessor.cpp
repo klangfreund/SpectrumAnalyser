@@ -175,7 +175,8 @@ AudioProcessorEditor* HiReSamAudioProcessor::createEditor()
 {
     return new HiReSamAudioProcessorEditor (this,
                                             spectrumProcessor.getRepaintViewerValue(),
-                                            spectrumProcessor.getMagnitudesBuffer());
+                                            spectrumProcessor.getMagnitudesBuffer(),
+                                            spectrumProcessor.getPitchValue());
 }
 
 //==============================================================================

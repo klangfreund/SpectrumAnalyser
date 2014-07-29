@@ -4,17 +4,11 @@ HiReSam - Open issues / Roadmap
 ===============================
 
 
-Split the Spectroscope into a processing and a component unit
--------------------------------------------------------------
-
-Estimated: 7200s
-Measured: 13100s
-
-
 Include the Pitch Detector into the Spectroscope
 ------------------------------------------------
 
 Estimated: 5200s
+Measured:
 
 
 Set a minimal size to the plugin window

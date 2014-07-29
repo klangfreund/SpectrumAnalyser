@@ -36,7 +36,7 @@ public:
     /** Destructor. */
     ~SpectrumProcessor();
     
-    void setSampleRate (double newSampleRate);
+    void setSampleRate (double sampleRate);
     
 	/** Copy a set of samples, ready to be processed.
         Your audio callback should continually call this method to pass it its
@@ -52,14 +52,19 @@ public:
     
     Value& getRepaintViewerValue();
     
+    Value& getPitchValue();
+    
     drow::Buffer& getMagnitudesBuffer();
     
 private:
-    double sampleRate;
     drow::FFTEngine fftEngine;
 	HeapBlock<float> tempBlock;
     drow::FifoBuffer<float> circularBuffer;
 	bool needToProcess;
+    
+    drow::PitchDetector pitchDetector;
+    Value pitch;
+    
     Value repaintViewer;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SpectrumProcessor);
