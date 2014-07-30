@@ -49,12 +49,11 @@ class SpectrumViewer :  public Component,
 {
 public:
     //==============================================================================
-    /** Creates a spectroscope with a given FFT size.
-        Note that the fft size given here is log2 of the FFT size so for example,
-        a 1024 size fft use 10.
+    /** Provide it with the parameters from the SpectrumViewer.
      */
 	SpectrumViewer (Value& repaintViewerValue,
-                    drow::Buffer& magnitudeBuffer);
+                    drow::Buffer& magnitudeBuffer,
+                    Value& pitch);
 	
     /** Destructor. */
 	~SpectrumViewer();
@@ -70,8 +69,13 @@ public:
     
     int getHeightOfFrequencyCaption();
 
-    /** @internal */
 	void timerCallback() override;
+    
+    void mouseEnter (const MouseEvent &event) override;
+    
+    void mouseMove (const MouseEvent &event) override;
+    
+    void mouseExit (const MouseEvent &event) override;
 	
 
 private:
@@ -82,6 +86,10 @@ private:
     double sampleRate;
     Value repaintViewer;
     drow::Buffer& fftMagnitudeBuffer;
+    
+    Value pitchValue;
+    bool mouseMode;
+    int mouseXPosition;
     
     //==============================================================================
     /*  The numbers below the graph, indication the frequency.

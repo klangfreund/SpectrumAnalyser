@@ -40,10 +40,6 @@ public:
     /** The value listener method. */
     void valueChanged (Value & value);
     
-    // Public because the HiReSamAudioProcessor needs to access them in
-    // its processBlock to transfer the samples.
-    PitchDetectorComponent pitchDetector;
-    
 private:
     SpectrumViewer spectrumViewer;
     Value sampleRate;

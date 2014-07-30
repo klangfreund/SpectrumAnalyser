@@ -42,10 +42,14 @@ const int SpectrumViewer::numberOfFrequenciesToPlot = 29;
 
 //==============================================================================
 SpectrumViewer::SpectrumViewer (Value& repaintViewerValue,
-                                drow::Buffer& magnitudeBuffer)
-:   sampleRate                {44100.0},
+                                drow::Buffer& magnitudeBuffer,
+                                Value& pitch)
+  : sampleRate                {44100.0},
     repaintViewer             (var(false)),
     fftMagnitudeBuffer        {magnitudeBuffer},
+    pitchValue                {var(0)},
+    mouseMode                 {false},
+    mouseXPosition            {0},
     heightForFrequencyCaption {20},
     gradientImage             (Image::RGB, 100, 100, false),
     scopeImage                (Image::RGB, 100, 100, false)
@@ -54,6 +58,7 @@ SpectrumViewer::SpectrumViewer (Value& repaintViewerValue,
 	setOpaque (true);
     
     repaintViewer.referTo (repaintViewerValue);
+    pitchValue.referTo(pitch);
 
     gradientImage.clear (scopeImage.getBounds(), Colours::black);
     scopeImage.clear (scopeImage.getBounds(), Colours::black);
@@ -81,6 +86,8 @@ void SpectrumViewer::resized()
 void SpectrumViewer::paint(Graphics& g)
 {
     g.drawImageAt (scopeImage, 0, 0, false);
+    
+
 }
 
 //==============================================================================
@@ -193,12 +200,57 @@ void SpectrumViewer::renderScopeImage()
         const float opacity = 0.6f;
         g.setTiledImageFill(gradientImage, 0, 0, opacity);
         g.fillPath(spectrumPath);
+        
+        
+        // Draw a vertical line at the mouse position
+        if (mouseMode)
+        {
+            g.setColour (Colours::lightgoldenrodyellow);
+            g.drawVerticalLine(mouseXPosition - 1, 0, getHeight());
+                // Don't know why the -1 offset for the x position
+                // is needed. (It is also needed if the drawing
+                // would be placed directly on the component, i.e.
+                // in the paint() function.
+        }
+        else
+        {
+            const double proportion = (double)pitchValue.getValue() / (sampleRate / 2.0);
+            const int pitchXCoord = roundToInt (logTransformInRange0to1 (proportion) * getWidth());
+            
+            g.setColour (Colours::green);
+            g.drawVerticalLine (pitchXCoord, 0.0f, (float) getHeight());
+        }
+
 		
 		repaintViewer = false;
         
         repaint(0, 0, scopeImage.getWidth(), scopeImage.getHeight());
 	}
 }
+
+void SpectrumViewer::mouseEnter (const MouseEvent &event)
+{
+    mouseMode = true;
+}
+
+void SpectrumViewer::mouseMove (const MouseEvent &event)
+{
+    mouseXPosition = event.getPosition().getX();
+    
+    // Results are more accurate if 1 is added to the mouse position. I assume because of
+    // rounding in the log as well as in the exp transformations.
+    const float normalizedXPosition = (mouseXPosition + 1) / (float)getWidth();
+    const float frequency = sampleRate / 2.0f * expTransformInRange0to1 (normalizedXPosition);
+    
+// TODO
+    //setPitchTextValue (frequency);
+}
+
+void SpectrumViewer::mouseExit (const MouseEvent &event)
+{
+    mouseMode = false;
+}
+
 
 
 //==============================================================================

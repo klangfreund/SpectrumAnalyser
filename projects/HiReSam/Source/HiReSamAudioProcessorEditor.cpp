@@ -18,7 +18,7 @@ HiReSamAudioProcessorEditor::HiReSamAudioProcessorEditor (HiReSamAudioProcessor*
                                                           drow::Buffer& spectrumMagnitudeBuffer,
                                                           Value& pitchValue)
     : AudioProcessorEditor (ownerFilter),
-      spectrumViewer (repaintSpectrumViewerValue, spectrumMagnitudeBuffer)
+      spectrumViewer (repaintSpectrumViewerValue, spectrumMagnitudeBuffer, pitchValue)
 {
     // The plugin's initial editor size.
     setSize (1000, 400);
@@ -42,7 +42,6 @@ HiReSamAudioProcessorEditor::HiReSamAudioProcessorEditor (HiReSamAudioProcessor*
     
     addAndMakeVisible (&header);
     addAndMakeVisible (&spectrumViewer);
-    addAndMakeVisible (&pitchDetector);
     addAndMakeVisible (&samWithBubble);
 }
 
@@ -72,7 +71,6 @@ void HiReSamAudioProcessorEditor::resized()
     const int minimalWithForSpectroscope = 120;
     const int widthForSamWithBubble = jmin (320, getWidth() - minimalWithForSpectroscope);
     spectrumViewer.setBounds (0, header.getHeight(), getWidth() - widthForSamWithBubble, getHeight() - header.getHeight());
-    pitchDetector.setBounds (0, header.getHeight(), spectrumViewer.getWidth(), getHeight() - header.getHeight() - spectrumViewer.getHeightOfFrequencyCaption());
     
     const int maxHeight = getHeight() - header.getHeight();
     const int height = jmin (360, maxHeight);
@@ -84,7 +82,6 @@ void HiReSamAudioProcessorEditor::valueChanged (Value & value)
     if (value.refersToSameSourceAs (sampleRate))
     {
         spectrumViewer.setSampleRate (sampleRate.getValue());
-        pitchDetector.setSampleRate (sampleRate.getValue());
     }
 }
 

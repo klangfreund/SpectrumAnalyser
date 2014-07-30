@@ -4,8 +4,8 @@ HiReSam - Open issues / Roadmap
 ===============================
 
 
-Include the Pitch Detector into the Spectroscope
-------------------------------------------------
+Include the pitch detector into the spectrum classes
+----------------------------------------------------
 
 Estimated: 5200s
 Measured:
