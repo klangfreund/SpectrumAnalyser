@@ -1,0 +1,53 @@
+/*
+  ==============================================================================
+ 
+    SpectrumAnalyserAudioProcessorEditor.h
+    Created: 10 Jun 2014 8:19:00pm
+    Author:  Samuel Gaehwiler
+ 
+  ==============================================================================
+ */
+
+#ifndef SPECTRUM_ANALYSER_AUDIO_PROCESSOR_EDITOR_H_INCLUDED
+#define SPECTRUM_ANALYSER_AUDIO_PROCESSOR_EDITOR_H_INCLUDED
+
+#include "SpectrumAnalyserHeader.h"
+#include "SpectrumAnalyserAudioProcessor.h"
+#include "PitchDetectorComponent.h"
+#include "SamWithBubble.h"
+#include "SpectrumViewer.h"
+
+
+//==============================================================================
+/**
+*/
+class SpectrumAnalyserAudioProcessorEditor  : public AudioProcessorEditor,
+                                              public Value::Listener
+{
+public:
+    SpectrumAnalyserAudioProcessorEditor (SpectrumAnalyserAudioProcessor* ownerFilter,
+                                          Value& repaintSpectrumViewerValue,
+                                          drow::Buffer& spectrumMagnitudeBuffer,
+                                          Value& pitchValue);
+    ~SpectrumAnalyserAudioProcessorEditor();
+
+    //==============================================================================
+    // This is just a standard Juce paint method...
+    void paint (Graphics& g);
+    
+    void resized();
+    
+    /** The value listener method. */
+    void valueChanged (Value & value);
+    
+private:
+    SpectrumViewer spectrumViewer;
+    Value sampleRate;
+    Label header;
+    SamWithBubble samWithBubble;
+    
+    SpectrumAnalyserAudioProcessor* getProcessor() const;
+};
+
+
+#endif  // SPECTRUM_ANALYSER_AUDIO_PROCESSOR_EDITOR_H_INCLUDED
