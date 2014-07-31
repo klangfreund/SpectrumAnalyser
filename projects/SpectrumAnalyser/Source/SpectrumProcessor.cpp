@@ -15,7 +15,8 @@
 SpectrumProcessor::SpectrumProcessor (int fftSizeLog2)
   : fftEngine       {fftSizeLog2},
     tempBlock       (fftEngine.getFFTSize()),
-    circularBuffer  (fftEngine.getMagnitudesBuffer().getSize() * 4),
+// TODO: Make the circularBuffer depen
+    circularBuffer  (jmax (fftEngine.getMagnitudesBuffer().getSize() * 4, 2048)),
     needToProcess   {false},
     pitch           {var(0)},
     repaintViewer   (var(false))
