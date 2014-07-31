@@ -144,7 +144,7 @@ void SpectrumViewer::renderScopeImage()
         // The path which will be the border of the filled area.
         Path spectrumPath;
         // Add the top left point.
-// NOTE TO DAVE96: Ensure that only values > 0 are passed to your drow::toDecibels().
+        // Ensure that only values > 0 are passed to your drow::toDecibels().
         const float yInPercent = data[0]>0 ? float (1 + (drow::toDecibels (data[0]) / 100.0f)) : -0.01;
         y = h - h * yInPercent;
         // No coordinate should be NaN
@@ -153,8 +153,8 @@ void SpectrumViewer::renderScopeImage()
         
         for (int i = 0; i < numBins; ++i)
         {
-// NOTE TO DAVE96: Same as above.
             x = logTransformInRange0to1 ((i + 1.0f) / numBins) * w;
+            // Ensure that only values > 0 are passed to your drow::toDecibels().
             const float yInPercent = data[i]>0 ? float (1 + (drow::toDecibels (data[i]) / 100.0f)) : -0.01;
             y = h - h * yInPercent;
             
