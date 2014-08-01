@@ -13,13 +13,13 @@
 #include "SpectrumProcessor.h"
 
 SpectrumProcessor::SpectrumProcessor (int fftSizeLog2)
-  : fftEngine       {fftSizeLog2},
-    tempBlock       (fftEngine.getFFTSize()),
+  : fftEngine         {fftSizeLog2},
+    tempBlock         (fftEngine.getFFTSize()),
 // TODO: Make the circularBuffer dependant of the buffer size of the incoming audio stream.
-    circularBuffer  (jmax (fftEngine.getMagnitudesBuffer().getSize() * 4, 2048)),
-    needToProcess   {false},
-    pitch           {var(0)},
-    repaintViewer   (var(false))
+    circularBuffer    (jmax (fftEngine.getMagnitudesBuffer().getSize() * 4, 2048)),
+    needToProcess     {false},
+    detectedFrequency {var(0)},
+    repaintViewer     (var(false))
 {
     fftEngine.setWindowType (drow::Window::Hann);
     
@@ -74,7 +74,7 @@ void SpectrumProcessor::process()
 		fftEngine.updateMagnitudesIfBigger();
         
         pitchDetector.processSamples(tempBlock.getData(), fftEngine.getFFTSize());
-        pitch = pitchDetector.getPitch();
+        detectedFrequency = pitchDetector.getPitch();
 		
 		repaintViewer = true;
 	}
@@ -91,7 +91,7 @@ drow::Buffer& SpectrumProcessor::getMagnitudesBuffer()
     return fftEngine.getMagnitudesBuffer();
 }
 
-Value& SpectrumProcessor::getPitchValue()
+Value& SpectrumProcessor::getDetectedFrequency()
 {
-    return pitch;
+    return detectedFrequency;
 }

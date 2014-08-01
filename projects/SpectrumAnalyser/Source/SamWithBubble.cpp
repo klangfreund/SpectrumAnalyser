@@ -13,7 +13,10 @@
 
 //==============================================================================
 SamWithBubble::SamWithBubble()
+  : frequencyValue (var(0))
 {
+    frequencyValue.addListener (this);
+    
     pitchLabel.setColour (Label::textColourId, Colours::lightgoldenrodyellow);
 //    pitchLabel.setColour (Label::backgroundColourId, Colours::red);
     Font pitchLabelFont = Font (18.0f);
@@ -24,6 +27,7 @@ SamWithBubble::SamWithBubble()
 
 SamWithBubble::~SamWithBubble()
 {
+    frequencyValue.removeListener (this);
 }
 
 void SamWithBubble::paint (Graphics& g)
@@ -95,7 +99,27 @@ void SamWithBubble::resized()
     bubblePath.closeSubPath();
 }
 
-void SamWithBubble::referToFrequencyTextValue (const Value & valueToReferTo)
+void SamWithBubble::referToFrequencyValue (const Value & valueToReferTo)
 {
-    pitchLabel.getTextValue().referTo(valueToReferTo);
+    frequencyValue.referTo(valueToReferTo);
+    // pitchLabel.getTextValue().referTo(valueToReferTo);
+}
+
+void SamWithBubble::valueChanged (Value & value)
+{
+    if (value.refersToSameSourceAs(frequencyValue))
+    {
+        const int frequency = frequencyValue.getValue();
+        String pitchString = frequencyValue.toString();
+        pitchString << " Hz";
+        
+        if (frequency > 7)
+        {
+            // TO DAVE: At 7 Hz, the function below returns the String "-1" (without a letter in front of it).
+            pitchString << " (" << drow::Pitch::fromFrequency (frequency).getMidiNoteName() << ")";
+        }
+
+        pitchLabel.setText(pitchString, NotificationType::dontSendNotification);
+    }
+    
 }

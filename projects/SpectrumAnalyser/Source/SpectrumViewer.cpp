@@ -24,11 +24,11 @@ const int SpectrumViewer::numberOfFrequenciesToPlot = 29;
 //==============================================================================
 SpectrumViewer::SpectrumViewer (Value& repaintViewerValue,
                                 drow::Buffer& magnitudeBuffer,
-                                Value& pitch)
+                                Value& detectedFrequencyValue)
   : sampleRate                {44100.0},
     repaintViewer             (var(false)),
     fftMagnitudeBuffer        {magnitudeBuffer},
-    pitchValue                {var(0)},
+    detectedFrequency         {var(0)},
     mouseMode                 {false},
     mouseXPosition            {0},
     heightForFrequencyCaption {20},
@@ -39,7 +39,7 @@ SpectrumViewer::SpectrumViewer (Value& repaintViewerValue,
 	setOpaque (true);
     
     repaintViewer.referTo (repaintViewerValue);
-    pitchValue.referTo(pitch);
+    detectedFrequency.referTo (detectedFrequencyValue);
 
     gradientImage.clear (scopeImage.getBounds(), Colours::black);
     scopeImage.clear (scopeImage.getBounds(), Colours::black);
@@ -195,7 +195,7 @@ void SpectrumViewer::renderScopeImage()
         }
         else
         {
-            const double proportion = (double)pitchValue.getValue() / (sampleRate / 2.0);
+            const double proportion = (double)detectedFrequency.getValue() / (sampleRate / 2.0);
             const int pitchXCoord = roundToInt (logTransformInRange0to1 (proportion) * getWidth());
             
             g.setColour (Colours::green);

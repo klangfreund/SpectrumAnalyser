@@ -16,7 +16,8 @@
 //==============================================================================
 /*
 */
-class SamWithBubble    : public Component
+class SamWithBubble    : public Component,
+                         public Value::Listener
 {
 public:
     SamWithBubble();
@@ -24,10 +25,13 @@ public:
 
     void paint (Graphics&);
     void resized();
-    void referToFrequencyTextValue (const Value & valueToReferTo);
+    void referToFrequencyValue (const Value & valueToReferTo);
+    
+    virtual void valueChanged (Value & value) override;
     
 private:
     Path bubblePath;
+    Value frequencyValue;
     Label pitchLabel;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SamWithBubble)

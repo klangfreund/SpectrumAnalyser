@@ -26,9 +26,9 @@ class SpectrumAnalyserAudioProcessorEditor  : public AudioProcessorEditor,
 {
 public:
     SpectrumAnalyserAudioProcessorEditor (SpectrumAnalyserAudioProcessor* ownerFilter,
-                                          Value& repaintSpectrumViewerValue,
+                                          Value& repaintSpectrumViewer,
                                           drow::Buffer& spectrumMagnitudeBuffer,
-                                          Value& pitchValue);
+                                          Value& detectedFrequency);
     ~SpectrumAnalyserAudioProcessorEditor();
 
     //==============================================================================

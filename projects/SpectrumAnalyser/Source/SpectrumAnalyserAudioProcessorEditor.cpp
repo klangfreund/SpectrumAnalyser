@@ -14,11 +14,11 @@
 
 //==============================================================================
 SpectrumAnalyserAudioProcessorEditor::SpectrumAnalyserAudioProcessorEditor (SpectrumAnalyserAudioProcessor* ownerFilter,
-                                                                            Value& repaintSpectrumViewerValue,
+                                                                            Value& repaintSpectrumViewer,
                                                                             drow::Buffer& spectrumMagnitudeBuffer,
-                                                                            Value& pitchValue)
+                                                                            Value& detectedFrequency)
     : AudioProcessorEditor (ownerFilter),
-      spectrumViewer (repaintSpectrumViewerValue, spectrumMagnitudeBuffer, pitchValue)
+      spectrumViewer (repaintSpectrumViewer, spectrumMagnitudeBuffer, detectedFrequency)
 {
     // The plugin's initial editor size.
     setSize (1000, 400);
@@ -38,7 +38,7 @@ SpectrumAnalyserAudioProcessorEditor::SpectrumAnalyserAudioProcessorEditor (Spec
     header.setColour (Label::textColourId, Colours::lightgoldenrodyellow);
     header.setColour (Label::backgroundColourId, Colours::black);
     
-    samWithBubble.referToFrequencyTextValue (pitchValue);
+    samWithBubble.referToFrequencyValue (detectedFrequency);
     
     addAndMakeVisible (&header);
     addAndMakeVisible (&spectrumViewer);

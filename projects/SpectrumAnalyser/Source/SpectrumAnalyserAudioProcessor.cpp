@@ -176,7 +176,7 @@ AudioProcessorEditor* SpectrumAnalyserAudioProcessor::createEditor()
     return new SpectrumAnalyserAudioProcessorEditor (this,
                                                      spectrumProcessor.getRepaintViewerValue(),
                                                      spectrumProcessor.getMagnitudesBuffer(),
-                                                     spectrumProcessor.getPitchValue());
+                                                     spectrumProcessor.getDetectedFrequency());
 }
 
 //==============================================================================

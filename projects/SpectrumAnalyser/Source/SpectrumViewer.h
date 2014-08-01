@@ -68,7 +68,7 @@ private:
     Value repaintViewer;
     drow::Buffer& fftMagnitudeBuffer;
     
-    Value pitchValue;
+    Value detectedFrequency;
     bool mouseMode;
     int mouseXPosition;
     

@@ -54,7 +54,7 @@ public:
     
     Value& getRepaintViewerValue();
     
-    Value& getPitchValue();
+    Value& getDetectedFrequency();
     
     drow::Buffer& getMagnitudesBuffer();
     
@@ -65,7 +65,7 @@ private:
 	bool needToProcess;
     
     drow::PitchDetector pitchDetector;
-    Value pitch;
+    Value detectedFrequency;
     
     Value repaintViewer;
     
