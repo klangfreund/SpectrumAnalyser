@@ -29,6 +29,7 @@ SpectrumViewer::SpectrumViewer (Value& repaintViewerValue,
     repaintViewer             (var(false)),
     fftMagnitudeBuffer        {magnitudeBuffer},
     detectedFrequency         {var(0)},
+    frequencyToDisplay        {var(0)},
     mouseMode                 {false},
     mouseXPosition            {0},
     heightForFrequencyCaption {20},
@@ -40,6 +41,7 @@ SpectrumViewer::SpectrumViewer (Value& repaintViewerValue,
     
     repaintViewer.referTo (repaintViewerValue);
     detectedFrequency.referTo (detectedFrequencyValue);
+    frequencyToDisplay.referTo(detectedFrequency);
 
     gradientImage.clear (scopeImage.getBounds(), Colours::black);
     scopeImage.clear (scopeImage.getBounds(), Colours::black);
@@ -82,6 +84,11 @@ void SpectrumViewer::setSampleRate (double newSampleRate)
 int SpectrumViewer::getHeightOfFrequencyCaption()
 {
     return heightForFrequencyCaption;
+}
+
+Value & SpectrumViewer::getFrequencyToDisplay()
+{
+    return frequencyToDisplay;
 }
 
 void SpectrumViewer::timerCallback()
@@ -212,6 +219,10 @@ void SpectrumViewer::renderScopeImage()
 void SpectrumViewer::mouseEnter (const MouseEvent &event)
 {
     mouseMode = true;
+    
+    // Detach the frequencyToDisplay from the detectedFrequency.
+    Value temp (var(0));
+    frequencyToDisplay.referTo(temp);
 }
 
 void SpectrumViewer::mouseMove (const MouseEvent &event)
@@ -222,14 +233,14 @@ void SpectrumViewer::mouseMove (const MouseEvent &event)
     // rounding in the log as well as in the exp transformations.
     const float normalizedXPosition = (mouseXPosition + 1) / (float)getWidth();
     const float frequency = sampleRate / 2.0f * expTransformInRange0to1 (normalizedXPosition);
-    
-// TODO
-    //setPitchTextValue (frequency);
+    frequencyToDisplay = (int)frequency;
 }
 
 void SpectrumViewer::mouseExit (const MouseEvent &event)
 {
     mouseMode = false;
+    
+    frequencyToDisplay.referTo (detectedFrequency);
 }
 
 

@@ -34,7 +34,7 @@ public:
      */
 	SpectrumViewer (Value& repaintViewerValue,
                     drow::Buffer& magnitudeBuffer,
-                    Value& pitch);
+                    Value& detectedFrequencyValue);
 	
     /** Destructor. */
 	~SpectrumViewer();
@@ -49,6 +49,8 @@ public:
     void setSampleRate (double newSampleRate);
     
     int getHeightOfFrequencyCaption();
+    
+    Value & getFrequencyToDisplay();
 
 	void timerCallback() override;
     
@@ -69,6 +71,7 @@ private:
     drow::Buffer& fftMagnitudeBuffer;
     
     Value detectedFrequency;
+    Value frequencyToDisplay;
     bool mouseMode;
     int mouseXPosition;
     

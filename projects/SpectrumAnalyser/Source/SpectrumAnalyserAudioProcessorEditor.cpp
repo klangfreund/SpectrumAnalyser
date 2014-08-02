@@ -38,7 +38,7 @@ SpectrumAnalyserAudioProcessorEditor::SpectrumAnalyserAudioProcessorEditor (Spec
     header.setColour (Label::textColourId, Colours::lightgoldenrodyellow);
     header.setColour (Label::backgroundColourId, Colours::black);
     
-    samWithBubble.referToFrequencyValue (detectedFrequency);
+    samWithBubble.referToFrequencyValue (spectrumViewer.getFrequencyToDisplay());
     
     addAndMakeVisible (&header);
     addAndMakeVisible (&spectrumViewer);
