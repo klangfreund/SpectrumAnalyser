@@ -23,6 +23,8 @@ SamWithBubble::SamWithBubble()
     pitchLabel.setFont (pitchLabelFont);
     pitchLabel.setJustificationType(Justification::horizontallyCentred);
     addAndMakeVisible (&pitchLabel);
+    
+    setInterceptsMouseClicks(false, false);
 }
 
 SamWithBubble::~SamWithBubble()
@@ -33,11 +35,10 @@ SamWithBubble::~SamWithBubble()
 void SamWithBubble::paint (Graphics& g)
 {
     // image
-    const int borderRight = 30;
-    const int borderBottom = 10;
-    const int imageHeight = 150;
-    const int imageWidth = 150;
-    g.drawImage(ImageCache::getFromMemory (BinaryData::Samuel_Gaehwiler_png, BinaryData::Samuel_Gaehwiler_pngSize), getWidth() - imageWidth - borderRight, getHeight() - imageHeight - borderBottom, imageWidth, imageHeight, 0, 0, 300, 300);
+    const int borderRight = 40;
+    const int imageHeight = 120;
+    const int imageWidth = 120;
+    g.drawImage(ImageCache::getFromMemory (BinaryData::Samuel_Gaehwiler_png, BinaryData::Samuel_Gaehwiler_pngSize), getWidth() - imageWidth - borderRight, getHeight() - imageHeight, imageWidth, imageHeight, 0, 0, 300, 300);
     
     // bubble
     g.setColour (Colours::black);
@@ -47,12 +48,12 @@ void SamWithBubble::paint (Graphics& g)
     g.strokePath (bubblePath, PathStrokeType (3.500f));
 
     // bubble text
-    pitchLabel.setBounds (40, 60, getWidth() - 80, 20);
+    pitchLabel.setBounds (40, 36, getWidth() - 80, 20);
     
     g.setColour (Colours::lightgoldenrodyellow);
     g.setFont (17.0f);
     Rectangle<int> bubblePathBounds = bubblePath.getBounds().getSmallestIntegerContainer();
-    bubblePathBounds.removeFromTop (80);
+    bubblePathBounds.removeFromTop (70);
     bubblePathBounds.removeFromLeft (20);
     const int maximumNumberOfLines = 3;
     const String bubbleText = String("Zu viel Arbeit? Plugin Ideen?\n") + "078 624 68 64\n" + "sam@klangfreund.com";
@@ -89,13 +90,13 @@ void SamWithBubble::resized()
     //    bubblePath.closeSubPath();
     float mostRight = getWidth() - 10.0f;
     float width = getWidth() - 30.0f;
-    bubblePath.startNewSubPath (mostRight - width, 80.0f);
-    bubblePath.quadraticTo (mostRight - 0.881f * width, 24.0f, mostRight - 0.429f * width, 32.0f);
-    bubblePath.quadraticTo (mostRight, 40.0f, mostRight, 104.0f);
-    bubblePath.quadraticTo (mostRight, 192.0f, mostRight - 0.69f * width, 176.0f);
-    bubblePath.lineTo (mostRight - 0.635f * width, 216.0f); // the tip of the bubble
-    bubblePath.lineTo (mostRight - 0.810f * width, 168.0f);
-    bubblePath.quadraticTo (mostRight - 1.119f * width, 136.0f, mostRight - width, 80.0f);
+    bubblePath.startNewSubPath (mostRight - width, 56.0f);
+    bubblePath.quadraticTo (mostRight - 0.881f * width, 0.0f, mostRight - 0.429f * width, 8.0f);
+    bubblePath.quadraticTo (mostRight, 16.0f, mostRight, 80.0f);
+    bubblePath.quadraticTo (mostRight, 168.0f, mostRight - 0.69f * width, 152.0f);
+    bubblePath.lineTo (mostRight - 0.635f * width, 192.0f); // the tip of the bubble
+    bubblePath.lineTo (mostRight - 0.810f * width, 144.0f);
+    bubblePath.quadraticTo (mostRight - 1.119f * width, 112.0f, mostRight - width, 56.0f);
     bubblePath.closeSubPath();
 }
 

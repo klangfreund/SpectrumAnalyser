@@ -21,7 +21,7 @@ SpectrumAnalyserAudioProcessorEditor::SpectrumAnalyserAudioProcessorEditor (Spec
       spectrumViewer (repaintSpectrumViewer, spectrumMagnitudeBuffer, detectedFrequency)
 {
     // The plugin's initial editor size.
-    setSize (1000, 400);
+    setSize (1000, 500);
     
     sampleRate.addListener (this);
     // The sampleRate has already been set in the SpectrumAnalyserAudioProcessor
@@ -68,13 +68,12 @@ void SpectrumAnalyserAudioProcessorEditor::resized()
     
     header.setBounds(0, 0, getWidth(), 24);
     
-    const int minimalWithForSpectroscope = 120;
-    const int widthForSamWithBubble = jmin (320, getWidth() - minimalWithForSpectroscope);
-    spectrumViewer.setBounds (0, header.getHeight(), getWidth() - widthForSamWithBubble, getHeight() - header.getHeight());
-    
+    spectrumViewer.setBounds (0, header.getHeight(), getWidth(), getHeight() - header.getHeight());
+
+    const int widthForSamWithBubble = 280; //= jmin (320, getWidth() - minimalWithForSpectroscope);
     const int maxHeight = getHeight() - header.getHeight();
-    const int height = jmin (360, maxHeight);
-    samWithBubble.setBounds(spectrumViewer.getWidth(), header.getHeight() + 0.5f * (maxHeight - height), widthForSamWithBubble, height);
+    const int height = jmin (310, maxHeight);
+    samWithBubble.setBounds(getWidth() - widthForSamWithBubble, header.getHeight(), widthForSamWithBubble, height);
 }
 
 void SpectrumAnalyserAudioProcessorEditor::valueChanged (Value & value)

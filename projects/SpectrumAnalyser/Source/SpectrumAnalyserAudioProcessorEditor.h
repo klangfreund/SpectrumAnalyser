@@ -13,7 +13,6 @@
 
 #include "SpectrumAnalyserHeader.h"
 #include "SpectrumAnalyserAudioProcessor.h"
-#include "PitchDetectorComponent.h"
 #include "SamWithBubble.h"
 #include "SpectrumViewer.h"
 
