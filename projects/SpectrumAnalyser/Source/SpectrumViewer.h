@@ -26,6 +26,7 @@
     copySamples() method. The FFT itself will be performed on a background thread.
  */
 class SpectrumViewer :  public Component,
+                        public Value::Listener,
                         public Timer
 {
 public:
@@ -53,6 +54,8 @@ public:
     Value & getFrequencyToDisplay();
 
 	void timerCallback() override;
+    
+    void valueChanged (Value &value) override;
     
     void mouseEnter (const MouseEvent &event) override;
     

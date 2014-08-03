@@ -40,8 +40,9 @@ SpectrumViewer::SpectrumViewer (Value& repaintViewerValue,
 	setOpaque (true);
     
     repaintViewer.referTo (repaintViewerValue);
+    
     detectedFrequency.referTo (detectedFrequencyValue);
-    frequencyToDisplay.referTo(detectedFrequency);
+    detectedFrequency.addListener(this);
 
     gradientImage.clear (scopeImage.getBounds(), Colours::black);
     scopeImage.clear (scopeImage.getBounds(), Colours::black);
@@ -101,6 +102,14 @@ void SpectrumViewer::timerCallback()
 	// fall levels here
 	for (int i = 0; i < magnitudeBufferSize; i++)
 		magnitudeBuffer[i] *= JUCE_LIVE_CONSTANT (0.707f);
+}
+
+void SpectrumViewer::valueChanged (Value &value)
+{
+    if (!mouseMode && value.refersToSameSourceAs(detectedFrequency))
+    {
+        frequencyToDisplay = detectedFrequency.getValue();
+    }
 }
 
 
@@ -219,10 +228,6 @@ void SpectrumViewer::renderScopeImage()
 void SpectrumViewer::mouseEnter (const MouseEvent &event)
 {
     mouseMode = true;
-    
-    // Detach the frequencyToDisplay from the detectedFrequency.
-    Value temp (var(0));
-    frequencyToDisplay.referTo(temp);
 }
 
 void SpectrumViewer::mouseMove (const MouseEvent &event)
@@ -239,8 +244,6 @@ void SpectrumViewer::mouseMove (const MouseEvent &event)
 void SpectrumViewer::mouseExit (const MouseEvent &event)
 {
     mouseMode = false;
-    
-    frequencyToDisplay.referTo (detectedFrequency);
 }
 
 
