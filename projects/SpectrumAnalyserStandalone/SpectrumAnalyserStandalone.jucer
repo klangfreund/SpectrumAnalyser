@@ -9,10 +9,6 @@
             file="../SpectrumAnalyser/Resources/Samuel_Gaehwiler.png"/>
     </GROUP>
     <GROUP id="{54DB0834-C391-BB20-D2E8-10BA7ED68A39}" name="Source SpectrumAnalyser">
-      <FILE id="kSj7Ql" name="PitchDetectorComponent.cpp" compile="1" resource="0"
-            file="../SpectrumAnalyser/Source/PitchDetectorComponent.cpp"/>
-      <FILE id="z4OalJ" name="PitchDetectorComponent.h" compile="0" resource="0"
-            file="../SpectrumAnalyser/Source/PitchDetectorComponent.h"/>
       <FILE id="HdoqTo" name="SamWithBubble.cpp" compile="1" resource="0"
             file="../SpectrumAnalyser/Source/SamWithBubble.cpp"/>
       <FILE id="BgYzQs" name="SamWithBubble.h" compile="0" resource="0" file="../SpectrumAnalyser/Source/SamWithBubble.h"/>

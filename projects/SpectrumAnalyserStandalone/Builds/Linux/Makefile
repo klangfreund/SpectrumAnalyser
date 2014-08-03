@@ -51,7 +51,6 @@ ifeq ($(CONFIG),Release)
 endif
 
 OBJECTS := \
-  $(OBJDIR)/PitchDetectorComponent_8012c50.o \
   $(OBJDIR)/SamWithBubble_81c52742.o \
   $(OBJDIR)/SpectrumAnalyserAudioProcessor_b5547c25.o \
   $(OBJDIR)/SpectrumAnalyserAudioProcessorEditor_d7632732.o \
@@ -88,11 +87,6 @@ clean:
 strip:
 	@echo Stripping HiReSamStandalone
 	-@strip --strip-unneeded $(OUTDIR)/$(TARGET)
-
-$(OBJDIR)/PitchDetectorComponent_8012c50.o: ../../../SpectrumAnalyser/Source/PitchDetectorComponent.cpp
-	-@mkdir -p $(OBJDIR)
-	@echo "Compiling PitchDetectorComponent.cpp"
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/SamWithBubble_81c52742.o: ../../../SpectrumAnalyser/Source/SamWithBubble.cpp
 	-@mkdir -p $(OBJDIR)

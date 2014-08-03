@@ -15,10 +15,6 @@
             file="Resources/Samuel_Gaehwiler.png"/>
     </GROUP>
     <GROUP id="{5E261AAC-E07E-0CAB-5A9C-292B360144B1}" name="Source">
-      <FILE id="AnTyrC" name="PitchDetectorComponent.cpp" compile="1" resource="0"
-            file="Source/PitchDetectorComponent.cpp"/>
-      <FILE id="jGz2Ej" name="PitchDetectorComponent.h" compile="0" resource="0"
-            file="Source/PitchDetectorComponent.h"/>
       <FILE id="Dt1MEh" name="SamWithBubble.cpp" compile="1" resource="0"
             file="Source/SamWithBubble.cpp"/>
       <FILE id="LrN9Zp" name="SamWithBubble.h" compile="0" resource="0" file="Source/SamWithBubble.h"/>

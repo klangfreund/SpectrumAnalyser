@@ -239,7 +239,6 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\SpectrumAnalyser\Source\PitchDetectorComponent.cpp"/>
     <ClCompile Include="..\..\..\SpectrumAnalyser\Source\SamWithBubble.cpp"/>
     <ClCompile Include="..\..\..\SpectrumAnalyser\Source\SpectrumAnalyserAudioProcessor.cpp"/>
     <ClCompile Include="..\..\..\SpectrumAnalyser\Source\SpectrumAnalyserAudioProcessorEditor.cpp"/>
@@ -1443,7 +1442,6 @@
     <ClCompile Include="..\..\..\SpectrumAnalyser\JuceLibraryCode\modules\juce_gui_extra\juce_gui_extra.cpp"/>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\SpectrumAnalyser\Source\PitchDetectorComponent.h"/>
     <ClInclude Include="..\..\..\SpectrumAnalyser\Source\SamWithBubble.h"/>
     <ClInclude Include="..\..\..\SpectrumAnalyser\Source\SpectrumAnalyserAudioProcessor.h"/>
     <ClInclude Include="..\..\..\SpectrumAnalyser\Source\SpectrumAnalyserAudioProcessorEditor.h"/>

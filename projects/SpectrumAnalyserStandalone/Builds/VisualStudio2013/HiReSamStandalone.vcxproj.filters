@@ -322,9 +322,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\SpectrumAnalyser\Source\PitchDetectorComponent.cpp">
-      <Filter>HiReSamStandalone\Source SpectrumAnalyser</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\SpectrumAnalyser\Source\SamWithBubble.cpp">
       <Filter>HiReSamStandalone\Source SpectrumAnalyser</Filter>
     </ClCompile>
@@ -1644,9 +1641,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\SpectrumAnalyser\Source\PitchDetectorComponent.h">
-      <Filter>HiReSamStandalone\Source SpectrumAnalyser</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\SpectrumAnalyser\Source\SamWithBubble.h">
       <Filter>HiReSamStandalone\Source SpectrumAnalyser</Filter>
     </ClInclude>

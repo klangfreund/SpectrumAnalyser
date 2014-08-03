@@ -340,9 +340,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Source\PitchDetectorComponent.cpp">
-      <Filter>HiReSam\Source</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\SamWithBubble.cpp">
       <Filter>HiReSam\Source</Filter>
     </ClCompile>
@@ -1701,9 +1698,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Source\PitchDetectorComponent.h">
-      <Filter>HiReSam\Source</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\SamWithBubble.h">
       <Filter>HiReSam\Source</Filter>
     </ClInclude>
