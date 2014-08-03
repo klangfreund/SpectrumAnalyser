@@ -203,11 +203,12 @@ void SpectrumViewer::renderScopeImage()
         if (mouseMode)
         {
             g.setColour (Colours::lightgoldenrodyellow);
-            g.drawVerticalLine(mouseXPosition - 1, 0, getHeight());
+            g.drawVerticalLine(mouseXPosition -1, 0, getHeight());
                 // Don't know why the -1 offset for the x position
                 // is needed. (It is also needed if the drawing
                 // would be placed directly on the component, i.e.
-                // in the paint() function.
+                // in the paint() function.)
+                // Maybe because of rounding in the mouseMove function.
         }
         else
         {
@@ -234,9 +235,7 @@ void SpectrumViewer::mouseMove (const MouseEvent &event)
 {
     mouseXPosition = event.getPosition().getX();
     
-    // Results are more accurate if 1 is added to the mouse position. I assume because of
-    // rounding in the log as well as in the exp transformations.
-    const float normalizedXPosition = (mouseXPosition + 1) / (float)getWidth();
+    const float normalizedXPosition = (mouseXPosition) / (float)getWidth();
     const float frequency = sampleRate / 2.0f * expTransformInRange0to1 (normalizedXPosition);
     frequencyToDisplay = (int)frequency;
 }

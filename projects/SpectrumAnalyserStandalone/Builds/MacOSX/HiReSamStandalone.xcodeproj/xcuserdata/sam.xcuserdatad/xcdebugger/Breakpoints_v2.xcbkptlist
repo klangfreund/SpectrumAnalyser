@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../../SpectrumAnalyser/Source/SpectrumViewer.cpp"
-            timestampString = "428772001.878456"
+            timestampString = "428772395.419793"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "241"
-            endingLineNumber = "241"
+            startingLineNumber = "237"
+            endingLineNumber = "237"
             landmarkName = "SpectrumViewer::mouseMove (const MouseEvent &amp;event)"
             landmarkType = "5">
          </BreakpointContent>
