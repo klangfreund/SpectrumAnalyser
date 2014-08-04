@@ -149,7 +149,7 @@ void SpectrumViewer::renderScopeImage()
         // -----------------------------------
 		g.setColour (Colours::white);
 		
-        const int numBins = fftMagnitudeBuffer.getSize() - 1;
+        const int numBins = fftMagnitudeBuffer.getSize();
         const float* data = fftMagnitudeBuffer.getData();
         
 // NOTE TO DAVE96: The jlimit is not needed. Puts the load off the CPU by 1-2%.
@@ -160,17 +160,17 @@ void SpectrumViewer::renderScopeImage()
         // The path which will be the border of the filled area.
         Path spectrumPath;
         // Add the top left point.
-        // Ensure that only values > 0 are passed to your drow::toDecibels().
+        // Only values > 0 are passed to drow::toDecibels().
         const float yInPercent = data[0]>0 ? float (1 + (drow::toDecibels (data[0]) / 100.0f)) : -0.01;
         y = h - h * yInPercent;
         // No coordinate should be NaN
         jassert (x == x && y == y);
         spectrumPath.startNewSubPath(x, y);
         
-        for (int i = 0; i < numBins; ++i)
+        for (int i = 1; i < numBins; ++i)
         {
-            x = logTransformInRange0to1 ((i + 1.0f) / numBins) * w;
-            // Ensure that only values > 0 are passed to your drow::toDecibels().
+            x = logTransformInRange0to1 ((float)i / numBins) * w;
+            // Only values > 0 are passed to drow::toDecibels().
             const float yInPercent = data[i]>0 ? float (1 + (drow::toDecibels (data[i]) / 100.0f)) : -0.01;
             y = h - h * yInPercent;
             
