@@ -4,22 +4,8 @@ HiReSam - Open issues / Roadmap
 ===============================
 
 
-Include the pitch detector into the spectrum classes
-----------------------------------------------------
-
-Estimated: 5200s
-Measured:
-
-
-Set a minimal size to the plugin window
----------------------------------------
-
-Estimated: 1800s
-Measured: 
-
-
-Reduce the CPU usage to draw the path
--------------------------------------
+Reduce the CPU usage of the path drawing
+----------------------------------------
 
 http://www.juce.com/forum/topic/improving-waveform/spectrum-drawing-efficiency-opengl
 http://www.juce.com/forum/topic/how-speed-2d-drawing
@@ -27,12 +13,12 @@ http://www.juce.com/forum/topic/how-speed-2d-drawing
 Estimated: 7200s
 Measured:
 
-
-
 Maybe: OpenGL drawing
 ---------------------
 
 http://www.juce.com/forum/topic/how-implement-spectrum-analyzer/oscilloscope-window
+
+
 
 
 About

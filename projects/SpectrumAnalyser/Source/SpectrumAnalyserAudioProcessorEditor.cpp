@@ -20,9 +20,6 @@ SpectrumAnalyserAudioProcessorEditor::SpectrumAnalyserAudioProcessorEditor (Spec
     : AudioProcessorEditor (ownerFilter),
       spectrumViewer (repaintSpectrumViewer, spectrumMagnitudeBuffer, detectedFrequency)
 {
-    // The plugin's initial editor size.
-    setSize (1000, 500);
-    
     sampleRate.addListener (this);
     // The sampleRate has already been set in the SpectrumAnalyserAudioProcessor
     // before the creation of the SpectrumAnalyserAudioProcessorEditor.
@@ -43,6 +40,13 @@ SpectrumAnalyserAudioProcessorEditor::SpectrumAnalyserAudioProcessorEditor (Spec
     addAndMakeVisible (&header);
     addAndMakeVisible (&spectrumViewer);
     addAndMakeVisible (&samWithBubble);
+    
+    // Add the triangular resizer component for the bottom-right of the UI.
+    resizeLimits.setMinimumSize(360, 320);
+    addAndMakeVisible (resizer = new ResizableCornerComponent (this, &resizeLimits));
+    
+    // The plugin's initial editor size.
+    setSize (1000, 500);
 }
 
 SpectrumAnalyserAudioProcessorEditor::~SpectrumAnalyserAudioProcessorEditor()
@@ -57,15 +61,6 @@ void SpectrumAnalyserAudioProcessorEditor::paint (Graphics& g)
 
 void SpectrumAnalyserAudioProcessorEditor::resized()
 {
-// TODO: Move this into a resizer component.
-    const int minWidth = 360;
-    const int minHeight = 320;
-    if (getWidth() < minWidth || getHeight() < minHeight)
-    {
-        setSize (jmax (minWidth, getWidth()), jmax (minHeight, getHeight()));
-    }
-// END TODO
-    
     header.setBounds(0, 0, getWidth(), 24);
     
     spectrumViewer.setBounds (0, header.getHeight(), getWidth(), getHeight() - header.getHeight());
@@ -74,6 +69,8 @@ void SpectrumAnalyserAudioProcessorEditor::resized()
     const int maxHeight = getHeight() - header.getHeight();
     const int height = jmin (310, maxHeight);
     samWithBubble.setBounds(getWidth() - widthForSamWithBubble, header.getHeight(), widthForSamWithBubble, height);
+    
+    resizer->setBounds (getWidth() - 16, getHeight() - 16, 16, 16);
 }
 
 void SpectrumAnalyserAudioProcessorEditor::valueChanged (Value & value)

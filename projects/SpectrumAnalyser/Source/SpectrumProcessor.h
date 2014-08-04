@@ -64,7 +64,7 @@ private:
     drow::FifoBuffer<float> circularBuffer;
 	bool needToProcess;
     
-    drow::PitchDetector pitchDetector;
+    double sampleRate;
     Value detectedFrequency;
     
     Value repaintViewer;

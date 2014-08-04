@@ -24,17 +24,15 @@ SpectrumProcessor::SpectrumProcessor (int fftSizeLog2)
     fftEngine.setWindowType (drow::Window::Hann);
     
     circularBuffer.reset();
-    
-    pitchDetector.setMinMaxFrequency (20, 20000);
 }
 
 SpectrumProcessor::~SpectrumProcessor()
 {
 }
 
-void SpectrumProcessor::setSampleRate (double sampleRate)
+void SpectrumProcessor::setSampleRate (double newSampleRate)
 {
-    pitchDetector.setSampleRate (sampleRate);
+    sampleRate = newSampleRate;
 }
 
 void SpectrumProcessor::copySamples (const float* samples, int numSamples)
@@ -45,22 +43,14 @@ void SpectrumProcessor::copySamples (const float* samples, int numSamples)
 
 int SpectrumProcessor::useTimeSlice()
 {
-    const int sleepTime = 5; // [ms]
+    if (needToProcess)
+    {
+        process();
+        needToProcess = false;
+    }
     
-//	if (paused)
-//    {
-//		return sleepTime;
-//	}
-//	else
-//	{
-		if (needToProcess)
-        {
-			process();
-            needToProcess = false;
-        }
-        
-		return sleepTime;
-//	}
+    const int sleepTime = 5; // [ms]
+    return sleepTime;
 }
 
 void SpectrumProcessor::process()
@@ -73,8 +63,26 @@ void SpectrumProcessor::process()
 		fftEngine.performFFT (tempBlock);
 		fftEngine.updateMagnitudesIfBigger();
         
-        pitchDetector.processSamples(tempBlock.getData(), fftEngine.getFFTSize());
-        detectedFrequency = pitchDetector.getPitch();
+        // find the peak in the FFT.
+        const int nrOfBins = fftEngine.getMagnitudesBuffer().getSize();
+        if (nrOfBins > 0)
+        {
+            float* magnitudeBuffer = fftEngine.getMagnitudesBuffer().getData();
+            
+            int peakIndex = 0;
+            float peakValue = magnitudeBuffer[0];
+        
+            for (int i = 1; i < nrOfBins; ++i)
+            {
+                if (magnitudeBuffer[i] > peakValue)
+                {
+                    peakIndex = i;
+                    peakValue = magnitudeBuffer[i];
+                }
+            }
+            
+            detectedFrequency = (float)peakIndex / nrOfBins * sampleRate / 2;
+        }
 		
 		repaintViewer = true;
 	}

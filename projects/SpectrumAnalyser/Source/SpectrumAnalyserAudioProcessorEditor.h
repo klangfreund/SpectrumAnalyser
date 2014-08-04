@@ -40,12 +40,16 @@ public:
     void valueChanged (Value & value);
     
 private:
+    SpectrumAnalyserAudioProcessor* getProcessor() const;
+    
     SpectrumViewer spectrumViewer;
     Value sampleRate;
     Label header;
     SamWithBubble samWithBubble;
     
-    SpectrumAnalyserAudioProcessor* getProcessor() const;
+    ScopedPointer<ResizableCornerComponent> resizer;
+    /** Specifies the maximum size of the window. */
+    ComponentBoundsConstrainer resizeLimits;
 };
 
 

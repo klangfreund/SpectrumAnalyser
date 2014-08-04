@@ -4,6 +4,18 @@ HiReSam - Closed issues
 =======================
 
 
+Set a minimal size to the plugin window
+---------------------------------------
+
+Estimated: 1800s
+Measured: 
+
+Include the pitch detector into the spectrum classes
+----------------------------------------------------
+
+Estimated: 5200s
+Measured:
+
 Split the Spectroscope into a processing and a component unit
 -------------------------------------------------------------
 
