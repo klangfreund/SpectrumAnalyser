@@ -66,6 +66,8 @@ public:
 
 private:
     //==============================================================================
+    void createGradientImage();
+    
     static const int frequenciesToPlot[];
     static const int numberOfFrequenciesToPlot;
     
@@ -103,10 +105,6 @@ private:
     int heightForFrequencyCaption;
 	
     Image gradientImage;
-    Image scopeImage;
-    
-    void createGradientImage();
-    void renderScopeImage();
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SpectrumViewer);
