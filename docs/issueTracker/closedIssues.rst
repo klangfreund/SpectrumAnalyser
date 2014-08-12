@@ -3,6 +3,11 @@
 HiReSam - Closed issues
 =======================
 
+Get rid of the dRowAudio scopeImage (to decrease CPU load) and directly paint on the SpectrumViewer component.
+--------------------------------------------------------------------------------------------------------------
+
+Estimated: 3600s
+Measured: 3100s
 
 Set a minimal size to the plugin window
 ---------------------------------------

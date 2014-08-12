@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>16D0B8B7-8B72-476B-AF2D-44C4277B9A50</string>
+	<key>IDESourceControlProjectName</key>
+	<string>HiReSam</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>5877AAB9-08B5-4328-9F1C-AB569C9BF7C5</key>
+		<string>ssh://github.com/klangfreund/SpectrumAnalyser.git</string>
+		<key>AFF93FD2-4BD8-4891-8191-278363C7F6D5</key>
+		<string>https://github.com/drowaudio/drowaudio.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>projects/SpectrumAnalyser/Builds/MacOSX/HiReSam.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>5877AAB9-08B5-4328-9F1C-AB569C9BF7C5</key>
+		<string>../../../../../..</string>
+		<key>AFF93FD2-4BD8-4891-8191-278363C7F6D5</key>
+		<string>../../../../JuceLibraryCode/modules/dRowAudio</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>ssh://github.com/klangfreund/SpectrumAnalyser.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>5877AAB9-08B5-4328-9F1C-AB569C9BF7C5</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>AFF93FD2-4BD8-4891-8191-278363C7F6D5</string>
+			<key>IDESourceControlWCCName</key>
+			<string>dRowAudio</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>5877AAB9-08B5-4328-9F1C-AB569C9BF7C5</string>
+			<key>IDESourceControlWCCName</key>
+			<string>SpectrumAnalyser</string>
+		</dict>
+	</array>
+</dict>
+</plist>

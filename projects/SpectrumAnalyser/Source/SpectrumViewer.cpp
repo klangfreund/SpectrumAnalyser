@@ -106,6 +106,7 @@ void SpectrumViewer::paint(Graphics& g)
     jassert (x == x && y == y);
     spectrumPath.startNewSubPath(x, y);
     
+//    g.setColour (Colours::darkgreen);
     for (int i = 1; i < numBins; ++i)
     {
         x = logTransformInRange0to1 ((float)i / numBins) * w;
@@ -113,13 +114,9 @@ void SpectrumViewer::paint(Graphics& g)
         const float yInPercent = data[i]>0 ? float (1 + (drow::toDecibels (data[i]) / 100.0f)) : -0.01;
         y = h - h * yInPercent;
         
-        spectrumPath.lineTo(x, y);
+//        g.drawVerticalLine(x, y, h);
         
-        //            g.drawLine (x1, h - h * y1,
-        //                        x2, h - h * y2);
-        //
-        //            y1 = y2;
-        //            x1 = x2;
+        spectrumPath.lineTo(x, y);
     }
     
     g.setColour (Colours::darkgreen);
