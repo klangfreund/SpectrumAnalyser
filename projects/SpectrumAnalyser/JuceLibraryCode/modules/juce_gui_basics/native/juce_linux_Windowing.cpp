@@ -1184,10 +1184,7 @@ public:
 
     void toBehind (ComponentPeer* other) override
     {
-        LinuxComponentPeer* const otherPeer = dynamic_cast <LinuxComponentPeer*> (other);
-        jassert (otherPeer != nullptr); // wrong type of window?
-
-        if (otherPeer != nullptr)
+        if (LinuxComponentPeer* const otherPeer = dynamic_cast<LinuxComponentPeer*> (other))
         {
             setMinimised (false);
 
@@ -1196,6 +1193,8 @@ public:
             ScopedXLock xlock;
             XRestackWindows (display, newStack, 2);
         }
+        else
+            jassertfalse; // wrong type of window?
     }
 
     bool isFocused() const override
@@ -1227,7 +1226,7 @@ public:
 
     void repaint (const Rectangle<int>& area) override
     {
-        repainter->repaint (area.getIntersection (component.getLocalBounds()));
+        repainter->repaint (area.getIntersection (bounds.withZeroOrigin()));
     }
 
     void performAnyPendingRepaintsNow() override
@@ -3050,7 +3049,7 @@ void Desktop::Displays::findDisplays (float masterScale)
                             d.userArea = d.totalArea = Rectangle<int> (screens[j].x_org,
                                                                        screens[j].y_org,
                                                                        screens[j].width,
-                                                                       screens[j].height) * masterScale;
+                                                                       screens[j].height) / masterScale;
                             d.isMain = (index == 0);
                             d.scale = masterScale;
                             d.dpi = getDisplayDPI (0); // (all screens share the same DPI)
@@ -3378,7 +3377,7 @@ void* MouseCursor::createStandardMouseCursor (MouseCursor::StandardCursorType ty
 
 void MouseCursor::showInWindow (ComponentPeer* peer) const
 {
-    if (LinuxComponentPeer* const lp = dynamic_cast <LinuxComponentPeer*> (peer))
+    if (LinuxComponentPeer* const lp = dynamic_cast<LinuxComponentPeer*> (peer))
         lp->showMouseCursor ((Cursor) getHandle());
 }
 
@@ -3402,7 +3401,7 @@ bool DragAndDropContainer::performExternalDragDropOfFiles (const StringArray& fi
 
     if (MouseInputSource* draggingSource = Desktop::getInstance().getDraggingMouseSource(0))
         if (Component* sourceComp = draggingSource->getComponentUnderMouse())
-            if (LinuxComponentPeer* const lp = dynamic_cast <LinuxComponentPeer*> (sourceComp->getPeer()))
+            if (LinuxComponentPeer* const lp = dynamic_cast<LinuxComponentPeer*> (sourceComp->getPeer()))
                 return lp->externalDragFileInit (files, canMoveFiles);
 
     // This method must be called in response to a component's mouseDown or mouseDrag event!
@@ -3417,7 +3416,7 @@ bool DragAndDropContainer::performExternalDragDropOfText (const String& text)
 
     if (MouseInputSource* draggingSource = Desktop::getInstance().getDraggingMouseSource(0))
         if (Component* sourceComp = draggingSource->getComponentUnderMouse())
-            if (LinuxComponentPeer* const lp = dynamic_cast <LinuxComponentPeer*> (sourceComp->getPeer()))
+            if (LinuxComponentPeer* const lp = dynamic_cast<LinuxComponentPeer*> (sourceComp->getPeer()))
                 return lp->externalDragTextInit (text);
 
     // This method must be called in response to a component's mouseDown or mouseDrag event!

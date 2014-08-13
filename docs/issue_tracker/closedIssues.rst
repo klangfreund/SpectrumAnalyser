@@ -3,6 +3,19 @@
 HiReSam - Closed issues
 =======================
 
+Reduce the CPU usage of the path drawing
+----------------------------------------
+
+http://www.juce.com/forum/topic/improving-waveform/spectrum-drawing-efficiency-opengl
+http://www.juce.com/forum/topic/how-speed-2d-drawing
+
+Estimated: 7200s
+Measured: 3986s
+
+Result: Only a marginal improvement. Therefore keep the current drawing.
+
+
+
 Get rid of the dRowAudio scopeImage (to decrease CPU load) and directly paint on the SpectrumViewer component.
 --------------------------------------------------------------------------------------------------------------
 

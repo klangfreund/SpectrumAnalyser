@@ -3,15 +3,11 @@
 HiReSam - Open issues / Roadmap
 ===============================
 
+Add a README to the project
+---------------------------
 
-Reduce the CPU usage of the path drawing
-----------------------------------------
-
-http://www.juce.com/forum/topic/improving-waveform/spectrum-drawing-efficiency-opengl
-http://www.juce.com/forum/topic/how-speed-2d-drawing
-
-Estimated: 7200s
-Measured:
+Estimated: 2400s
+Measured: 
 
 Maybe: OpenGL drawing
 ---------------------

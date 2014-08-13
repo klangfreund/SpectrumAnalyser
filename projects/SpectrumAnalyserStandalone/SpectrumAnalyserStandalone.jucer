@@ -5,6 +5,7 @@
               companyName="Klangfreund" defines="" includeBinaryInAppConfig="1">
   <MAINGROUP id="AO7N4d" name="HiReSamStandalone">
     <GROUP id="{D890D75C-F095-15C8-EE08-64AFA3E8E73C}" name="Resources SpectrumAnalyser">
+      <FILE id="cwFDLq" name="571.svg" compile="0" resource="1" file="../SpectrumAnalyser/Resources/571.svg"/>
       <FILE id="BjJnSX" name="Samuel_Gaehwiler.png" compile="0" resource="1"
             file="../SpectrumAnalyser/Resources/Samuel_Gaehwiler.png"/>
     </GROUP>

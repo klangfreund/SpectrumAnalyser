@@ -3113,6 +3113,9 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\SpectrumAnalyser\Resources\571.svg">
+      <Filter>HiReSamStandalone\Resources SpectrumAnalyser</Filter>
+    </None>
     <None Include="..\..\..\SpectrumAnalyser\Resources\Samuel_Gaehwiler.png">
       <Filter>HiReSamStandalone\Resources SpectrumAnalyser</Filter>
     </None>

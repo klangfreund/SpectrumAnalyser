@@ -1860,6 +1860,7 @@
     <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h"/>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\Resources\571.svg"/>
     <None Include="..\..\Resources\Samuel_Gaehwiler.png"/>
     <None Include="..\..\JuceLibraryCode\modules\dRowAudio\juce_module_info"/>
     <None Include="..\..\JuceLibraryCode\modules\juce_audio_basics\juce_module_info"/>
