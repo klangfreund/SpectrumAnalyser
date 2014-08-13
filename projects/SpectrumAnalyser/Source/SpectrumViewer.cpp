@@ -120,6 +120,10 @@ void SpectrumViewer::paint(Graphics& g)
     float lineThickness = 0.75f;
     g.strokePath (spectrumPath, PathStrokeType(lineThickness));
     
+    // Remark: Using g.drawVerticalLine - which is told to be much more efficient for the renderer -
+    // on every bin position instead of using a Path improved the overall performance of this
+    // spectrum analyser by only 5%. (I profiled it)
+    
     // Bottom right point.
     spectrumPath.lineTo(x, getHeight());
     // Bottom left point.
