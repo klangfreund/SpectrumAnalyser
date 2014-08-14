@@ -106,6 +106,8 @@ private:
 	
     Image gradientImage;
     
+    Path path571;
+    
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SpectrumViewer);
 };
