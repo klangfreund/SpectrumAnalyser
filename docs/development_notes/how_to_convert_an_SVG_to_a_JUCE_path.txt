@@ -1,0 +1,17 @@
+An SVG is an XML that can contain multiple paths and other shapes and stuff.
+
+
+1. Create an SVG containing one single path
+-------------------------------------------
+
+In Illustrator, create your vector graphics (containing multiple shapes).
+Convert everything to paths.
+(If you save this as svg and open in an editor, you will get multiple paths)
+Select all and go to Object -> Compound Path -> Make.
+Save as SVG.
+
+2. Create the C++ JUCE::Path code
+---------------------------------
+
+Open the SVG in a text editor and copy the SVG path string - the string after 'd=' - to the SVG Path Converter of the Introjucer.
+This provides you with code to paste into a cpp file.

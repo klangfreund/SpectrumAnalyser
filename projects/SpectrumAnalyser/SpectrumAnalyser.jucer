@@ -11,7 +11,6 @@
               pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="3.1.0">
   <MAINGROUP id="oRDNlC" name="HiReSam">
     <GROUP id="{9B255AF0-ECB2-496B-3E36-21437FCA54DF}" name="Resources">
-      <FILE id="bWwdUC" name="571.svg" compile="0" resource="1" file="Resources/571.svg"/>
       <FILE id="qxh07k" name="Samuel_Gaehwiler.png" compile="0" resource="1"
             file="Resources/Samuel_Gaehwiler.png"/>
     </GROUP>

@@ -3194,9 +3194,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\Resources\571.svg">
-      <Filter>HiReSam\Resources</Filter>
-    </None>
     <None Include="..\..\Resources\Samuel_Gaehwiler.png">
       <Filter>HiReSam\Resources</Filter>
     </None>

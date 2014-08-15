@@ -1934,7 +1934,6 @@
     <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h"/>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\SpectrumAnalyser\Resources\571.svg"/>
     <None Include="..\..\..\SpectrumAnalyser\Resources\Samuel_Gaehwiler.png"/>
     <None Include="..\..\..\SpectrumAnalyser\JuceLibraryCode\modules\dRowAudio\juce_module_info"/>
     <None Include="..\..\..\SpectrumAnalyser\JuceLibraryCode\modules\juce_audio_basics\juce_module_info"/>

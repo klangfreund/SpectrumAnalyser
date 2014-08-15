@@ -68,6 +68,8 @@ private:
     //==============================================================================
     void createGradientImage();
     
+    Path get571RecordingStudioPath();
+    
     static const int frequenciesToPlot[];
     static const int numberOfFrequenciesToPlot;
     
