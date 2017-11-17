@@ -2,29 +2,30 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2013 - Raw Material Software Ltd.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission is granted to use this software under the terms of either:
-   a) the GPL v2 (or any later version)
-   b) the Affero GPL v3
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   Details of these licenses can be found at: www.gnu.org/licenses
+   By using JUCE, you agree to the terms of both the JUCE 5 End-User License
+   Agreement and JUCE 5 Privacy Policy (both updated and effective as of the
+   27th April 2017).
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+   End User License Agreement: www.juce.com/juce-5-licence
+   Privacy Policy: www.juce.com/juce-5-privacy-policy
 
-   ------------------------------------------------------------------------------
+   Or: You may also use this code under the terms of the GPL v3 (see
+   www.gnu.org/licenses).
 
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.juce.com for more information.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
 
-#ifndef JUCE_CONCERTINAPANEL_H_INCLUDED
-#define JUCE_CONCERTINAPANEL_H_INCLUDED
-
+namespace juce
+{
 
 //==============================================================================
 /**
@@ -85,13 +86,26 @@ public:
         expanded to that size. Otherwise, it'll fill as much of the total
         space as possible.
     */
-    bool expandPanelFully (Component* panelComponent, const bool animate);
+    bool expandPanelFully (Component* panelComponent, bool animate);
 
     /** Sets a maximum size for one of the panels. */
     void setMaximumPanelSize (Component* panelComponent, int maximumSize);
 
     /** Sets the height of the header section for one of the panels. */
     void setPanelHeaderSize (Component* panelComponent, int headerSize);
+
+    /** Sets a custom header Component for one of the panels.
+
+        @param panelComponent           the panel component to add the custom header to.
+        @param customHeaderComponent    the custom component to use for the panel header.
+                                        This can be nullptr to clear the custom header component
+                                        and just use the standard LookAndFeel panel.
+        @param takeOwnership            if true, then the PanelHolder will take ownership
+                                        of the custom header component, and will delete it later when
+                                        it's no longer needed. If false, it won't delete it, and
+                                        you must make sure it doesn't get deleted while in use.
+     */
+    void setCustomPanelHeader (Component* panelComponent, Component* customHeaderComponent, bool takeOwnership);
 
     //==============================================================================
     /** This abstract base class is implemented by LookAndFeel classes. */
@@ -100,7 +114,8 @@ public:
         virtual ~LookAndFeelMethods() {}
 
         virtual void drawConcertinaPanelHeader (Graphics&, const Rectangle<int>& area,
-                                                bool isMouseOver, bool isMouseDown, ConcertinaPanel&, Component&) = 0;
+                                                bool isMouseOver, bool isMouseDown,
+                                                ConcertinaPanel&, Component&) = 0;
     };
 
 private:
@@ -127,5 +142,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ConcertinaPanel)
 };
 
-
-#endif   // JUCE_CONCERTINAPANEL_H_INCLUDED
+} // namespace juce

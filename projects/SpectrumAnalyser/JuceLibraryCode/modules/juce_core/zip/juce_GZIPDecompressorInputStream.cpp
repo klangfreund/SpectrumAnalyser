@@ -1,30 +1,27 @@
 /*
   ==============================================================================
 
-   This file is part of the juce_core module of the JUCE library.
-   Copyright (c) 2013 - Raw Material Software Ltd.
+   This file is part of the JUCE library.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission to use, copy, modify, and/or distribute this software for any purpose with
-   or without fee is hereby granted, provided that the above copyright notice and this
-   permission notice appear in all copies.
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD
-   TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN
-   NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
-   DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER
-   IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
-   CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+   The code included in this file is provided under the terms of the ISC license
+   http://www.isc.org/downloads/software-support-policy/isc-license. Permission
+   To use, copy, modify, and/or distribute this software for any purpose with or
+   without fee is hereby granted provided that the above copyright notice and
+   this permission notice appear in all copies.
 
-   ------------------------------------------------------------------------------
-
-   NOTE! This permissive ISC license applies ONLY to files within the juce_core module!
-   All other JUCE modules are covered by a dual GPL/commercial license, so if you are
-   using any other modules, be sure to check that you also comply with their license.
-
-   For more details, visit www.juce.com
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
+
+namespace juce
+{
 
 #if JUCE_MSVC
  #pragma warning (push)
@@ -39,6 +36,9 @@ namespace zlibNamespace
    #pragma clang diagnostic ignored "-Wconversion"
    #pragma clang diagnostic ignored "-Wshadow"
    #pragma clang diagnostic ignored "-Wdeprecated-register"
+   #if __has_warning("-Wcomma")
+    #pragma clang diagnostic ignored "-Wcomma"
+   #endif
   #endif
 
   #undef OS_CODE
@@ -77,6 +77,15 @@ namespace zlibNamespace
   #endif
  #else
   #include JUCE_ZLIB_INCLUDE_PATH
+
+  #ifndef z_uInt
+   #ifdef uInt
+    #define z_uInt uInt
+   #else
+    #define z_uInt unsigned int
+   #endif
+  #endif
+
  #endif
 }
 
@@ -90,25 +99,18 @@ namespace zlibNamespace
 class GZIPDecompressorInputStream::GZIPDecompressHelper
 {
 public:
-    GZIPDecompressHelper (const bool dontWrap)
-        : finished (true),
-          needsDictionary (false),
-          error (true),
-          streamIsValid (false),
-          data (nullptr),
-          dataSize (0)
+    GZIPDecompressHelper (Format f)
     {
         using namespace zlibNamespace;
         zerostruct (stream);
-        streamIsValid = (inflateInit2 (&stream, dontWrap ? -MAX_WBITS : MAX_WBITS) == Z_OK);
+        streamIsValid = (inflateInit2 (&stream, getBitsForFormat (f)) == Z_OK);
         finished = error = ! streamIsValid;
     }
 
     ~GZIPDecompressHelper()
     {
-        using namespace zlibNamespace;
         if (streamIsValid)
-            inflateEnd (&stream);
+            zlibNamespace::inflateEnd (&stream);
     }
 
     bool needsInput() const noexcept        { return dataSize <= 0; }
@@ -122,6 +124,7 @@ public:
     int doNextBlock (uint8* const dest, const unsigned int destSize)
     {
         using namespace zlibNamespace;
+
         if (streamIsValid && data != nullptr && ! finished)
         {
             stream.next_in  = data;
@@ -157,45 +160,56 @@ public:
         return 0;
     }
 
-    bool finished, needsDictionary, error, streamIsValid;
+    static int getBitsForFormat (Format f) noexcept
+    {
+        switch (f)
+        {
+            case zlibFormat:     return  MAX_WBITS;
+            case deflateFormat:  return -MAX_WBITS;
+            case gzipFormat:     return  MAX_WBITS | 16;
+            default:             jassertfalse; break;
+        }
+
+        return MAX_WBITS;
+    }
+
+    bool finished = true, needsDictionary = false, error = true, streamIsValid = false;
 
     enum { gzipDecompBufferSize = 32768 };
 
 private:
     zlibNamespace::z_stream stream;
-    uint8* data;
-    size_t dataSize;
+    uint8* data = nullptr;
+    size_t dataSize = 0;
 
     JUCE_DECLARE_NON_COPYABLE (GZIPDecompressHelper)
 };
 
 //==============================================================================
-GZIPDecompressorInputStream::GZIPDecompressorInputStream (InputStream* const source,
-                                                          const bool deleteSourceWhenDestroyed,
-                                                          const bool noWrap_,
-                                                          const int64 uncompressedStreamLength_)
+GZIPDecompressorInputStream::GZIPDecompressorInputStream (InputStream* source, bool deleteSourceWhenDestroyed,
+                                                          Format f, int64 uncompressedLength)
   : sourceStream (source, deleteSourceWhenDestroyed),
-    uncompressedStreamLength (uncompressedStreamLength_),
-    noWrap (noWrap_),
+    uncompressedStreamLength (uncompressedLength),
+    format (f),
     isEof (false),
     activeBufferSize (0),
     originalSourcePos (source->getPosition()),
     currentPos (0),
     buffer ((size_t) GZIPDecompressHelper::gzipDecompBufferSize),
-    helper (new GZIPDecompressHelper (noWrap_))
+    helper (new GZIPDecompressHelper (f))
 {
 }
 
 GZIPDecompressorInputStream::GZIPDecompressorInputStream (InputStream& source)
   : sourceStream (&source, false),
     uncompressedStreamLength (-1),
-    noWrap (false),
+    format (zlibFormat),
     isEof (false),
     activeBufferSize (0),
     originalSourcePos (source.getPosition()),
     currentPos (0),
     buffer ((size_t) GZIPDecompressHelper::gzipDecompBufferSize),
-    helper (new GZIPDecompressHelper (false))
+    helper (new GZIPDecompressHelper (zlibFormat))
 {
 }
 
@@ -215,7 +229,7 @@ int GZIPDecompressorInputStream::read (void* destBuffer, int howMany)
     if (howMany > 0 && ! isEof)
     {
         int numRead = 0;
-        uint8* d = static_cast <uint8*> (destBuffer);
+        uint8* d = static_cast<uint8*> (destBuffer);
 
         while (! helper->error)
         {
@@ -278,7 +292,7 @@ bool GZIPDecompressorInputStream::setPosition (int64 newPos)
         isEof = false;
         activeBufferSize = 0;
         currentPos = 0;
-        helper = new GZIPDecompressHelper (noWrap);
+        helper = new GZIPDecompressHelper (format);
 
         sourceStream->setPosition (originalSourcePos);
     }
@@ -286,3 +300,5 @@ bool GZIPDecompressorInputStream::setPosition (int64 newPos)
     skipNextBytes (newPos - currentPos);
     return true;
 }
+
+} // namespace juce

@@ -77,19 +77,18 @@ void SpectrumViewer::paint(Graphics& g)
     g.fillRect(0, 0, w, h);
     
     
-    // Draw the "571 recording studio" logo
-    // ------------------------------------
-    Rectangle<float> targetRectangle = getLocalBounds().toFloat();
-    targetRectangle.removeFromBottom (heightForFrequencyCaption);
-    targetRectangle = targetRectangle.reduced(10.0f);
-    // g.setColour (Colours::black.brighter(0.125));
-    g.setColour (Colours::lightgoldenrodyellow.darker(JUCE_LIVE_CONSTANT (7.5f)));
-    g.fillPath (path571, RectanglePlacement (RectanglePlacement::centred)
-                .getTransformToFit (path571.getBounds(), targetRectangle));
-    //    g.setColour (Colours::green);
-    //    float lineThickness2 = 0.75f;
-    //    g.strokePath (path571, PathStrokeType(lineThickness2), RectanglePlacement (RectanglePlacement::centred)
-    //                  .getTransformToFit (path571.getBounds(), targetRectangle));
+//    // Draw the "571 recording studio" logo
+//    // ------------------------------------
+//    Rectangle<float> targetRectangle = getLocalBounds().toFloat();
+//    targetRectangle.removeFromBottom (heightForFrequencyCaption);
+//    targetRectangle = targetRectangle.reduced(10.0f);
+//    g.setColour (Colours::lightgoldenrodyellow.darker(JUCE_LIVE_CONSTANT (7.5f)));
+//    g.fillPath (path571, RectanglePlacement (RectanglePlacement::centred)
+//                .getTransformToFit (path571.getBounds(), targetRectangle));
+//    //    g.setColour (Colours::green);
+//    //    float lineThickness2 = 0.75f;
+//    //    g.strokePath (path571, PathStrokeType(lineThickness2), RectanglePlacement (RectanglePlacement::centred)
+//    //                  .getTransformToFit (path571.getBounds(), targetRectangle));
     
     
     // Draw the vertical lines

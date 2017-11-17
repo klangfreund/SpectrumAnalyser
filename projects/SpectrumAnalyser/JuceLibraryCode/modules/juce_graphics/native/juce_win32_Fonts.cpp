@@ -2,25 +2,30 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2013 - Raw Material Software Ltd.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission is granted to use this software under the terms of either:
-   a) the GPL v2 (or any later version)
-   b) the Affero GPL v3
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   Details of these licenses can be found at: www.gnu.org/licenses
+   By using JUCE, you agree to the terms of both the JUCE 5 End-User License
+   Agreement and JUCE 5 Privacy Policy (both updated and effective as of the
+   27th April 2017).
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+   End User License Agreement: www.juce.com/juce-5-licence
+   Privacy Policy: www.juce.com/juce-5-privacy-policy
 
-   ------------------------------------------------------------------------------
+   Or: You may also use this code under the terms of the GPL v3 (see
+   www.gnu.org/licenses).
 
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.juce.com for more information.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
+
+namespace juce
+{
 
 /*  This is some quick-and-dirty code to extract the typeface name from a lump of TTF file data.
     It's needed because although win32 will happily load a TTF file from in-memory data, it won't
@@ -73,7 +78,7 @@ namespace TTFNameExtractor
             for (int i = 0; i < numChars; ++i)
                 buffer[i] = ByteOrder::swapIfLittleEndian (buffer[i]);
 
-            static_jassert (sizeof (CharPointer_UTF16::CharType) == sizeof (uint16));
+            static_assert (sizeof (CharPointer_UTF16::CharType) == sizeof (uint16), "Sanity check UTF-16 type");
             result = CharPointer_UTF16 ((CharPointer_UTF16::CharType*) buffer.getData());
         }
         else
@@ -110,7 +115,7 @@ namespace TTFNameExtractor
             }
         }
 
-        return String();
+        return {};
     }
 
     static String getTypefaceNameFromFile (MemoryInputStream& input)
@@ -128,7 +133,7 @@ namespace TTFNameExtractor
                 return parseNameTable (input, ByteOrder::swapIfLittleEndian (tableDirectory.offset));
         }
 
-        return String();
+        return {};
     }
 }
 
@@ -363,7 +368,7 @@ public:
         results[numChars] = -1;
         float x = 0;
 
-        if (GetGlyphIndices (dc, utf16, (int) numChars, reinterpret_cast <WORD*> (results.getData()),
+        if (GetGlyphIndices (dc, utf16, (int) numChars, reinterpret_cast<WORD*> (results.getData()),
                              GGI_MARK_NONEXISTING_GLYPHS) != GDI_ERROR)
         {
             for (size_t i = 0; i < numChars; ++i)
@@ -381,7 +386,7 @@ public:
         results[numChars] = -1;
         float x = 0;
 
-        if (GetGlyphIndices (dc, utf16, (int) numChars, reinterpret_cast <WORD*> (results.getData()),
+        if (GetGlyphIndices (dc, utf16, (int) numChars, reinterpret_cast<WORD*> (results.getData()),
                              GGI_MARK_NONEXISTING_GLYPHS) != GDI_ERROR)
         {
             resultGlyphs.ensureStorageAllocated ((int) numChars);
@@ -542,22 +547,22 @@ private:
         }
     }
 
-    void createKerningPairs (HDC dc, const float height)
+    void createKerningPairs (HDC hdc, const float height)
     {
         HeapBlock<KERNINGPAIR> rawKerning;
-        const DWORD numKPs = GetKerningPairs (dc, 0, 0);
+        const DWORD numKPs = GetKerningPairs (hdc, 0, 0);
         rawKerning.calloc (numKPs);
-        GetKerningPairs (dc, numKPs, rawKerning);
+        GetKerningPairs (hdc, numKPs, rawKerning);
 
         kerningPairs.ensureStorageAllocated ((int) numKPs);
 
         for (DWORD i = 0; i < numKPs; ++i)
         {
             KerningPair kp;
-            kp.glyph1 = getGlyphForChar (dc, rawKerning[i].wFirst);
-            kp.glyph2 = getGlyphForChar (dc, rawKerning[i].wSecond);
+            kp.glyph1 = getGlyphForChar (hdc, rawKerning[i].wFirst);
+            kp.glyph2 = getGlyphForChar (hdc, rawKerning[i].wSecond);
 
-            const int standardWidth = getGlyphWidth (dc, kp.glyph1);
+            const int standardWidth = getGlyphWidth (hdc, kp.glyph1);
             kp.kerning = (standardWidth + rawKerning[i].iKernAmount) / height;
             kerningPairs.add (kp);
 
@@ -587,7 +592,7 @@ private:
         return gm.gmCellIncX;
     }
 
-    float getKerning (HDC dc, const int glyph1, const int glyph2)
+    float getKerning (HDC hdc, const int glyph1, const int glyph2)
     {
         KerningPair kp;
         kp.glyph1 = glyph1;
@@ -602,7 +607,7 @@ private:
             if (index < 0)
             {
                 kp.glyph2 = -1;
-                kp.kerning = getGlyphWidth (dc, kp.glyph1) / (float) tm.tmHeight;
+                kp.kerning = getGlyphWidth (hdc, kp.glyph1) / (float) tm.tmHeight;
                 kerningPairs.add (kp);
                 return kp.kerning;
             }
@@ -642,3 +647,5 @@ void Typeface::scanFolderForFonts (const File&)
 {
     jassertfalse; // not implemented on this platform
 }
+
+} // namespace juce

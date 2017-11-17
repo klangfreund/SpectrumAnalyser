@@ -2,29 +2,30 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2013 - Raw Material Software Ltd.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission is granted to use this software under the terms of either:
-   a) the GPL v2 (or any later version)
-   b) the Affero GPL v3
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   Details of these licenses can be found at: www.gnu.org/licenses
+   By using JUCE, you agree to the terms of both the JUCE 5 End-User License
+   Agreement and JUCE 5 Privacy Policy (both updated and effective as of the
+   27th April 2017).
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+   End User License Agreement: www.juce.com/juce-5-licence
+   Privacy Policy: www.juce.com/juce-5-privacy-policy
 
-   ------------------------------------------------------------------------------
+   Or: You may also use this code under the terms of the GPL v3 (see
+   www.gnu.org/licenses).
 
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.juce.com for more information.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
 
-#ifndef JUCE_AFFINETRANSFORM_H_INCLUDED
-#define JUCE_AFFINETRANSFORM_H_INCLUDED
-
+namespace juce
+{
 
 //==============================================================================
 /**
@@ -37,7 +38,7 @@
 
     @see Path, Point, Line
 */
-class JUCE_API  AffineTransform
+class JUCE_API  AffineTransform  final
 {
 public:
     //==============================================================================
@@ -67,15 +68,13 @@ public:
     /** Compares two transforms. */
     bool operator!= (const AffineTransform& other) const noexcept;
 
-    /** A ready-to-use identity transform, which you can use to append other
-        transformations to.
-
-        e.g. @code
-        AffineTransform myTransform = AffineTransform::identity.rotated (.5f)
-                                                               .scaled (2.0f);
-        @endcode
+   #if JUCE_ALLOW_STATIC_NULL_VARIABLES
+    /** A ready-to-use identity transform.
+        Note that you should always avoid using a static variable like this, and
+        prefer AffineTransform() or {} if you need a default-constructed instance.
     */
     static const AffineTransform identity;
+   #endif
 
     //==============================================================================
     /** Transforms a 2D coordinate using this matrix. */
@@ -83,8 +82,8 @@ public:
     void transformPoint (ValueType& x, ValueType& y) const noexcept
     {
         const ValueType oldX = x;
-        x = static_cast <ValueType> (mat00 * oldX + mat01 * y + mat02);
-        y = static_cast <ValueType> (mat10 * oldX + mat11 * y + mat12);
+        x = static_cast<ValueType> (mat00 * oldX + mat01 * y + mat02);
+        y = static_cast<ValueType> (mat10 * oldX + mat11 * y + mat12);
     }
 
     /** Transforms two 2D coordinates using this matrix.
@@ -97,10 +96,10 @@ public:
                           ValueType& x2, ValueType& y2) const noexcept
     {
         const ValueType oldX1 = x1, oldX2 = x2;
-        x1 = static_cast <ValueType> (mat00 * oldX1 + mat01 * y1 + mat02);
-        y1 = static_cast <ValueType> (mat10 * oldX1 + mat11 * y1 + mat12);
-        x2 = static_cast <ValueType> (mat00 * oldX2 + mat01 * y2 + mat02);
-        y2 = static_cast <ValueType> (mat10 * oldX2 + mat11 * y2 + mat12);
+        x1 = static_cast<ValueType> (mat00 * oldX1 + mat01 * y1 + mat02);
+        y1 = static_cast<ValueType> (mat10 * oldX1 + mat11 * y1 + mat12);
+        x2 = static_cast<ValueType> (mat00 * oldX2 + mat01 * y2 + mat02);
+        y2 = static_cast<ValueType> (mat10 * oldX2 + mat11 * y2 + mat12);
     }
 
     /** Transforms three 2D coordinates using this matrix.
@@ -114,12 +113,12 @@ public:
                           ValueType& x3, ValueType& y3) const noexcept
     {
         const ValueType oldX1 = x1, oldX2 = x2, oldX3 = x3;
-        x1 = static_cast <ValueType> (mat00 * oldX1 + mat01 * y1 + mat02);
-        y1 = static_cast <ValueType> (mat10 * oldX1 + mat11 * y1 + mat12);
-        x2 = static_cast <ValueType> (mat00 * oldX2 + mat01 * y2 + mat02);
-        y2 = static_cast <ValueType> (mat10 * oldX2 + mat11 * y2 + mat12);
-        x3 = static_cast <ValueType> (mat00 * oldX3 + mat01 * y3 + mat02);
-        y3 = static_cast <ValueType> (mat10 * oldX3 + mat11 * y3 + mat12);
+        x1 = static_cast<ValueType> (mat00 * oldX1 + mat01 * y1 + mat02);
+        y1 = static_cast<ValueType> (mat10 * oldX1 + mat11 * y1 + mat12);
+        x2 = static_cast<ValueType> (mat00 * oldX2 + mat01 * y2 + mat02);
+        y2 = static_cast<ValueType> (mat10 * oldX2 + mat11 * y2 + mat12);
+        x3 = static_cast<ValueType> (mat00 * oldX3 + mat01 * y3 + mat02);
+        y3 = static_cast<ValueType> (mat10 * oldX3 + mat11 * y3 + mat12);
     }
 
     //==============================================================================
@@ -231,8 +230,7 @@ public:
                                              float x10, float y10,
                                              float x01, float y01) noexcept;
 
-    /** Returns the transform that will map three specified points onto three target points.
-    */
+    /** Returns the transform that will map three specified points onto three target points. */
     static AffineTransform fromTargetPoints (float sourceX1, float sourceY1, float targetX1, float targetY1,
                                              float sourceX2, float sourceY2, float targetX2, float targetY2,
                                              float sourceX3, float sourceY3, float targetX3, float targetY3) noexcept;
@@ -276,11 +274,6 @@ public:
     */
     float mat00, mat01, mat02;
     float mat10, mat11, mat12;
-
-
-private:
-    //==============================================================================
-    JUCE_LEAK_DETECTOR (AffineTransform)
 };
 
-#endif   // JUCE_AFFINETRANSFORM_H_INCLUDED
+} // namespace juce

@@ -2,29 +2,26 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2013 - Raw Material Software Ltd.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission is granted to use this software under the terms of either:
-   a) the GPL v2 (or any later version)
-   b) the Affero GPL v3
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   Details of these licenses can be found at: www.gnu.org/licenses
+   The code included in this file is provided under the terms of the ISC license
+   http://www.isc.org/downloads/software-support-policy/isc-license. Permission
+   To use, copy, modify, and/or distribute this software for any purpose with or
+   without fee is hereby granted provided that the above copyright notice and
+   this permission notice appear in all copies.
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
-   ------------------------------------------------------------------------------
-
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.juce.com for more information.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
 
-#ifndef JUCE_AUDIODEVICEMANAGER_H_INCLUDED
-#define JUCE_AUDIODEVICEMANAGER_H_INCLUDED
-
+namespace juce
+{
 
 //==============================================================================
 /**
@@ -211,7 +208,7 @@ public:
     /** Returns the current device properties that are in use.
         @see setAudioDeviceSetup
     */
-    void getAudioDeviceSetup (AudioDeviceSetup& result);
+    void getAudioDeviceSetup (AudioDeviceSetup& result) const;
 
     /** Changes the current device or its settings.
 
@@ -404,26 +401,28 @@ public:
     */
     void playTestSound();
 
-    /** Turns on level-measuring.
-
-        When enabled, the device manager will measure the peak input level
-        across all channels, and you can get this level by calling getCurrentInputLevel().
-
-        This is mainly intended for audio setup UI panels to use to create a mic
-        level display, so that the user can check that they've selected the right
-        device.
-
-        A simple filter is used to make the level decay smoothly, but this is
-        only intended for giving rough feedback, and not for any kind of accurate
-        measurement.
+    //==============================================================================
+    /** Turns on level-measuring for input channels.
+        @see getCurrentInputLevel()
     */
-    void enableInputLevelMeasurement (bool enableMeasurement);
+    void enableInputLevelMeasurement (bool enableMeasurement) noexcept;
+
+    /** Turns on level-measuring for output channels.
+        @see getCurrentOutputLevel()
+    */
+    void enableOutputLevelMeasurement (bool enableMeasurement) noexcept;
 
     /** Returns the current input level.
         To use this, you must first enable it by calling enableInputLevelMeasurement().
-        See enableInputLevelMeasurement() for more info.
+        @see enableInputLevelMeasurement()
     */
-    double getCurrentInputLevel() const;
+    double getCurrentInputLevel() const noexcept;
+
+    /** Returns the current output level.
+        To use this, you must first enable it by calling enableOutputLevelMeasurement().
+        @see enableOutputLevelMeasurement()
+    */
+    double getCurrentOutputLevel() const noexcept;
 
     /** Returns the a lock that can be used to synchronise access to the audio callback.
         Obviously while this is locked, you're blocking the audio thread from running, so
@@ -436,6 +435,15 @@ public:
         it must only be used for very brief periods when absolutely necessary.
     */
     CriticalSection& getMidiCallbackLock() noexcept         { return midiCallbackLock; }
+
+    //==============================================================================
+    /** Returns the number of under- or over runs reported.
+
+        This method will use the underlying device's native getXRunCount if it supports
+        it. Otherwise it will estimate the number of under-/overruns by measuring the
+        time it spent in the audio callback.
+    */
+    int getXRunCount() const noexcept;
 
 private:
     //==============================================================================
@@ -450,11 +458,6 @@ private:
     BigInteger inputChannels, outputChannels;
     ScopedPointer<XmlElement> lastExplicitSettings;
     mutable bool listNeedsScanning;
-    bool useInputNames;
-    Atomic<int> inputLevelMeasurementEnabledCount;
-    double inputLevel;
-    ScopedPointer<AudioSampleBuffer> testSound;
-    int testSoundPosition;
     AudioSampleBuffer tempBuffer;
 
     struct MidiCallbackInfo
@@ -471,7 +474,24 @@ private:
     ScopedPointer<MidiOutput> defaultMidiOutput;
     CriticalSection audioCallbackLock, midiCallbackLock;
 
-    double cpuUsageMs, timeToCpuScale;
+    ScopedPointer<AudioSampleBuffer> testSound;
+    int testSoundPosition;
+
+    double cpuUsageMs, timeToCpuScale, msPerBlock;
+    int xruns;
+
+    struct LevelMeter
+    {
+        LevelMeter() noexcept;
+        void updateLevel (const float* const*, int numChannels, int numSamples) noexcept;
+        void setEnabled (bool) noexcept;
+        double getCurrentLevel() const noexcept;
+
+        Atomic<int> enabled;
+        double level;
+    };
+
+    LevelMeter inputLevelMeter, outputLevelMeter;
 
     //==============================================================================
     class CallbackHandler;
@@ -509,4 +529,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioDeviceManager)
 };
 
-#endif   // JUCE_AUDIODEVICEMANAGER_H_INCLUDED
+} // namespace juce

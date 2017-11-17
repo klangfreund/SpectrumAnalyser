@@ -2,29 +2,30 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2013 - Raw Material Software Ltd.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission is granted to use this software under the terms of either:
-   a) the GPL v2 (or any later version)
-   b) the Affero GPL v3
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   Details of these licenses can be found at: www.gnu.org/licenses
+   By using JUCE, you agree to the terms of both the JUCE 5 End-User License
+   Agreement and JUCE 5 Privacy Policy (both updated and effective as of the
+   27th April 2017).
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+   End User License Agreement: www.juce.com/juce-5-licence
+   Privacy Policy: www.juce.com/juce-5-privacy-policy
 
-   ------------------------------------------------------------------------------
+   Or: You may also use this code under the terms of the GPL v3 (see
+   www.gnu.org/licenses).
 
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.juce.com for more information.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
 
-#ifndef JUCE_LABEL_H_INCLUDED
-#define JUCE_LABEL_H_INCLUDED
-
+namespace juce
+{
 
 //==============================================================================
 /**
@@ -33,9 +34,9 @@
 */
 class JUCE_API  Label  : public Component,
                          public SettableTooltipClient,
-                         protected TextEditorListener,
+                         protected TextEditor::Listener,
                          private ComponentListener,
-                         private ValueListener
+                         private Value::Listener
 {
 public:
     //==============================================================================
@@ -44,8 +45,8 @@ public:
         @param componentName    the name to give the component
         @param labelText        the text to show in the label
     */
-    Label (const String& componentName = String::empty,
-           const String& labelText = String::empty);
+    Label (const String& componentName = String(),
+           const String& labelText = String());
 
     /** Destructor. */
     ~Label();
@@ -117,7 +118,7 @@ public:
     void setJustificationType (Justification justification);
 
     /** Returns the type of justification, as set in setJustificationType(). */
-    Justification getJustificationType() const noexcept                 { return justification; }
+    Justification getJustificationType() const noexcept                         { return justification; }
 
     /** Changes the border that is left between the edge of the component and the text.
         By default there's a small gap left at the sides of the component to allow for
@@ -126,7 +127,7 @@ public:
     void setBorderSize (BorderSize<int> newBorderSize);
 
     /** Returns the size of the border to be left around the text. */
-    BorderSize<int> getBorderSize() const noexcept                      { return border; }
+    BorderSize<int> getBorderSize() const noexcept                              { return border; }
 
     /** Makes this label "stick to" another component.
 
@@ -148,20 +149,23 @@ public:
 
     /** If the label is attached to the left of another component, this returns true.
 
-        Returns false if the label is above the other component. This is only relevent if
+        Returns false if the label is above the other component. This is only relevant if
         attachToComponent() has been called.
     */
-    bool isAttachedOnLeft() const noexcept                              { return leftOfOwnerComp; }
+    bool isAttachedOnLeft() const noexcept                                      { return leftOfOwnerComp; }
 
     /** Specifies the minimum amount that the font can be squashed horizontally before it starts
-        using ellipsis.
+        using ellipsis. Use a value of 0 for a default value.
 
         @see Graphics::drawFittedText
     */
     void setMinimumHorizontalScale (float newScale);
 
     /** Specifies the amount that the font can be squashed horizontally. */
-    float getMinimumHorizontalScale() const noexcept                    { return minimumHorizontalScale; }
+    float getMinimumHorizontalScale() const noexcept                            { return minimumHorizontalScale; }
+
+    /** Set a keyboard type for use when the text editor is shown. */
+    void setKeyboardType (TextInputTarget::VirtualKeyboardType type) noexcept   { keyboardType = type; }
 
     //==============================================================================
     /**
@@ -184,7 +188,10 @@ public:
         virtual void labelTextChanged (Label* labelThatHasChanged) = 0;
 
         /** Called when a Label goes into editing mode and displays a TextEditor. */
-        virtual void editorShown (Label*, TextEditor& textEditorShown);
+        virtual void editorShown (Label*, TextEditor&) {}
+
+        /** Called when a Label is about to delete its TextEditor and exit editing mode. */
+        virtual void editorHidden (Label*, TextEditor&) {}
     };
 
     /** Registers a listener that will be called when the label's text changes. */
@@ -331,6 +338,7 @@ private:
     WeakReference<Component> ownerComponent;
     BorderSize<int> border;
     float minimumHorizontalScale;
+    TextInputTarget::VirtualKeyboardType keyboardType;
     bool editSingleClick;
     bool editDoubleClick;
     bool lossOfFocusDiscardsChanges;
@@ -344,4 +352,4 @@ private:
 /** This typedef is just for compatibility with old code - newer code should use the Label::Listener class directly. */
 typedef Label::Listener LabelListener;
 
-#endif   // JUCE_LABEL_H_INCLUDED
+} // namespace juce

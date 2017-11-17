@@ -1,6 +1,6 @@
 /* libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2004-2009  Josh Coalson
- * Copyright (C) 2011-2013  Xiph.Org Foundation
+ * Copyright (C) 2011-2014  Xiph.Org Foundation
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -34,7 +34,10 @@
 #define FLAC__CALLBACK_H
 
 #include "ordinals.h"
-#include <stdlib.h> /* for size_t */
+
+// JUCE: removed as JUCE already includes this and including stdlib
+// in FlacNamespace will cause problems
+//#include <stdlib.h>
 
 /** \file include/FLAC/callback.h
  *

@@ -2,29 +2,30 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2013 - Raw Material Software Ltd.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission is granted to use this software under the terms of either:
-   a) the GPL v2 (or any later version)
-   b) the Affero GPL v3
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   Details of these licenses can be found at: www.gnu.org/licenses
+   By using JUCE, you agree to the terms of both the JUCE 5 End-User License
+   Agreement and JUCE 5 Privacy Policy (both updated and effective as of the
+   27th April 2017).
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+   End User License Agreement: www.juce.com/juce-5-licence
+   Privacy Policy: www.juce.com/juce-5-privacy-policy
 
-   ------------------------------------------------------------------------------
+   Or: You may also use this code under the terms of the GPL v3 (see
+   www.gnu.org/licenses).
 
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.juce.com for more information.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
 
-#ifndef JUCE_PLUGINLISTCOMPONENT_H_INCLUDED
-#define JUCE_PLUGINLISTCOMPONENT_H_INCLUDED
-
+namespace juce
+{
 
 //==============================================================================
 /**
@@ -34,7 +35,7 @@
 class JUCE_API  PluginListComponent   : public Component,
                                         public FileDragAndDropTarget,
                                         private ChangeListener,
-                                        private ButtonListener  // (can't use Button::Listener due to idiotic VC2005 bug)
+                                        private Button::Listener
 {
 public:
     //==============================================================================
@@ -47,7 +48,8 @@ public:
     PluginListComponent (AudioPluginFormatManager& formatManager,
                          KnownPluginList& listToRepresent,
                          const File& deadMansPedalFile,
-                         PropertiesFile* propertiesToUse);
+                         PropertiesFile* propertiesToUse,
+                         bool allowPluginsWhichRequireAsynchronousInstantiation = false);
 
     /** Destructor. */
     ~PluginListComponent();
@@ -55,9 +57,15 @@ public:
     /** Changes the text in the panel's options button. */
     void setOptionsButtonText (const String& newText);
 
+    /** Changes the text in the progress dialog box that is shown when scanning. */
+    void setScanDialogText (const String& textForProgressWindowTitle,
+                            const String& textForProgressWindowDescription);
+
     /** Sets how many threads to simultaneously scan for plugins.
-        If this is 0, then all scanning happens on the message thread (this is the default)
-    */
+     If this is 0, then all scanning happens on the message thread (this is the default when
+     allowPluginsWhichRequireAsynchronousInstantiation is false). If
+     allowPluginsWhichRequireAsynchronousInstantiation is true then numThreads must not
+     be zero (it is one by default). */
     void setNumberOfThreadsForScanning (int numThreads);
 
     /** Returns the last search path stored in a given properties file for the specified format. */
@@ -72,6 +80,17 @@ public:
     /** Returns true if there's currently a scan in progress. */
     bool isScanning() const noexcept;
 
+    /** Removes the plugins currently selected in the table. */
+    void removeSelectedPlugins();
+
+    /** Sets a custom table model to be used.
+        This will take ownership of the model and delete it when no longer needed.
+     */
+    void setTableModel (TableListBoxModel* model);
+
+    /** Returns the table used to display the plugin list. */
+    TableListBox& getTableListBox() noexcept            { return table; }
+
 private:
     //==============================================================================
     AudioPluginFormatManager& formatManager;
@@ -80,12 +99,12 @@ private:
     TableListBox table;
     TextButton optionsButton;
     PropertiesFile* propertiesToUse;
+    String dialogTitle, dialogText;
+    bool allowAsync;
     int numThreads;
 
     class TableModel;
-    friend class TableModel;
-    friend struct ContainerDeletePolicy<TableModel>;
-    ScopedPointer<TableModel> tableModel;
+    ScopedPointer<TableListBoxModel> tableModel;
 
     class Scanner;
     friend class Scanner;
@@ -98,8 +117,8 @@ private:
     void updateList();
     void showSelectedFolder();
     bool canShowSelectedFolder() const;
-    void removeSelected();
     void removeMissingPlugins();
+    void removePluginItem (int index);
 
     void resized() override;
     bool isInterestedInFileDrag (const StringArray&) override;
@@ -110,5 +129,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginListComponent)
 };
 
-
-#endif   // JUCE_PLUGINLISTCOMPONENT_H_INCLUDED
+} // namespace juce

@@ -2,29 +2,30 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2013 - Raw Material Software Ltd.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission is granted to use this software under the terms of either:
-   a) the GPL v2 (or any later version)
-   b) the Affero GPL v3
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   Details of these licenses can be found at: www.gnu.org/licenses
+   By using JUCE, you agree to the terms of both the JUCE 5 End-User License
+   Agreement and JUCE 5 Privacy Policy (both updated and effective as of the
+   27th April 2017).
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+   End User License Agreement: www.juce.com/juce-5-licence
+   Privacy Policy: www.juce.com/juce-5-privacy-policy
 
-   ------------------------------------------------------------------------------
+   Or: You may also use this code under the terms of the GPL v3 (see
+   www.gnu.org/licenses).
 
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.juce.com for more information.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
 
-#ifndef JUCE_TABLELISTBOX_H_INCLUDED
-#define JUCE_TABLELISTBOX_H_INCLUDED
-
+namespace juce
+{
 
 //==============================================================================
 /**
@@ -56,8 +57,11 @@ public:
 
         The graphics context has its origin at the row's top-left, and your method
         should fill the area specified by the width and height parameters.
+
+        Note that the rowNumber value may be greater than the number of rows in your
+        list, so be careful that you don't assume it's less than getNumRows().
     */
-    virtual void paintRowBackground (Graphics& g,
+    virtual void paintRowBackground (Graphics&,
                                      int rowNumber,
                                      int width, int height,
                                      bool rowIsSelected) = 0;
@@ -66,8 +70,11 @@ public:
 
         The graphics context's origin will already be set to the top-left of the cell,
         whose size is specified by (width, height).
+
+        Note that the rowNumber value may be greater than the number of rows in your
+        list, so be careful that you don't assume it's less than getNumRows().
     */
-    virtual void paintCell (Graphics& g,
+    virtual void paintCell (Graphics&,
                             int rowNumber,
                             int columnId,
                             int width, int height,
@@ -142,25 +149,21 @@ public:
     */
     virtual int getColumnAutoSizeWidth (int columnId);
 
-    /** Returns a tooltip for a particular cell in the table.
-    */
+    /** Returns a tooltip for a particular cell in the table. */
     virtual String getCellTooltip (int rowNumber, int columnId);
 
     //==============================================================================
     /** Override this to be informed when rows are selected or deselected.
-
         @see ListBox::selectedRowsChanged()
     */
     virtual void selectedRowsChanged (int lastRowSelected);
 
     /** Override this to be informed when the delete key is pressed.
-
         @see ListBox::deleteKeyPressed()
     */
     virtual void deleteKeyPressed (int lastRowSelected);
 
     /** Override this to be informed when the return key is pressed.
-
         @see ListBox::returnKeyPressed()
     */
     virtual void returnKeyPressed (int lastRowSelected);
@@ -210,29 +213,34 @@ public:
     /** Creates a TableListBox.
 
         The model pointer passed-in can be null, in which case you can set it later
-        with setModel().
+        with setModel(). The TableListBox does not take ownership of the model - it's
+        the caller's responsibility to manage its lifetime and make sure it
+        doesn't get deleted while still being used.
     */
-    TableListBox (const String& componentName = String::empty,
-                  TableListBoxModel* model = 0);
+    TableListBox (const String& componentName = String(),
+                  TableListBoxModel* model = nullptr);
 
     /** Destructor. */
     ~TableListBox();
 
     //==============================================================================
     /** Changes the TableListBoxModel that is being used for this table.
+        The TableListBox does not take ownership of the model - it's the caller's responsibility
+        to manage its lifetime and make sure it doesn't get deleted while still being used.
     */
     void setModel (TableListBoxModel* newModel);
 
     /** Returns the model currently in use. */
-    TableListBoxModel* getModel() const                             { return model; }
+    TableListBoxModel* getModel() const noexcept                    { return model; }
 
     //==============================================================================
     /** Returns the header component being used in this table. */
-    TableHeaderComponent& getHeader() const                         { return *header; }
+    TableHeaderComponent& getHeader() const noexcept                { return *header; }
 
     /** Sets the header component to use for the table.
         The table will take ownership of the component that you pass in, and will delete it
         when it's no longer needed.
+        The pointer passed in may not be null.
     */
     void setHeader (TableHeaderComponent* newHeader);
 
@@ -244,7 +252,7 @@ public:
     /** Returns the height of the table header.
         @see setHeaderHeight
     */
-    int getHeaderHeight() const;
+    int getHeaderHeight() const noexcept;
 
     //==============================================================================
     /** Resizes a column to fit its contents.
@@ -260,15 +268,14 @@ public:
     void autoSizeAllColumns();
 
     /** Enables or disables the auto size options on the popup menu.
-
         By default, these are enabled.
     */
-    void setAutoSizeMenuOptionShown (bool shouldBeShown);
+    void setAutoSizeMenuOptionShown (bool shouldBeShown) noexcept;
 
     /** True if the auto-size options should be shown on the menu.
-        @see setAutoSizeMenuOptionsShown
+        @see setAutoSizeMenuOptionShown
     */
-    bool isAutoSizeMenuOptionShown() const;
+    bool isAutoSizeMenuOptionShown() const noexcept                 { return autoSizeOptionsShown; }
 
     /** Returns the position of one of the cells in the table.
 
@@ -303,7 +310,7 @@ public:
     /** @internal */
     Component* refreshComponentForRow (int rowNumber, bool isRowSelected, Component* existingComponentToUpdate) override;
     /** @internal */
-    void selectedRowsChanged (int lastRowSelected) override;
+    void selectedRowsChanged (int row) override;
     /** @internal */
     void deleteKeyPressed (int currentSelectedRow) override;
     /** @internal */
@@ -329,15 +336,14 @@ private:
     class Header;
     class RowComp;
 
-    TableHeaderComponent* header;
+    TableHeaderComponent* header = nullptr;
     TableListBoxModel* model;
-    int columnIdNowBeingDragged;
-    bool autoSizeOptionsShown;
+    int columnIdNowBeingDragged = 0;
+    bool autoSizeOptionsShown = true;
 
     void updateColumnComponents() const;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TableListBox)
 };
 
-
-#endif   // JUCE_TABLELISTBOX_H_INCLUDED
+} // namespace juce

@@ -2,29 +2,30 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2013 - Raw Material Software Ltd.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission is granted to use this software under the terms of either:
-   a) the GPL v2 (or any later version)
-   b) the Affero GPL v3
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   Details of these licenses can be found at: www.gnu.org/licenses
+   By using JUCE, you agree to the terms of both the JUCE 5 End-User License
+   Agreement and JUCE 5 Privacy Policy (both updated and effective as of the
+   27th April 2017).
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+   End User License Agreement: www.juce.com/juce-5-licence
+   Privacy Policy: www.juce.com/juce-5-privacy-policy
 
-   ------------------------------------------------------------------------------
+   Or: You may also use this code under the terms of the GPL v3 (see
+   www.gnu.org/licenses).
 
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.juce.com for more information.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
 
-#ifndef JUCE_MIDIKEYBOARDCOMPONENT_H_INCLUDED
-#define JUCE_MIDIKEYBOARDCOMPONENT_H_INCLUDED
-
+namespace juce
+{
 
 //==============================================================================
 /**
@@ -35,7 +36,7 @@
     notes by calling the noteOn() and noteOff() methods of its MidiKeyboardState object.
 
     Another feature is that the computer keyboard can also be used to play notes. By
-    default it maps the top two rows of a standard querty keyboard to the notes, but
+    default it maps the top two rows of a standard qwerty keyboard to the notes, but
     these can be remapped if needed. It will only respond to keypresses when it has
     the keyboard focus, so to disable this feature you can call setWantsKeyboardFocus (false).
 
@@ -165,10 +166,16 @@ public:
     */
     int getLowestVisibleKey() const noexcept                        { return (int) firstKey; }
 
-    /** Returns the length of the black notes.
+    /** Sets the length of the black notes as a proportion of the white note length. */
+    void setBlackNoteLengthProportion (float ratio) noexcept;
+
+    /** Returns the length of the black notes as a proportion of the white note length. */
+    float getBlackNoteLengthProportion() const noexcept             { return blackNoteLengthRatio; }
+
+    /** Returns the absolute length of the black notes.
         This will be their vertical or horizontal length, depending on the keyboard's orientation.
     */
-    int getBlackNoteLength() const noexcept                         { return blackNoteLength; }
+    int getBlackNoteLength() const noexcept;
 
     /** If set to true, then scroll buttons will appear at either end of the keyboard
         if there are too many notes to fit them all in the component at once.
@@ -202,6 +209,9 @@ public:
         distance, in either direction.
     */
     int getKeyStartPosition (int midiNoteNumber) const;
+
+    /** Returns the total width needed to fit all the keys in the available range. */
+    int getTotalKeyboardWidth() const noexcept;
 
     /** Returns the key at a given coordinate. */
     int getNoteAtPosition (Point<int> position);
@@ -281,11 +291,13 @@ public:
     /** @internal */
     bool keyStateChanged (bool isKeyDown) override;
     /** @internal */
+    bool keyPressed (const KeyPress&) override;
+    /** @internal */
     void focusLost (FocusChangeType) override;
     /** @internal */
     void handleNoteOn (MidiKeyboardState*, int midiChannel, int midiNoteNumber, float velocity) override;
     /** @internal */
-    void handleNoteOff (MidiKeyboardState*, int midiChannel, int midiNoteNumber) override;
+    void handleNoteOff (MidiKeyboardState*, int midiChannel, int midiNoteNumber, float velocity) override;
     /** @internal */
     void colourChanged() override;
 
@@ -351,7 +363,7 @@ protected:
     */
     virtual void mouseUpOnKey (int midiNoteNumber, const MouseEvent& e);
 
-    /** Calculates the positon of a given midi-note.
+    /** Calculates the position of a given midi-note.
 
         This can be overridden to create layouts with custom key-widths.
 
@@ -364,12 +376,17 @@ protected:
     virtual void getKeyPosition (int midiNoteNumber, float keyWidth,
                                  int& x, int& w) const;
 
+    /** Returns the rectangle for a given key if within the displayable range */
+    Rectangle<int> getRectangleForKey (int midiNoteNumber) const;
+
+
 private:
     //==============================================================================
     friend class MidiKeyboardUpDownButton;
 
     MidiKeyboardState& state;
-    int xOffset, blackNoteLength;
+    float blackNoteLengthRatio;
+    int xOffset;
     float keyWidth;
     Orientation orientation;
 
@@ -398,12 +415,10 @@ private:
     void resetAnyKeysInUse();
     void updateNoteUnderMouse (Point<int>, bool isDown, int fingerNum);
     void updateNoteUnderMouse (const MouseEvent&, bool isDown);
-    void repaintNote (const int midiNoteNumber);
+    void repaintNote (int midiNoteNumber);
     void setLowestVisibleKeyFloat (float noteNumber);
-    Rectangle<int> getWhiteNotePos (int noteNumber) const;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiKeyboardComponent)
 };
 
-
-#endif   // JUCE_MIDIKEYBOARDCOMPONENT_H_INCLUDED
+} // namespace juce

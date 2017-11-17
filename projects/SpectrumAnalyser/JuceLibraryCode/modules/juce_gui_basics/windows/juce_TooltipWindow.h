@@ -2,29 +2,30 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2013 - Raw Material Software Ltd.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission is granted to use this software under the terms of either:
-   a) the GPL v2 (or any later version)
-   b) the Affero GPL v3
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   Details of these licenses can be found at: www.gnu.org/licenses
+   By using JUCE, you agree to the terms of both the JUCE 5 End-User License
+   Agreement and JUCE 5 Privacy Policy (both updated and effective as of the
+   27th April 2017).
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+   End User License Agreement: www.juce.com/juce-5-licence
+   Privacy Policy: www.juce.com/juce-5-privacy-policy
 
-   ------------------------------------------------------------------------------
+   Or: You may also use this code under the terms of the GPL v3 (see
+   www.gnu.org/licenses).
 
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.juce.com for more information.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
 
-#ifndef JUCE_TOOLTIPWINDOW_H_INCLUDED
-#define JUCE_TOOLTIPWINDOW_H_INCLUDED
-
+namespace juce
+{
 
 //==============================================================================
 /**
@@ -32,14 +33,17 @@
 
     To enable tooltips in your app, just create a single instance of a TooltipWindow
     object. Note that if you instantiate more than one instance of this class, you'll
-    end up with multiple tooltips being shown!
+    end up with multiple tooltips being shown! This is a common problem when compiling
+    audio plug-ins with JUCE: depending on the way you instantiate TooltipWindow,
+    you may end up with a TooltipWindow for each plug-in instance. To avoid this use a
+    SharedResourcePointer to instantiate the TooltipWindow only once.
 
     The TooltipWindow object will then stay invisible, waiting until the mouse
     hovers for the specified length of time - it will then see if it's currently
     over a component which implements the TooltipClient interface, and if so,
     it will make itself visible to show the tooltip in the appropriate place.
 
-    @see TooltipClient, SettableTooltipClient
+    @see TooltipClient, SettableTooltipClient, SharedResourcePointer
 */
 class JUCE_API  TooltipWindow  : public Component,
                                  private Timer
@@ -61,7 +65,7 @@ public:
         @param millisecondsBeforeTipAppears     the time for which the mouse has to stay still
                                                 before a tooltip will be shown
 
-        @see TooltipClient, LookAndFeel::drawTooltip, LookAndFeel::getTooltipSize
+        @see TooltipClient, LookAndFeel::drawTooltip, LookAndFeel::getTooltipBounds
     */
     explicit TooltipWindow (Component* parentComponent = nullptr,
                             int millisecondsBeforeTipAppears = 700);
@@ -80,6 +84,11 @@ public:
 
     /** Can be called to manually hide the tip if it's showing. */
     void hideTip();
+
+    /** Asks a component for its tooltip.
+        This can be overridden if you need custom lookup behaviour or to modify the strings.
+    */
+    virtual String getTipFor (Component&);
 
     //==============================================================================
     /** A set of colour IDs to use to change the colour of various aspects of the tooltip.
@@ -104,28 +113,32 @@ public:
     {
         virtual ~LookAndFeelMethods() {}
 
-        virtual void getTooltipSize (const String& tipText, int& width, int& height) = 0;
+        /** returns the bounds for a tooltip at the given screen coordinate, constrained within the given desktop area. */
+        virtual Rectangle<int> getTooltipBounds (const String& tipText, Point<int> screenPos, Rectangle<int> parentArea) = 0;
         virtual void drawTooltip (Graphics&, const String& text, int width, int height) = 0;
+
+       #if JUCE_CATCH_DEPRECATED_CODE_MISUSE
+        // This method has been replaced by getTooltipBounds()
+        virtual int getTooltipSize (const String&, int&, int&) { return 0; }
+       #endif
     };
 
 private:
     //==============================================================================
-    int millisecondsBeforeTipAppears;
     Point<float> lastMousePos;
-    int mouseClicks, mouseWheelMoves;
-    unsigned int lastCompChangeTime, lastHideTime;
-    Component* lastComponentUnderMouse;
+    Component* lastComponentUnderMouse = nullptr;
     String tipShowing, lastTipUnderMouse;
+    int millisecondsBeforeTipAppears;
+    int mouseClicks = 0, mouseWheelMoves = 0;
+    unsigned int lastCompChangeTime = 0, lastHideTime = 0;
+    bool reentrant = false;
 
     void paint (Graphics&) override;
     void mouseEnter (const MouseEvent&) override;
     void timerCallback() override;
-    void updatePosition (const String&, Point<int>, const Rectangle<int>&);
-
-    static String getTipFor (Component*);
+    void updatePosition (const String&, Point<int>, Rectangle<int>);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TooltipWindow)
 };
 
-
-#endif   // JUCE_TOOLTIPWINDOW_H_INCLUDED
+} // namespace juce

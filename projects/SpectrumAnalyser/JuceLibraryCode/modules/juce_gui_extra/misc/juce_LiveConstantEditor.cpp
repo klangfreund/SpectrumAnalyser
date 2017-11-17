@@ -2,25 +2,30 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2013 - Raw Material Software Ltd.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission is granted to use this software under the terms of either:
-   a) the GPL v2 (or any later version)
-   b) the Affero GPL v3
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   Details of these licenses can be found at: www.gnu.org/licenses
+   By using JUCE, you agree to the terms of both the JUCE 5 End-User License
+   Agreement and JUCE 5 Privacy Policy (both updated and effective as of the
+   27th April 2017).
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+   End User License Agreement: www.juce.com/juce-5-licence
+   Privacy Policy: www.juce.com/juce-5-privacy-policy
 
-   ------------------------------------------------------------------------------
+   Or: You may also use this code under the terms of the GPL v3 (see
+   www.gnu.org/licenses).
 
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.juce.com for more information.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
+
+namespace juce
+{
 
 #if JUCE_ENABLE_LIVE_CONSTANT_EDITOR
 
@@ -32,13 +37,10 @@ class AllComponentRepainter  : private Timer,
                                private DeletedAtShutdown
 {
 public:
-    AllComponentRepainter() {}
+    AllComponentRepainter()  {}
+    ~AllComponentRepainter() { clearSingletonInstance(); }
 
-    static AllComponentRepainter& getInstance()
-    {
-        static AllComponentRepainter* instance = new AllComponentRepainter();
-        return *instance;
-    }
+    juce_DeclareSingleton (AllComponentRepainter, false)
 
     void trigger()
     {
@@ -51,30 +53,52 @@ private:
     {
         stopTimer();
 
+        Array<Component*> alreadyDone;
+
         for (int i = TopLevelWindow::getNumTopLevelWindows(); --i >= 0;)
-            if (Component* c = TopLevelWindow::getTopLevelWindow(i))
-                repaintAndResizeAllComps (c);
+            if (auto* c = TopLevelWindow::getTopLevelWindow(i))
+                repaintAndResizeAllComps (c, alreadyDone);
+
+        auto& desktop = Desktop::getInstance();
+
+        for (int i = desktop.getNumComponents(); --i >= 0;)
+            if (auto* c = desktop.getComponent(i))
+                repaintAndResizeAllComps (c, alreadyDone);
     }
 
-    static void repaintAndResizeAllComps (Component::SafePointer<Component> c)
+    static void repaintAndResizeAllComps (Component::SafePointer<Component> c,
+                                          Array<Component*>& alreadyDone)
     {
-        if (c->isVisible())
+        if (c->isVisible() && ! alreadyDone.contains (c))
         {
             c->repaint();
             c->resized();
 
             for (int i = c->getNumChildComponents(); --i >= 0;)
-                if (c != nullptr)
-                    if (Component* child = c->getChildComponent(i))
-                        repaintAndResizeAllComps (child);
+            {
+                if (auto* child = c->getChildComponent(i))
+                {
+                    repaintAndResizeAllComps (child, alreadyDone);
+                    alreadyDone.add (child);
+                }
+
+                if (c == nullptr)
+                    break;
+            }
         }
     }
 };
 
+juce_ImplementSingleton (AllComponentRepainter)
+juce_ImplementSingleton (ValueList)
+
 //==============================================================================
 int64 parseInt (String s)
 {
-    s = s.retainCharacters ("0123456789abcdefABCDEFx");
+    s = s.trimStart();
+
+    if (s.startsWithChar ('-'))
+        return -parseInt (s.substring (1));
 
     if (s.startsWith ("0x"))
         return s.substring(2).getHexValue64();
@@ -103,7 +127,7 @@ LiveValueBase::~LiveValueBase()
 
 //==============================================================================
 LivePropertyEditorBase::LivePropertyEditorBase (LiveValueBase& v, CodeDocument& d)
-    : value (v), resetButton ("reset"), document (d), sourceEditor (document, &tokeniser), wasHex (false)
+    : value (v), document (d), sourceEditor (document, &tokeniser)
 {
     setSize (600, 100);
 
@@ -122,6 +146,7 @@ LivePropertyEditorBase::LivePropertyEditorBase (LiveValueBase& v, CodeDocument& 
     valueEditor.setText (v.getStringValue (wasHex), dontSendNotification);
     valueEditor.addListener (this);
     sourceEditor.setReadOnly (true);
+    sourceEditor.setFont (sourceEditor.getFont().withHeight (13.0f));
     resetButton.addListener (this);
 }
 
@@ -133,11 +158,11 @@ void LivePropertyEditorBase::paint (Graphics& g)
 
 void LivePropertyEditorBase::resized()
 {
-    Rectangle<int> r (getLocalBounds().reduced (0, 3).withTrimmedBottom (1));
+    auto r = getLocalBounds().reduced (0, 3).withTrimmedBottom (1);
 
-    Rectangle<int> left (r.removeFromLeft (jmax (200, r.getWidth() / 3)));
+    auto left = r.removeFromLeft (jmax (200, r.getWidth() / 3));
 
-    Rectangle<int> top (left.removeFromTop (25));
+    auto top = left.removeFromTop (25);
     resetButton.setBounds (top.removeFromRight (35).reduced (0, 3));
     name.setBounds (top);
 
@@ -175,7 +200,7 @@ void LivePropertyEditorBase::applyNewValue (const String& s)
     selectOriginalValue();
 
     valueEditor.setText (s, dontSendNotification);
-    AllComponentRepainter::getInstance().trigger();
+    AllComponentRepainter::getInstance()->trigger();
 }
 
 void LivePropertyEditorBase::selectOriginalValue()
@@ -186,8 +211,8 @@ void LivePropertyEditorBase::selectOriginalValue()
 void LivePropertyEditorBase::findOriginalValueInCode()
 {
     CodeDocument::Position pos (document, value.sourceLine, 0);
-    String line (pos.getLineText());
-    String::CharPointerType p (line.getCharPointer());
+    auto line = pos.getLineText();
+    auto p = line.getCharPointer();
 
     p = CharacterFunctions::find (p, CharPointer_ASCII ("JUCE_LIVE_CONSTANT"));
 
@@ -211,13 +236,13 @@ void LivePropertyEditorBase::findOriginalValueInCode()
 
     if (p.getAndAdvance() == '(')
     {
-        String::CharPointerType start (p), end (p);
+        auto start = p, end = p;
 
         int depth = 1;
 
         while (! end.isEmpty())
         {
-            const juce_wchar c = end.getAndAdvance();
+            auto c = end.getAndAdvance();
 
             if (c == '(')  ++depth;
             if (c == ')')  --depth;
@@ -306,11 +331,11 @@ public:
 
     void updateItems (ValueList& list)
     {
-        if (ValueListHolderComponent* l = dynamic_cast<ValueListHolderComponent*> (viewport.getViewedComponent()))
+        if (auto* l = dynamic_cast<ValueListHolderComponent*> (viewport.getViewedComponent()))
         {
             while (l->getNumChildComponents() < list.values.size())
             {
-                if (LiveValueBase* v = list.values [l->getNumChildComponents()])
+                if (auto* v = list.values [l->getNumChildComponents()])
                     l->addItem (viewport.getMaximumVisibleWidth(), *v, list.getDocument (v->sourceFile));
                 else
                     break;
@@ -324,7 +349,7 @@ public:
     {
         DocumentWindow::resized();
 
-        if (ValueListHolderComponent* l = dynamic_cast<ValueListHolderComponent*> (viewport.getViewedComponent()))
+        if (auto* l = dynamic_cast<ValueListHolderComponent*> (viewport.getViewedComponent()))
             l->layout (viewport.getMaximumVisibleWidth());
     }
 
@@ -333,14 +358,8 @@ public:
 };
 
 //==============================================================================
-ValueList::ValueList() {}
-ValueList::~ValueList() {}
-
-ValueList& ValueList::getInstance()
-{
-    static ValueList* i = new ValueList();
-    return *i;
-}
+ValueList::ValueList()  {}
+ValueList::~ValueList() { clearSingletonInstance(); }
 
 void ValueList::addValue (LiveValueBase* v)
 {
@@ -363,7 +382,7 @@ CodeDocument& ValueList::getDocument (const File& file)
     if (index >= 0)
         return *documents.getUnchecked (index);
 
-    CodeDocument* doc = documents.add (new CodeDocument());
+    auto* doc = documents.add (new CodeDocument());
     documentFiles.add (file);
     doc->replaceAllContent (file.loadFileAsString());
     doc->clearUndoHistory();
@@ -393,7 +412,7 @@ struct ColourEditorComp  : public Component,
 
     void mouseDown (const MouseEvent&) override
     {
-        ColourSelector* colourSelector = new ColourSelector();
+        auto* colourSelector = new ColourSelector();
         colourSelector->setName ("Colour");
         colourSelector->setCurrentColour (getColour());
         colourSelector->addChangeListener (this);
@@ -405,7 +424,7 @@ struct ColourEditorComp  : public Component,
 
     void changeListenerCallback (ChangeBroadcaster* source) override
     {
-        if (ColourSelector* cs = dynamic_cast<ColourSelector*> (source))
+        if (auto* cs = dynamic_cast<ColourSelector*> (source))
             editor.applyNewValue (getAsString (cs->getCurrentColour(), true));
 
         repaint();
@@ -420,10 +439,9 @@ Component* createColourEditor (LivePropertyEditorBase& editor)
 }
 
 //==============================================================================
-class SliderComp   : public Component,
-                     private Slider::Listener
+struct SliderComp   : public Component,
+                      private Slider::Listener
 {
-public:
     SliderComp (LivePropertyEditorBase& e, bool useFloat)
         : editor (e), isFloat (useFloat)
     {
@@ -433,7 +451,7 @@ public:
         slider.addListener (this);
     }
 
-    void updateRange()
+    virtual void updateRange()
     {
         double v = isFloat ? parseDouble (editor.value.getStringValue (false))
                            : (double) parseInt (editor.value.getStringValue (false));
@@ -444,31 +462,46 @@ public:
         slider.setValue (v, dontSendNotification);
     }
 
-private:
-    LivePropertyEditorBase& editor;
-    Slider slider;
-    bool isFloat;
-
-    void sliderValueChanged (Slider*)
+    void sliderValueChanged (Slider*) override
     {
         editor.applyNewValue (isFloat ? getAsString ((double) slider.getValue(), editor.wasHex)
                                       : getAsString ((int64)  slider.getValue(), editor.wasHex));
 
     }
 
-    void sliderDragStarted (Slider*)  {}
-    void sliderDragEnded (Slider*)    { updateRange(); }
+    void sliderDragStarted (Slider*) override  {}
+    void sliderDragEnded (Slider*) override    { updateRange(); }
 
-    void resized()
+    void resized() override
     {
         slider.setBounds (getLocalBounds().removeFromTop (25));
     }
+
+    LivePropertyEditorBase& editor;
+    Slider slider;
+    bool isFloat;
 };
 
+//==============================================================================
+struct BoolSliderComp  : public SliderComp
+{
+    BoolSliderComp (LivePropertyEditorBase& e) : SliderComp (e, false) {}
 
-Component* createIntegerSlider (LivePropertyEditorBase& editor) { return new SliderComp (editor, false); }
-Component* createFloatSlider   (LivePropertyEditorBase& editor) { return new SliderComp (editor, true);  }
+    void updateRange() override
+    {
+        slider.setRange (0.0, 1.0, dontSendNotification);
+        slider.setValue (editor.value.getStringValue (false) == "true", dontSendNotification);
+    }
+
+    void sliderValueChanged (Slider*) override  { editor.applyNewValue (slider.getValue() > 0.5 ? "true" : "false"); }
+};
+
+Component* createIntegerSlider (LivePropertyEditorBase& editor)  { return new SliderComp (editor, false); }
+Component* createFloatSlider   (LivePropertyEditorBase& editor)  { return new SliderComp (editor, true);  }
+Component* createBoolSlider    (LivePropertyEditorBase& editor)  { return new BoolSliderComp (editor); }
 
 }
 
 #endif
+
+} // namespace juce

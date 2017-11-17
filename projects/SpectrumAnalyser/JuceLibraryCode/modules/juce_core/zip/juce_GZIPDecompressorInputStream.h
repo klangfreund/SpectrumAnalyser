@@ -1,34 +1,27 @@
 /*
   ==============================================================================
 
-   This file is part of the juce_core module of the JUCE library.
-   Copyright (c) 2013 - Raw Material Software Ltd.
+   This file is part of the JUCE library.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission to use, copy, modify, and/or distribute this software for any purpose with
-   or without fee is hereby granted, provided that the above copyright notice and this
-   permission notice appear in all copies.
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD
-   TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN
-   NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
-   DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER
-   IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
-   CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+   The code included in this file is provided under the terms of the ISC license
+   http://www.isc.org/downloads/software-support-policy/isc-license. Permission
+   To use, copy, modify, and/or distribute this software for any purpose with or
+   without fee is hereby granted provided that the above copyright notice and
+   this permission notice appear in all copies.
 
-   ------------------------------------------------------------------------------
-
-   NOTE! This permissive ISC license applies ONLY to files within the juce_core module!
-   All other JUCE modules are covered by a dual GPL/commercial license, so if you are
-   using any other modules, be sure to check that you also comply with their license.
-
-   For more details, visit www.juce.com
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
 
-#ifndef JUCE_GZIPDECOMPRESSORINPUTSTREAM_H_INCLUDED
-#define JUCE_GZIPDECOMPRESSORINPUTSTREAM_H_INCLUDED
-
+namespace juce
+{
 
 //==============================================================================
 /**
@@ -43,21 +36,28 @@
 class JUCE_API  GZIPDecompressorInputStream  : public InputStream
 {
 public:
+    enum Format
+    {
+        zlibFormat = 0,
+        deflateFormat,
+        gzipFormat
+    };
+
     //==============================================================================
     /** Creates a decompressor stream.
 
         @param sourceStream                 the stream to read from
         @param deleteSourceWhenDestroyed    whether or not to delete the source stream
                                             when this object is destroyed
-        @param noWrap                       this is used internally by the ZipFile class
-                                            and should be ignored by user applications
+        @param sourceFormat                 can be used to select which of the supported
+                                            formats the data is expected to be in
         @param uncompressedStreamLength     if the creator knows the length that the
                                             uncompressed stream will be, then it can supply this
                                             value, which will be returned by getTotalLength()
     */
     GZIPDecompressorInputStream (InputStream* sourceStream,
                                  bool deleteSourceWhenDestroyed,
-                                 bool noWrap = false,
+                                 Format sourceFormat = zlibFormat,
                                  int64 uncompressedStreamLength = -1);
 
     /** Creates a decompressor stream.
@@ -81,17 +81,22 @@ private:
     //==============================================================================
     OptionalScopedPointer<InputStream> sourceStream;
     const int64 uncompressedStreamLength;
-    const bool noWrap;
+    const Format format;
     bool isEof;
     int activeBufferSize;
     int64 originalSourcePos, currentPos;
-    HeapBlock <uint8> buffer;
+    HeapBlock<uint8> buffer;
 
     class GZIPDecompressHelper;
     friend struct ContainerDeletePolicy<GZIPDecompressHelper>;
     ScopedPointer<GZIPDecompressHelper> helper;
 
+   #if JUCE_CATCH_DEPRECATED_CODE_MISUSE
+    // The arguments to this method have changed! Please pass a Format enum instead of the old dontWrap bool.
+    GZIPDecompressorInputStream (InputStream*, bool, bool, int64 x = -1);
+   #endif
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GZIPDecompressorInputStream)
 };
 
-#endif   // JUCE_GZIPDECOMPRESSORINPUTSTREAM_H_INCLUDED
+} // namespace juce

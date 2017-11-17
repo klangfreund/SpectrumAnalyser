@@ -2,29 +2,30 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2013 - Raw Material Software Ltd.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission is granted to use this software under the terms of either:
-   a) the GPL v2 (or any later version)
-   b) the Affero GPL v3
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   Details of these licenses can be found at: www.gnu.org/licenses
+   By using JUCE, you agree to the terms of both the JUCE 5 End-User License
+   Agreement and JUCE 5 Privacy Policy (both updated and effective as of the
+   27th April 2017).
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+   End User License Agreement: www.juce.com/juce-5-licence
+   Privacy Policy: www.juce.com/juce-5-privacy-policy
 
-   ------------------------------------------------------------------------------
+   Or: You may also use this code under the terms of the GPL v3 (see
+   www.gnu.org/licenses).
 
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.juce.com for more information.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
 
-#ifndef JUCE_TEXTLAYOUT_H_INCLUDED
-#define JUCE_TEXTLAYOUT_H_INCLUDED
-
+namespace juce
+{
 
 //==============================================================================
 /**
@@ -35,7 +36,7 @@
 
     @see AttributedString
 */
-class JUCE_API  TextLayout
+class JUCE_API  TextLayout  final
 {
 public:
     /** Creates an empty layout.
@@ -45,10 +46,8 @@ public:
     TextLayout();
     TextLayout (const TextLayout&);
     TextLayout& operator= (const TextLayout&);
-   #if JUCE_COMPILER_SUPPORTS_MOVE_SEMANTICS
-    TextLayout (TextLayout&& other) noexcept;
+    TextLayout (TextLayout&&) noexcept;
     TextLayout& operator= (TextLayout&&) noexcept;
-   #endif
 
     /** Destructor. */
     ~TextLayout();
@@ -57,7 +56,12 @@ public:
     /** Creates a layout from the given attributed string.
         This will replace any data that is currently stored in the layout.
     */
-    void createLayout (const AttributedString& text, float maxWidth);
+    void createLayout (const AttributedString&, float maxWidth);
+
+    /** Creates a layout from the given attributed string, given some size constraints.
+        This will replace any data that is currently stored in the layout.
+    */
+    void createLayout (const AttributedString&, float maxWidth, float maxHeight);
 
     /** Creates a layout, attempting to choose a width which results in lines
         of a similar length.
@@ -65,13 +69,21 @@ public:
         This will be slower than the normal createLayout method, but produces a
         tidier result.
     */
-    void createLayoutWithBalancedLineLengths (const AttributedString& text, float maxWidth);
+    void createLayoutWithBalancedLineLengths (const AttributedString&, float maxWidth);
+
+    /** Creates a layout, attempting to choose a width which results in lines
+        of a similar length.
+
+        This will be slower than the normal createLayout method, but produces a
+        tidier result.
+    */
+    void createLayoutWithBalancedLineLengths (const AttributedString&, float maxWidth, float maxHeight);
 
     /** Draws the layout within the specified area.
         The position of the text within the rectangle is controlled by the justification
         flags set in the original AttributedString that was used to create this layout.
     */
-    void draw (Graphics& g, const Rectangle<float>& area) const;
+    void draw (Graphics&, Rectangle<float> area) const;
 
     //==============================================================================
     /** A positioned glyph. */
@@ -131,6 +143,12 @@ public:
         /** Returns the X position range which contains all the glyphs in this line. */
         Range<float> getLineBoundsX() const noexcept;
 
+        /** Returns the Y position range which contains all the glyphs in this line. */
+        Range<float> getLineBoundsY() const noexcept;
+
+        /** Returns the smallest rectangle which contains all the glyphs in this line. */
+        Rectangle<float> getLineBounds() const noexcept;
+
         OwnedArray<Run> runs;           /**< The glyph-runs in this line. */
         Range<int> stringRange;         /**< The character range that this line represents in the
                                              original string that was used to create it. */
@@ -147,7 +165,7 @@ public:
     float getWidth() const noexcept     { return width; }
 
     /** Returns the maximum height of the content. */
-    float getHeight() const noexcept;
+    float getHeight() const noexcept    { return height; }
 
     /** Returns the number of lines in the layout. */
     int getNumLines() const noexcept    { return lines.size(); }
@@ -157,21 +175,21 @@ public:
 
     /** Adds a line to the layout. The layout will take ownership of this line object
         and will delete it when it is no longer needed. */
-    void addLine (Line* line);
+    void addLine (Line*);
 
     /** Pre-allocates space for the specified number of lines. */
     void ensureStorageAllocated (int numLinesNeeded);
 
 private:
     OwnedArray<Line> lines;
-    float width;
+    float width, height;
     Justification justification;
 
     void createStandardLayout (const AttributedString&);
     bool createNativeLayout (const AttributedString&);
-    void recalculateWidth (const AttributedString&);
+    void recalculateSize();
 
     JUCE_LEAK_DETECTOR (TextLayout)
 };
 
-#endif   // JUCE_TEXTLAYOUT_H_INCLUDED
+} // namespace juce

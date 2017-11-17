@@ -2,30 +2,32 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2013 - Raw Material Software Ltd.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission is granted to use this software under the terms of either:
-   a) the GPL v2 (or any later version)
-   b) the Affero GPL v3
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   Details of these licenses can be found at: www.gnu.org/licenses
+   By using JUCE, you agree to the terms of both the JUCE 5 End-User License
+   Agreement and JUCE 5 Privacy Policy (both updated and effective as of the
+   27th April 2017).
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+   End User License Agreement: www.juce.com/juce-5-licence
+   Privacy Policy: www.juce.com/juce-5-privacy-policy
 
-   ------------------------------------------------------------------------------
+   Or: You may also use this code under the terms of the GPL v3 (see
+   www.gnu.org/licenses).
 
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.juce.com for more information.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
 
-#include "juce_mac_CoreGraphicsContext.h"
+namespace juce
+{
 
-//==============================================================================
-class CoreGraphicsImage : public ImagePixelData
+class CoreGraphicsImage   : public ImagePixelData
 {
 public:
     CoreGraphicsImage (const Image::PixelFormat format, const int w, const int h, const bool clearImage)
@@ -72,7 +74,7 @@ public:
         }
     }
 
-    ImagePixelData* clone() override
+    ImagePixelData::Ptr clone() override
     {
         CoreGraphicsImage* im = new CoreGraphicsImage (pixelFormat, width, height, false);
         memcpy (im->imageData, imageData, (size_t) (lineStride * height));
@@ -172,15 +174,13 @@ CoreGraphicsContext::CoreGraphicsContext (CGContextRef c, const float h, const f
       state (new SavedState())
 {
     CGContextRetain (context);
-    CGContextSaveGState(context);
+    CGContextSaveGState (context);
     CGContextSetShouldSmoothFonts (context, true);
+    CGContextSetAllowsFontSmoothing (context, true);
     CGContextSetShouldAntialias (context, true);
     CGContextSetBlendMode (context, kCGBlendModeNormal);
     rgbColourSpace = CGColorSpaceCreateDeviceRGB();
     greyColourSpace = CGColorSpaceCreateDeviceGray();
-    gradientCallbacks.version = 0;
-    gradientCallbacks.evaluate = SavedState::gradientCallback;
-    gradientCallbacks.releaseInfo = 0;
     setFont (Font());
 }
 
@@ -218,8 +218,6 @@ float CoreGraphicsContext::getPhysicalPixelScaleFactor()
     const CGAffineTransform t = CGContextGetCTM (context);
 
     return targetScale * (float) (juce_hypot (t.a, t.c) + juce_hypot (t.b, t.d)) / 2.0f;
-
-//    return targetScale * (float) (t.a + t.d) / 2.0f;
 }
 
 bool CoreGraphicsContext::clipToRectangle (const Rectangle<int>& r)
@@ -248,19 +246,17 @@ bool CoreGraphicsContext::clipToRectangleListWithoutTest (const RectangleList<in
         lastClipRect = Rectangle<int>();
         return false;
     }
-    else
-    {
-        const size_t numRects = (size_t) clipRegion.getNumRectangles();
-        HeapBlock <CGRect> rects (numRects);
 
-        int i = 0;
-        for (const Rectangle<int>* r = clipRegion.begin(), * const e = clipRegion.end(); r != e; ++r)
-            rects[i++] = CGRectMake (r->getX(), flipHeight - r->getBottom(), r->getWidth(), r->getHeight());
+    auto numRects = (size_t) clipRegion.getNumRectangles();
+    HeapBlock<CGRect> rects (numRects);
 
-        CGContextClipToRects (context, rects, numRects);
-        lastClipRectIsValid = false;
-        return true;
-    }
+    int i = 0;
+    for (auto& r : clipRegion)
+        rects[i++] = CGRectMake (r.getX(), flipHeight - r.getBottom(), r.getWidth(), r.getHeight());
+
+    CGContextClipToRects (context, rects, numRects);
+    lastClipRectIsValid = false;
+    return true;
 }
 
 bool CoreGraphicsContext::clipToRectangleList (const RectangleList<int>& clipRegion)
@@ -391,9 +387,13 @@ void CoreGraphicsContext::setOpacity (float newOpacity)
 
 void CoreGraphicsContext::setInterpolationQuality (Graphics::ResamplingQuality quality)
 {
-    CGContextSetInterpolationQuality (context, quality == Graphics::lowResamplingQuality
-                                                ? kCGInterpolationLow
-                                                : kCGInterpolationHigh);
+    switch (quality)
+    {
+        case Graphics::lowResamplingQuality:    CGContextSetInterpolationQuality (context, kCGInterpolationNone);   return;
+        case Graphics::mediumResamplingQuality: CGContextSetInterpolationQuality (context, kCGInterpolationMedium); return;
+        case Graphics::highResamplingQuality:   CGContextSetInterpolationQuality (context, kCGInterpolationHigh);   return;
+        default: return;
+    }
 }
 
 //==============================================================================
@@ -411,17 +411,7 @@ void CoreGraphicsContext::fillCGRect (const CGRect& cgRect, const bool replaceEx
 {
     if (replaceExistingContents)
     {
-      #if MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_5
-        CGContextClearRect (context, cgRect);
-      #else
-       #if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_5
-        if (CGContextDrawLinearGradient == 0) // (just a way of checking whether we're running in 10.5 or later)
-            CGContextClearRect (context, cgRect);
-        else
-       #endif
-            CGContextSetBlendMode (context, kCGBlendModeCopy);
-      #endif
-
+        CGContextSetBlendMode (context, kCGBlendModeCopy);
         fillCGRect (cgRect, false);
         CGContextSetBlendMode (context, kCGBlendModeNormal);
     }
@@ -490,7 +480,8 @@ void CoreGraphicsContext::drawImage (const Image& sourceImage, const AffineTrans
 {
     const int iw = sourceImage.getWidth();
     const int ih = sourceImage.getHeight();
-    CGImageRef image = CoreGraphicsImage::getCachedImageRef (sourceImage, rgbColourSpace);
+    CGImageRef image = CoreGraphicsImage::getCachedImageRef (sourceImage, sourceImage.getFormat() == Image::PixelFormat::SingleChannel ? greyColourSpace
+                                                                                                                                       : rgbColourSpace);
 
     CGContextSaveGState (context);
     CGContextSetAlpha (context, state->fillType.getOpacity());
@@ -504,22 +495,22 @@ void CoreGraphicsContext::drawImage (const Image& sourceImage, const AffineTrans
       #if JUCE_IOS
         CGContextDrawTiledImage (context, imageRect, image);
       #else
-       #if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5
         // There's a bug in CGContextDrawTiledImage that makes it incredibly slow
         // if it's doing a transformation - it's quicker to just draw lots of images manually
-        if (CGContextDrawTiledImage != 0 && transform.isOnlyTranslation())
-            CGContextDrawTiledImage (context, imageRect, image);
-        else
-       #endif
+        if (&CGContextDrawTiledImage != 0 && transform.isOnlyTranslation())
         {
-            // Fallback to manually doing a tiled fill on 10.4
+            CGContextDrawTiledImage (context, imageRect, image);
+        }
+        else
+        {
+            // Fallback to manually doing a tiled fill
             CGRect clip = CGRectIntegral (CGContextGetClipBoundingBox (context));
 
             int x = 0, y = 0;
             while (x > clip.origin.x)   x -= iw;
             while (y > clip.origin.y)   y -= ih;
 
-            const int right = (int) (clip.origin.x + clip.size.width);
+            const int right  = (int) (clip.origin.x + clip.size.width);
             const int bottom = (int) (clip.origin.y + clip.size.height);
 
             while (y < bottom)
@@ -561,17 +552,18 @@ void CoreGraphicsContext::drawLine (const Line<float>& line)
     {
         Path p;
         p.addLineSegment (line, 1.0f);
-        fillPath (p, AffineTransform::identity);
+        fillPath (p, AffineTransform());
     }
 }
 
 void CoreGraphicsContext::fillRectList (const RectangleList<float>& list)
 {
-    HeapBlock<CGRect> rects ((size_t) list.getNumRectangles());
+    HeapBlock<CGRect> rects (list.getNumRectangles());
 
     size_t num = 0;
-    for (const Rectangle<float>* r = list.begin(), * const e = list.end(); r != e; ++r)
-        rects[num++] = CGRectMake (r->getX(), flipHeight - r->getBottom(), r->getWidth(), r->getHeight());
+
+    for (auto& r : list)
+        rects[num++] = CGRectMake (r.getX(), flipHeight - r.getBottom(), r.getWidth(), r.getHeight());
 
     if (state->fillType.isColour())
     {
@@ -600,7 +592,7 @@ void CoreGraphicsContext::setFont (const Font& newFont)
         state->fontRef = 0;
         state->font = newFont;
 
-        if (OSXTypeface* osxTypeface = dynamic_cast <OSXTypeface*> (state->font.getTypeface()))
+        if (OSXTypeface* osxTypeface = dynamic_cast<OSXTypeface*> (state->font.getTypeface()))
         {
             state->fontRef = osxTypeface->fontRef;
             CGContextSetFont (context, state->fontRef);
@@ -672,103 +664,95 @@ bool CoreGraphicsContext::drawTextLayout (const AttributedString& text, const Re
     CoreTextTypeLayout::drawToCGContext (text, area, context, (float) flipHeight);
     return true;
    #else
-    (void) text; (void) area;
+    ignoreUnused (text, area);
     return false;
    #endif
 }
 
 CoreGraphicsContext::SavedState::SavedState()
-    : font (1.0f), fontRef (0), fontTransform (CGAffineTransformIdentity),
-      shading (0), numGradientLookupEntries (0)
+    : font (1.0f), fontRef (0), fontTransform (CGAffineTransformIdentity), gradient (0)
 {
 }
 
 CoreGraphicsContext::SavedState::SavedState (const SavedState& other)
     : fillType (other.fillType), font (other.font), fontRef (other.fontRef),
-      fontTransform (other.fontTransform), shading (0),
-      gradientLookupTable ((size_t) other.numGradientLookupEntries),
-      numGradientLookupEntries (other.numGradientLookupEntries)
+      fontTransform (other.fontTransform), gradient (other.gradient)
 {
-    memcpy (gradientLookupTable, other.gradientLookupTable, sizeof (PixelARGB) * (size_t) numGradientLookupEntries);
+    if (gradient != 0)
+        CGGradientRetain (gradient);
 }
 
 CoreGraphicsContext::SavedState::~SavedState()
 {
-    if (shading != 0)
-        CGShadingRelease (shading);
+    if (gradient != 0)
+        CGGradientRelease (gradient);
 }
 
 void CoreGraphicsContext::SavedState::setFill (const FillType& newFill)
 {
     fillType = newFill;
 
-    if (fillType.isGradient() && shading != 0)
+    if (gradient != 0)
     {
-        CGShadingRelease (shading);
-        shading = 0;
+        CGGradientRelease (gradient);
+        gradient = 0;
     }
 }
 
-CGShadingRef CoreGraphicsContext::SavedState::getShading (CoreGraphicsContext& owner)
+static CGGradientRef createGradient (const ColourGradient& g, CGColorSpaceRef colourSpace)
 {
-    if (shading == 0)
+    const int numColours = g.getNumColours();
+    CGFloat* const data = (CGFloat*) alloca ((size_t) numColours * 5 * sizeof (CGFloat));
+    CGFloat* const locations = data;
+    CGFloat* const components = data + numColours;
+    CGFloat* comps = components;
+
+    for (int i = 0; i < numColours; ++i)
     {
-        ColourGradient& g = *(fillType.gradient);
-        numGradientLookupEntries = g.createLookupTable (fillType.transform, gradientLookupTable) - 1;
+        const Colour colour (g.getColour (i));
+        *comps++ = (CGFloat) colour.getFloatRed();
+        *comps++ = (CGFloat) colour.getFloatGreen();
+        *comps++ = (CGFloat) colour.getFloatBlue();
+        *comps++ = (CGFloat) colour.getFloatAlpha();
+        locations[i] = (CGFloat) g.getColourPosition (i);
 
-        CGFunctionRef function = CGFunctionCreate (this, 1, 0, 4, 0, &(owner.gradientCallbacks));
-        CGPoint p1 (convertToCGPoint (g.point1));
-
-        if (g.isRadial)
-        {
-            shading = CGShadingCreateRadial (owner.rgbColourSpace, p1, 0,
-                                             p1, g.point1.getDistanceFrom (g.point2),
-                                             function, true, true);
-        }
-        else
-        {
-            shading = CGShadingCreateAxial (owner.rgbColourSpace, p1,
-                                            convertToCGPoint (g.point2),
-                                            function, true, true);
-        }
-
-        CGFunctionRelease (function);
+        // There's a bug (?) in the way the CG renderer works where it seems
+        // to go wrong if you have two colour stops both at position 0..
+        jassert (i == 0 || locations[i] != 0);
     }
 
-    return shading;
-}
-
-void CoreGraphicsContext::SavedState::gradientCallback (void* info, const CGFloat* inData, CGFloat* outData)
-{
-    const SavedState* const s = static_cast <const SavedState*> (info);
-
-    const int index = roundToInt (s->numGradientLookupEntries * inData[0]);
-    PixelARGB colour (s->gradientLookupTable [jlimit (0, s->numGradientLookupEntries, index)]);
-    colour.unpremultiply();
-
-    outData[0] = colour.getRed()   / 255.0f;
-    outData[1] = colour.getGreen() / 255.0f;
-    outData[2] = colour.getBlue()  / 255.0f;
-    outData[3] = colour.getAlpha() / 255.0f;
+    return CGGradientCreateWithColorComponents (colourSpace, components, locations, (size_t) numColours);
 }
 
 void CoreGraphicsContext::drawGradient()
 {
     flip();
     applyTransform (state->fillType.transform);
-
-    CGContextSetInterpolationQuality (context, kCGInterpolationDefault); // (This is required for 10.4, where there's a crash if
-                                                                         // you draw a gradient with high quality interp enabled).
     CGContextSetAlpha (context, state->fillType.getOpacity());
-    CGContextDrawShading (context, state->getShading (*this));
+
+    const ColourGradient& g = *state->fillType.gradient;
+
+    CGPoint p1 (convertToCGPoint (g.point1));
+    CGPoint p2 (convertToCGPoint (g.point2));
+
+    state->fillType.transform.transformPoints (p1.x, p1.y, p2.x, p2.y);
+
+    if (state->gradient == 0)
+        state->gradient = createGradient (g, rgbColourSpace);
+
+    if (g.isRadial)
+        CGContextDrawRadialGradient (context, state->gradient, p1, 0, p1, g.point1.getDistanceFrom (g.point2),
+                                     kCGGradientDrawsBeforeStartLocation | kCGGradientDrawsAfterEndLocation);
+    else
+        CGContextDrawLinearGradient (context, state->gradient, p1, p2,
+                                     kCGGradientDrawsBeforeStartLocation | kCGGradientDrawsAfterEndLocation);
 }
 
 void CoreGraphicsContext::createPath (const Path& path) const
 {
     CGContextBeginPath (context);
-    Path::Iterator i (path);
 
-    while (i.next())
+    for (Path::Iterator i (path); i.next();)
     {
         switch (i.elementType)
         {
@@ -785,9 +769,8 @@ void CoreGraphicsContext::createPath (const Path& path) const
 void CoreGraphicsContext::createPath (const Path& path, const AffineTransform& transform) const
 {
     CGContextBeginPath (context);
-    Path::Iterator i (path);
 
-    while (i.next())
+    for (Path::Iterator i (path); i.next();)
     {
         switch (i.elementType)
         {
@@ -892,11 +875,10 @@ Image juce_loadWithCoreImage (InputStream& input)
         }
     }
 
-    return Image::null;
+    return Image();
 }
 #endif
 
-#if JUCE_MAC
 Image juce_createImageFromCIImage (CIImage*, int, int);
 Image juce_createImageFromCIImage (CIImage* im, int w, int h)
 {
@@ -917,11 +899,25 @@ CGImageRef juce_createCoreGraphicsImage (const Image& juceImage, CGColorSpaceRef
 
 CGContextRef juce_getImageContext (const Image& image)
 {
-    if (CoreGraphicsImage* const cgi = dynamic_cast <CoreGraphicsImage*> (image.getPixelData()))
+    if (CoreGraphicsImage* const cgi = dynamic_cast<CoreGraphicsImage*> (image.getPixelData()))
         return cgi->context;
 
     jassertfalse;
     return 0;
 }
 
+#if JUCE_IOS
+Image juce_createImageFromUIImage (UIImage* img)
+{
+    CGImageRef image = [img CGImage];
+
+    Image retval (Image::ARGB, (int) CGImageGetWidth (image), (int) CGImageGetHeight (image), true);
+    CGContextRef ctx = juce_getImageContext (retval);
+
+    CGContextDrawImage (ctx, CGRectMake (0.0f, 0.0f, CGImageGetWidth (image), CGImageGetHeight (image)), image);
+
+    return retval;
+}
 #endif
+
+}

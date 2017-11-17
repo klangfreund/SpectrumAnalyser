@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist>
+  <dict>
+    <key>CFBundleExecutable</key>
+    <string>${EXECUTABLE_NAME}</string>
+    <key>CFBundleIconFile</key>
+    <string></string>
+    <key>CFBundleIdentifier</key>
+    <string>com.klangfreund.SpectrumAnalyser</string>
+    <key>CFBundleName</key>
+    <string>SpectrumAnalyser</string>
+    <key>CFBundleDisplayName</key>
+    <string>SpectrumAnalyser</string>
+    <key>CFBundlePackageType</key>
+    <string>BNDL</string>
+    <key>CFBundleSignature</key>
+    <string>????</string>
+    <key>CFBundleShortVersionString</key>
+    <string>0.1.1</string>
+    <key>CFBundleVersion</key>
+    <string>0.1.1</string>
+    <key>NSHumanReadableCopyright</key>
+    <string></string>
+    <key>NSHighResolutionCapable</key>
+    <true/>
+    <key>AudioComponents</key>
+    <array>
+      <dict>
+        <key>name</key>
+        <string>Klangfreund: SpectrumAnalyser</string>
+        <key>description</key>
+        <string>SpectrumAnalyser</string>
+        <key>factoryFunction</key>
+        <string>SpectrumAnalyserAUFactory</string>
+        <key>manufacturer</key>
+        <string>Klfr</string>
+        <key>type</key>
+        <string>aufx</string>
+        <key>subtype</key>
+        <string>Sana</string>
+        <key>version</key>
+        <integer>257</integer>
+      </dict>
+    </array>
+  </dict>
+</plist>

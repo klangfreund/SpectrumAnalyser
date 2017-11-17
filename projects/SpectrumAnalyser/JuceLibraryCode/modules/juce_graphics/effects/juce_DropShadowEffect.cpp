@@ -2,25 +2,30 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2013 - Raw Material Software Ltd.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission is granted to use this software under the terms of either:
-   a) the GPL v2 (or any later version)
-   b) the Affero GPL v3
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   Details of these licenses can be found at: www.gnu.org/licenses
+   By using JUCE, you agree to the terms of both the JUCE 5 End-User License
+   Agreement and JUCE 5 Privacy Policy (both updated and effective as of the
+   27th April 2017).
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+   End User License Agreement: www.juce.com/juce-5-licence
+   Privacy Policy: www.juce.com/juce-5-privacy-policy
 
-   ------------------------------------------------------------------------------
+   Or: You may also use this code under the terms of the GPL v3 (see
+   www.gnu.org/licenses).
 
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.juce.com for more information.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
+
+namespace juce
+{
 
 static inline void blurDataTriplets (uint8* d, int num, const int delta) noexcept
 {
@@ -116,11 +121,11 @@ void DropShadow::drawForPath (Graphics& g, const Path& path) const
     }
 }
 
-static void drawShadowSection (Graphics& g, ColourGradient& cg, const Rectangle<int>& area,
+static void drawShadowSection (Graphics& g, ColourGradient& cg, Rectangle<float> area,
                                bool isCorner, float centreX, float centreY, float edgeX, float edgeY)
 {
-    cg.point1 = area.getRelativePoint (centreX, centreY).toFloat();
-    cg.point2 = area.getRelativePoint (edgeX, edgeY).toFloat();
+    cg.point1 = area.getRelativePoint (centreX, centreY);
+    cg.point2 = area.getRelativePoint (edgeX, edgeY);
     cg.isRadial = isCorner;
 
     g.setGradientFill (cg);
@@ -134,14 +139,14 @@ void DropShadow::drawForRectangle (Graphics& g, const Rectangle<int>& targetArea
     for (float i = 0.05f; i < 1.0f; i += 0.1f)
         cg.addColour (1.0 - i, colour.withMultipliedAlpha (i * i));
 
-    const int radiusInset = (radius + 1) / 2;
-    const int expandedRadius = radius + radiusInset;
+    const float radiusInset = (radius + 1) / 2.0f;
+    const float expandedRadius = radius + radiusInset;
 
-    const Rectangle<int> area (targetArea.reduced (radiusInset) + offset);
+    const Rectangle<float> area (targetArea.toFloat().reduced (radiusInset) + offset.toFloat());
 
-    Rectangle<int> r (area.expanded (expandedRadius));
-    Rectangle<int> top (r.removeFromTop (expandedRadius));
-    Rectangle<int> bottom (r.removeFromBottom (expandedRadius));
+    Rectangle<float> r (area.expanded (expandedRadius));
+    Rectangle<float> top (r.removeFromTop (expandedRadius));
+    Rectangle<float> bottom (r.removeFromBottom (expandedRadius));
 
     drawShadowSection (g, cg, top.removeFromLeft  (expandedRadius), true, 1.0f, 1.0f, 0, 1.0f);
     drawShadowSection (g, cg, top.removeFromRight (expandedRadius), true, 0, 1.0f, 1.0f, 1.0f);
@@ -180,3 +185,5 @@ void DropShadowEffect::applyEffect (Image& image, Graphics& g, float scaleFactor
     g.setOpacity (alpha);
     g.drawImageAt (image, 0, 0);
 }
+
+} // namespace juce

@@ -2,25 +2,30 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2013 - Raw Material Software Ltd.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission is granted to use this software under the terms of either:
-   a) the GPL v2 (or any later version)
-   b) the Affero GPL v3
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   Details of these licenses can be found at: www.gnu.org/licenses
+   By using JUCE, you agree to the terms of both the JUCE 5 End-User License
+   Agreement and JUCE 5 Privacy Policy (both updated and effective as of the
+   27th April 2017).
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+   End User License Agreement: www.juce.com/juce-5-licence
+   Privacy Policy: www.juce.com/juce-5-privacy-policy
 
-   ------------------------------------------------------------------------------
+   Or: You may also use this code under the terms of the GPL v3 (see
+   www.gnu.org/licenses).
 
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.juce.com for more information.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
+
+namespace juce
+{
 
 struct UndoManager::ActionSet
 {
@@ -28,10 +33,6 @@ struct UndoManager::ActionSet
         : name (transactionName),
           time (Time::getCurrentTime())
     {}
-
-    OwnedArray <UndoableAction> actions;
-    String name;
-    Time time;
 
     bool perform() const
     {
@@ -60,6 +61,10 @@ struct UndoManager::ActionSet
 
         return total;
     }
+
+    OwnedArray<UndoableAction> actions;
+    String name;
+    Time time;
 };
 
 //==============================================================================
@@ -102,6 +107,19 @@ void UndoManager::setMaxNumberOfStoredUnits (const int maxNumberOfUnitsToKeep,
 //==============================================================================
 bool UndoManager::perform (UndoableAction* const newAction, const String& actionName)
 {
+    if (perform (newAction))
+    {
+        if (actionName.isNotEmpty())
+            setCurrentTransactionName (actionName);
+
+        return true;
+    }
+
+    return false;
+}
+
+bool UndoManager::perform (UndoableAction* const newAction)
+{
     if (newAction != nullptr)
     {
         ScopedPointer<UndoableAction> action (newAction);
@@ -112,9 +130,6 @@ bool UndoManager::perform (UndoableAction* const newAction, const String& action
                            // or undo() methods, or else these actions will be discarded!
             return false;
         }
-
-        if (actionName.isNotEmpty())
-            currentTransactionName = actionName;
 
         if (action->perform())
         {
@@ -134,7 +149,7 @@ bool UndoManager::perform (UndoableAction* const newAction, const String& action
             }
             else
             {
-                actionSet = new ActionSet (currentTransactionName);
+                actionSet = new ActionSet (newTransactionName);
                 transactions.insert (nextIndex, actionSet);
                 ++nextIndex;
             }
@@ -143,7 +158,8 @@ bool UndoManager::perform (UndoableAction* const newAction, const String& action
             actionSet->actions.add (action.release());
             newTransaction = false;
 
-            clearFutureTransactions();
+            moveFutureTransactionsToStash();
+            dropOldTransactionsIfTooLarge();
             sendChangeMessage();
             return true;
         }
@@ -152,14 +168,41 @@ bool UndoManager::perform (UndoableAction* const newAction, const String& action
     return false;
 }
 
-void UndoManager::clearFutureTransactions()
+void UndoManager::moveFutureTransactionsToStash()
+{
+    if (nextIndex < transactions.size())
+    {
+        stashedFutureTransactions.clear();
+
+        while (nextIndex < transactions.size())
+        {
+            ActionSet* removed = transactions.removeAndReturn (nextIndex);
+            stashedFutureTransactions.add (removed);
+            totalUnitsStored -= removed->getTotalSize();
+        }
+    }
+}
+
+void UndoManager::restoreStashedFutureTransactions()
 {
     while (nextIndex < transactions.size())
     {
-        totalUnitsStored -= transactions.getLast()->getTotalSize();
-        transactions.removeLast();
+        totalUnitsStored -= transactions.getUnchecked (nextIndex)->getTotalSize();
+        transactions.remove (nextIndex);
     }
 
+    for (int i = 0; i < stashedFutureTransactions.size(); ++i)
+    {
+        ActionSet* action = stashedFutureTransactions.removeAndReturn (i);
+        totalUnitsStored += action->getTotalSize();
+        transactions.add (action);
+    }
+
+    stashedFutureTransactions.clearQuick (false);
+}
+
+void UndoManager::dropOldTransactionsIfTooLarge()
+{
     while (nextIndex > 0
             && totalUnitsStored > maxNumUnitsToKeep
             && transactions.size() > minimumTransactionsToKeep)
@@ -174,23 +217,39 @@ void UndoManager::clearFutureTransactions()
     }
 }
 
-void UndoManager::beginNewTransaction (const String& actionName)
+void UndoManager::beginNewTransaction() noexcept
 {
-    newTransaction = true;
-    currentTransactionName = actionName;
+    beginNewTransaction (String());
 }
 
-void UndoManager::setCurrentTransactionName (const String& newName)
+void UndoManager::beginNewTransaction (const String& actionName) noexcept
 {
-    currentTransactionName = newName;
+    newTransaction = true;
+    newTransactionName = actionName;
+}
+
+void UndoManager::setCurrentTransactionName (const String& newName) noexcept
+{
+    if (newTransaction)
+        newTransactionName = newName;
+    else if (ActionSet* action = getCurrentSet())
+        action->name = newName;
+}
+
+String UndoManager::getCurrentTransactionName() const noexcept
+{
+    if (ActionSet* action = getCurrentSet())
+        return action->name;
+
+    return newTransactionName;
 }
 
 //==============================================================================
 UndoManager::ActionSet* UndoManager::getCurrentSet() const noexcept     { return transactions [nextIndex - 1]; }
 UndoManager::ActionSet* UndoManager::getNextSet() const noexcept        { return transactions [nextIndex]; }
 
-bool UndoManager::canUndo() const   { return getCurrentSet() != nullptr; }
-bool UndoManager::canRedo() const   { return getNextSet()    != nullptr; }
+bool UndoManager::canUndo() const noexcept   { return getCurrentSet() != nullptr; }
+bool UndoManager::canRedo() const noexcept   { return getNextSet()    != nullptr; }
 
 bool UndoManager::undo()
 {
@@ -232,31 +291,31 @@ bool UndoManager::redo()
 
 String UndoManager::getUndoDescription() const
 {
-    if (const ActionSet* const s = getCurrentSet())
+    if (auto* s = getCurrentSet())
         return s->name;
 
-    return String();
+    return {};
 }
 
 String UndoManager::getRedoDescription() const
 {
-    if (const ActionSet* const s = getNextSet())
+    if (auto* s = getNextSet())
         return s->name;
 
-    return String();
+    return {};
 }
 
 Time UndoManager::getTimeOfUndoTransaction() const
 {
-    if (const ActionSet* const s = getCurrentSet())
+    if (auto* s = getCurrentSet())
         return s->time;
 
-    return Time();
+    return {};
 }
 
 Time UndoManager::getTimeOfRedoTransaction() const
 {
-    if (const ActionSet* const s = getNextSet())
+    if (auto* s = getNextSet())
         return s->time;
 
     return Time::getCurrentTime();
@@ -264,10 +323,16 @@ Time UndoManager::getTimeOfRedoTransaction() const
 
 bool UndoManager::undoCurrentTransactionOnly()
 {
-    return newTransaction ? false : undo();
+    if ((! newTransaction) && undo())
+    {
+        restoreStashedFutureTransactions();
+        return true;
+    }
+
+    return false;
 }
 
-void UndoManager::getActionsInCurrentTransaction (Array <const UndoableAction*>& actionsFound) const
+void UndoManager::getActionsInCurrentTransaction (Array<const UndoableAction*>& actionsFound) const
 {
     if (! newTransaction)
         if (const ActionSet* const s = getCurrentSet())
@@ -283,3 +348,5 @@ int UndoManager::getNumActionsInCurrentTransaction() const
 
     return 0;
 }
+
+} // namespace juce

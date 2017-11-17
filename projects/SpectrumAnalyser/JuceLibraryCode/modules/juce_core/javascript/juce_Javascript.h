@@ -1,31 +1,29 @@
 /*
   ==============================================================================
 
-   This file is part of the juce_core module of the JUCE library.
-   Copyright (c) 2013 - Raw Material Software Ltd.
+   This file is part of the JUCE library.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission to use, copy, modify, and/or distribute this software for any purpose with
-   or without fee is hereby granted, provided that the above copyright notice and this
-   permission notice appear in all copies.
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD
-   TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN
-   NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
-   DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER
-   IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
-   CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+   The code included in this file is provided under the terms of the ISC license
+   http://www.isc.org/downloads/software-support-policy/isc-license. Permission
+   To use, copy, modify, and/or distribute this software for any purpose with or
+   without fee is hereby granted provided that the above copyright notice and
+   this permission notice appear in all copies.
 
-   ------------------------------------------------------------------------------
-
-   NOTE! This permissive ISC license applies ONLY to files within the juce_core module!
-   All other JUCE modules are covered by a dual GPL/commercial license, so if you are
-   using any other modules, be sure to check that you also comply with their license.
-
-   For more details, visit www.juce.com
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
 
+namespace juce
+{
+
+//==============================================================================
 /**
     A simple javascript interpreter!
 
@@ -44,7 +42,7 @@
     script creates complex connections between objects, you run the risk of creating cyclic
     dependencies and hence leaking.
 */
-class JavascriptEngine
+class JUCE_API  JavascriptEngine  final
 {
 public:
     /** Creates an instance of the engine.
@@ -78,16 +76,25 @@ public:
         The function arguments are passed in the same format as used by native
         methods in the var class.
     */
-    var callFunction (Identifier function,
+    var callFunction (const Identifier& function,
                       const var::NativeFunctionArgs& args,
                       Result* errorMessage = nullptr);
+
+    /** Calls a function object in the namespace of a dynamic object, and returns the result.
+        The function arguments are passed in the same format as used by native
+        methods in the var class.
+    */
+    var callFunctionObject (DynamicObject* objectScope,
+                            const var& functionObject,
+                            const var::NativeFunctionArgs& args,
+                            Result* errorMessage = nullptr);
 
     /** Adds a native object to the root namespace.
         The object passed-in is reference-counted, and will be retained by the
         engine until the engine is deleted. The name must be a simple JS identifier,
         without any dots.
     */
-    void registerNativeObject (Identifier objectName, DynamicObject* object);
+    void registerNativeObject (const Identifier& objectName, DynamicObject* object);
 
     /** This value indicates how long a call to one of the evaluate methods is permitted
         to run before timing-out and failing.
@@ -96,10 +103,18 @@ public:
     */
     RelativeTime maximumExecutionTime;
 
+    /** When called from another thread, causes the interpreter to time-out as soon as possible */
+    void stop() noexcept;
+
+    /** Provides access to the set of properties of the root namespace object. */
+    const NamedValueSet& getRootObjectProperties() const noexcept;
+
 private:
     JUCE_PUBLIC_IN_DLL_BUILD (struct RootObject)
-    ReferenceCountedObjectPtr<RootObject> root;
-    void prepareTimeout() const;
+    const ReferenceCountedObjectPtr<RootObject> root;
+    void prepareTimeout() const noexcept;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JavascriptEngine)
 };
+
+} // namespace juce

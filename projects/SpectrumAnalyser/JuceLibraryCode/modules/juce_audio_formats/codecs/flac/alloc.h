@@ -1,6 +1,6 @@
 /* alloc - Convenience routines for safely allocating memory
  * Copyright (C) 2007-2009  Josh Coalson
- * Copyright (C) 2011-2013  Xiph.Org Foundation
+ * Copyright (C) 2011-2014  Xiph.Org Foundation
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -33,7 +33,7 @@
 #ifndef FLAC__SHARE__ALLOC_H
 #define FLAC__SHARE__ALLOC_H
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 
@@ -41,11 +41,14 @@
  * before #including this file,  otherwise SIZE_MAX might not be defined
  */
 
-#include <limits.h> /* for SIZE_MAX */
-#if HAVE_STDINT_H
-#include <stdint.h> /* for SIZE_MAX in case limits.h didn't get it */
-#endif
-#include <stdlib.h> /* for size_t, malloc(), etc */
+// JUCE: removed as JUCE already includes standard headers and including
+// these in FlacNamespace will cause problems
+
+//#include <limits.h> /* for SIZE_MAX */
+//#if HAVE_STDINT_H
+//#include <stdint.h> /* for SIZE_MAX in case limits.h didn't get it */
+//#endif
+//#include <stdlib.h> /* for size_t, malloc(), etc */
 #include "compat.h"
 
 #ifndef SIZE_MAX

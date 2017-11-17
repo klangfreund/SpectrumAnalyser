@@ -1,6 +1,8 @@
 # SpectrumAnalyser
 A simple spectrum analyser plugin, written in C++, using the JUCE and dRowAudio libraries.
 
+![screenshot](docs/screenshot.png?raw=true "Spectrum Analyser")
+
 # License
 
 Inherited from JUCE:

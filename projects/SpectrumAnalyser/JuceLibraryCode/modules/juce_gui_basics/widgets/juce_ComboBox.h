@@ -2,29 +2,30 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2013 - Raw Material Software Ltd.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission is granted to use this software under the terms of either:
-   a) the GPL v2 (or any later version)
-   b) the Affero GPL v3
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   Details of these licenses can be found at: www.gnu.org/licenses
+   By using JUCE, you agree to the terms of both the JUCE 5 End-User License
+   Agreement and JUCE 5 Privacy Policy (both updated and effective as of the
+   27th April 2017).
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+   End User License Agreement: www.juce.com/juce-5-licence
+   Privacy Policy: www.juce.com/juce-5-privacy-policy
 
-   ------------------------------------------------------------------------------
+   Or: You may also use this code under the terms of the GPL v3 (see
+   www.gnu.org/licenses).
 
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.juce.com for more information.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
 
-#ifndef JUCE_COMBOBOX_H_INCLUDED
-#define JUCE_COMBOBOX_H_INCLUDED
-
+namespace juce
+{
 
 //==============================================================================
 /**
@@ -43,8 +44,8 @@
 */
 class JUCE_API  ComboBox  : public Component,
                             public SettableTooltipClient,
-                            public LabelListener,  // (can't use Label::Listener due to idiotic VC2005 bug)
-                            public ValueListener,
+                            public Label::Listener,
+                            public Value::Listener,
                             private AsyncUpdater
 {
 public:
@@ -57,13 +58,13 @@ public:
 
         @param componentName    the name to set for the component (see Component::setName())
     */
-    explicit ComboBox (const String& componentName = String::empty);
+    explicit ComboBox (const String& componentName = String());
 
     /** Destructor. */
-    ~ComboBox();
+    virtual ~ComboBox();
 
     //==============================================================================
-    /** Sets whether the test in the combo-box is editable.
+    /** Sets whether the text in the combo-box is editable.
 
         The default state for a new ComboBox is non-editable, and can only be changed
         by choosing from the drop-down list.
@@ -263,6 +264,17 @@ public:
     */
     virtual void showPopup();
 
+    /** Hides the combo box's popup list, if it's currently visible. */
+    void hidePopup();
+
+    /** Returns true if the popup menu is currently being shown. */
+    bool isPopupActive() const noexcept                 { return menuActive; }
+
+    /** Returns the PopupMenu object associated with the ComboBox.
+        Can be useful for adding sub-menus to the ComboBox standard PopupMenu
+    */
+    PopupMenu* getRootMenu() { return &currentMenu; }
+
     //==============================================================================
     /**
         A class for receiving events from a ComboBox.
@@ -329,7 +341,7 @@ public:
         These constants can be used either via the Component::setColour(), or LookAndFeel::setColour()
         methods.
 
-        To change the colours of the menu that pops up
+        To change the colours of the menu that pops up, you can set the colour IDs in PopupMenu::ColourIDs.
 
         @see Component::setColour, Component::findColour, LookAndFeel::setColour, LookAndFeel::findColour
     */
@@ -407,32 +419,29 @@ public:
 
 private:
     //==============================================================================
-    struct ItemInfo
+    enum EditableState
     {
-        ItemInfo (const String&, int itemId, bool isEnabled, bool isHeading);
-        bool isSeparator() const noexcept;
-        bool isRealItem() const noexcept;
-
-        String name;
-        int itemId;
-        bool isEnabled : 1, isHeading : 1;
+        editableUnknown,
+        labelIsNotEditable,
+        labelIsEditable
     };
 
-    OwnedArray <ItemInfo> items;
+    PopupMenu currentMenu;
     Value currentId;
-    int lastCurrentId;
-    bool isButtonDown, separatorPending, menuActive, scrollWheelEnabled;
-    float mouseWheelAccumulator;
-    ListenerList <Listener> listeners;
+    int lastCurrentId = 0;
+    bool isButtonDown = false, menuActive = false, scrollWheelEnabled = false;
+    float mouseWheelAccumulator = 0;
+    ListenerList<Listener> listeners;
     ScopedPointer<Label> label;
     String textWhenNothingSelected, noChoicesMessage;
+    EditableState labelEditableState = editableUnknown;
 
-    ItemInfo* getItemForId (int) const noexcept;
-    ItemInfo* getItemForIndex (int) const noexcept;
+    PopupMenu::Item* getItemForId (int) const noexcept;
+    PopupMenu::Item* getItemForIndex (int) const noexcept;
     bool selectIfEnabled (int index);
     bool nudgeSelectedItem (int delta);
     void sendChange (NotificationType);
-    static void popupMenuFinishedCallback (int, ComboBox*);
+    void showPopupIfNotActive();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ComboBox)
 };
@@ -440,4 +449,4 @@ private:
 /** This typedef is just for compatibility with old code - newer code should use the ComboBox::Listener class directly. */
 typedef ComboBox::Listener ComboBoxListener;
 
-#endif   // JUCE_COMBOBOX_H_INCLUDED
+} // namespace juce

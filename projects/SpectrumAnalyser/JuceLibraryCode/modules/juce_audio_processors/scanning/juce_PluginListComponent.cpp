@@ -2,25 +2,30 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2013 - Raw Material Software Ltd.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission is granted to use this software under the terms of either:
-   a) the GPL v2 (or any later version)
-   b) the Affero GPL v3
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   Details of these licenses can be found at: www.gnu.org/licenses
+   By using JUCE, you agree to the terms of both the JUCE 5 End-User License
+   Agreement and JUCE 5 Privacy Policy (both updated and effective as of the
+   27th April 2017).
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+   End User License Agreement: www.juce.com/juce-5-licence
+   Privacy Policy: www.juce.com/juce-5-privacy-policy
 
-   ------------------------------------------------------------------------------
+   Or: You may also use this code under the terms of the GPL v3 (see
+   www.gnu.org/licenses).
 
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.juce.com for more information.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
+
+namespace juce
+{
 
 class PluginListComponent::TableModel  : public TableListBoxModel
 {
@@ -34,8 +39,11 @@ public:
 
     void paintRowBackground (Graphics& g, int /*rowNumber*/, int /*width*/, int /*height*/, bool rowIsSelected) override
     {
-        if (rowIsSelected)
-            g.fillAll (owner.findColour (TextEditor::highlightColourId));
+        const auto defaultColour = owner.findColour (ListBox::backgroundColourId);
+        const auto c = rowIsSelected ? defaultColour.interpolatedWith (owner.findColour (ListBox::textColourId), 0.5f)
+                                     : defaultColour;
+
+        g.fillAll (c);
     }
 
     enum
@@ -75,9 +83,10 @@ public:
 
         if (text.isNotEmpty())
         {
+            const auto defaultTextColour = owner.findColour (ListBox::textColourId);
             g.setColour (isBlacklisted ? Colours::red
-                                       : columnId == nameCol ? Colours::black
-                                                             : Colours::grey);
+                                       : columnId == nameCol ? defaultTextColour
+                                                             : defaultTextColour.interpolatedWith (Colours::transparentBlack, 0.3f));
             g.setFont (Font (height * 0.7f, Font::bold));
             g.drawFittedText (text, 4, 0, width - 6, height, Justification::centredLeft, 1, 0.9f);
         }
@@ -85,7 +94,7 @@ public:
 
     void deleteKeyPressed (int) override
     {
-        owner.removeSelected();
+        owner.removeSelectedPlugins();
     }
 
     void sortOrderChanged (int newSortColumnId, bool isForwards) override
@@ -100,14 +109,6 @@ public:
 
             default: jassertfalse; break;
         }
-    }
-
-    static void removePluginItem (KnownPluginList& list, int index)
-    {
-        if (index < list.getNumTypes())
-            list.removeType (index);
-        else
-            list.removeFromBlacklist (list.getBlacklistedFiles() [index - list.getNumTypes()]);
     }
 
     static String getPluginDescription (const PluginDescription& desc)
@@ -131,13 +132,15 @@ public:
 
 //==============================================================================
 PluginListComponent::PluginListComponent (AudioPluginFormatManager& manager, KnownPluginList& listToEdit,
-                                          const File& deadMansPedal, PropertiesFile* const props)
+                                          const File& deadMansPedal, PropertiesFile* const props,
+                                          bool allowPluginsWhichRequireAsynchronousInstantiation)
     : formatManager (manager),
       list (listToEdit),
       deadMansPedalFile (deadMansPedal),
       optionsButton ("Options..."),
       propertiesToUse (props),
-      numThreads (0)
+      allowAsync (allowPluginsWhichRequireAsynchronousInstantiation),
+      numThreads (allowAsync ? 1 : 0)
 {
     tableModel = new TableModel (*this, listToEdit);
 
@@ -179,6 +182,12 @@ void PluginListComponent::setOptionsButtonText (const String& newText)
     resized();
 }
 
+void PluginListComponent::setScanDialogText (const String& title, const String& content)
+{
+    dialogTitle = title;
+    dialogText = content;
+}
+
 void PluginListComponent::setNumberOfThreadsForScanning (int num)
 {
     numThreads = num;
@@ -207,13 +216,24 @@ void PluginListComponent::updateList()
     table.repaint();
 }
 
-void PluginListComponent::removeSelected()
+void PluginListComponent::removeSelectedPlugins()
 {
     const SparseSet<int> selected (table.getSelectedRows());
 
     for (int i = table.getNumRows(); --i >= 0;)
         if (selected.contains (i))
-            TableModel::removePluginItem (list, i);
+            removePluginItem (i);
+}
+
+void PluginListComponent::setTableModel (TableListBoxModel* model)
+{
+    table.setModel (nullptr);
+    tableModel = model;
+    table.setModel (tableModel);
+
+    table.getHeader().reSortTable();
+    table.updateContent();
+    table.repaint();
 }
 
 bool PluginListComponent::canShowSelectedFolder() const
@@ -238,6 +258,14 @@ void PluginListComponent::removeMissingPlugins()
             list.removeType (i);
 }
 
+void PluginListComponent::removePluginItem (int index)
+{
+    if (index < list.getNumTypes())
+        list.removeType (index);
+    else
+        list.removeFromBlacklist (list.getBlacklistedFiles() [index - list.getNumTypes()]);
+}
+
 void PluginListComponent::optionsMenuStaticCallback (int result, PluginListComponent* pluginList)
 {
     if (pluginList != nullptr)
@@ -250,7 +278,7 @@ void PluginListComponent::optionsMenuCallback (int result)
     {
         case 0:   break;
         case 1:   list.clear(); break;
-        case 2:   removeSelected(); break;
+        case 2:   removeSelectedPlugins(); break;
         case 3:   showSelectedFolder(); break;
         case 4:   removeMissingPlugins(); break;
 
@@ -293,7 +321,7 @@ bool PluginListComponent::isInterestedInFileDrag (const StringArray& /*files*/)
 
 void PluginListComponent::filesDropped (const StringArray& files, int, int)
 {
-    OwnedArray <PluginDescription> typesFound;
+    OwnedArray<PluginDescription> typesFound;
     list.scanAndAddDragAndDroppedFiles (formatManager, files, typesFound);
 }
 
@@ -313,19 +341,26 @@ void PluginListComponent::setLastSearchPath (PropertiesFile& properties, AudioPl
 class PluginListComponent::Scanner    : private Timer
 {
 public:
-    Scanner (PluginListComponent& plc, AudioPluginFormat& format, PropertiesFile* properties, int threads)
+    Scanner (PluginListComponent& plc, AudioPluginFormat& format, PropertiesFile* properties,
+             bool allowPluginsWhichRequireAsynchronousInstantiation, int threads,
+             const String& title, const String& text)
         : owner (plc), formatToScan (format), propertiesToUse (properties),
-          pathChooserWindow (TRANS("Select folders to scan..."), String::empty, AlertWindow::NoIcon),
-          progressWindow (TRANS("Scanning for plug-ins..."),
-                          TRANS("Searching for all possible plug-in files..."), AlertWindow::NoIcon),
-          progress (0.0), numThreads (threads), finished (false)
+          pathChooserWindow (TRANS("Select folders to scan..."), String(), AlertWindow::NoIcon),
+          progressWindow (title, text, AlertWindow::NoIcon),
+          progress (0.0), numThreads (threads), allowAsync (allowPluginsWhichRequireAsynchronousInstantiation),
+          finished (false)
     {
         FileSearchPath path (formatToScan.getDefaultLocationsToSearch());
 
+        // You need to use at least one thread when scanning plug-ins asynchronously
+        jassert (! allowAsync || (numThreads > 0));
+
         if (path.getNumPaths() > 0) // if the path is empty, then paths aren't used for this format.
         {
+           #if ! JUCE_IOS
             if (propertiesToUse != nullptr)
                 path = getLastSearchPath (*propertiesToUse, formatToScan);
+           #endif
 
             pathList.setSize (500, 300);
             pathList.setPath (path);
@@ -364,7 +399,7 @@ private:
     String pluginBeingScanned;
     double progress;
     int numThreads;
-    bool finished;
+    bool allowAsync, finished;
     ScopedPointer<ThreadPool> pool;
 
     static void startScanCallback (int result, AlertWindow* alert, Scanner* scanner)
@@ -396,7 +431,7 @@ private:
                                                 + TRANS ("Are you sure you want to scan the folder \"XYZ\"?")
                                                    .replace ("XYZ", f.getFullPathName()),
                                               TRANS ("Scan"),
-                                              String::empty,
+                                              String(),
                                               nullptr,
                                               ModalCallbackFunction::create (warnAboutStupidPathsCallback, this));
                 return;
@@ -448,7 +483,7 @@ private:
         pathChooserWindow.setVisible (false);
 
         scanner = new PluginDirectoryScanner (owner.list, formatToScan, pathList.getPath(),
-                                              true, owner.deadMansPedalFile);
+                                              true, owner.deadMansPedalFile, allowAsync);
 
         if (propertiesToUse != nullptr)
         {
@@ -528,7 +563,9 @@ private:
 
 void PluginListComponent::scanFor (AudioPluginFormat& format)
 {
-    currentScanner = new Scanner (*this, format, propertiesToUse, numThreads);
+    currentScanner = new Scanner (*this, format, propertiesToUse, allowAsync, numThreads,
+                                  dialogTitle.isNotEmpty() ? dialogTitle : TRANS("Scanning for plug-ins..."),
+                                  dialogText.isNotEmpty()  ? dialogText  : TRANS("Searching for all possible plug-in files..."));
 }
 
 bool PluginListComponent::isScanning() const noexcept
@@ -552,3 +589,5 @@ void PluginListComponent::scanFinished (const StringArray& failedFiles)
                                             + ":\n\n"
                                             + shortNames.joinIntoString (", "));
 }
+
+} // namespace juce

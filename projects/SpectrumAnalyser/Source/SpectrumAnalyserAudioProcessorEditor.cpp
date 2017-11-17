@@ -67,8 +67,8 @@ void SpectrumAnalyserAudioProcessorEditor::resized()
 
     const int widthForSamWithBubble = 190;
     const int maxHeight = getHeight() - header.getHeight();
-    const int height = jmin (190, maxHeight);
-    samWithBubble.setBounds(getWidth() - widthForSamWithBubble, 0, widthForSamWithBubble, height);
+    const int height = jmin (140, maxHeight);
+    samWithBubble.setBounds(getWidth() - widthForSamWithBubble, 10, widthForSamWithBubble, height);
     
     resizer->setBounds (getWidth() - 16, getHeight() - 16, 16, 16);
 }

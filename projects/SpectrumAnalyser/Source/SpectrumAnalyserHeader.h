@@ -17,13 +17,14 @@
 // JUCE_ENABLE_LIVE_CONSTANT_EDITOR will be defined there if not already
 // defined.
 
-#ifndef    JUCE_ENABLE_LIVE_CONSTANT_EDITOR
+#ifndef JUCE_ENABLE_LIVE_CONSTANT_EDITOR
   #define JUCE_ENABLE_LIVE_CONSTANT_EDITOR 0
 #endif
 
-#ifndef    JUCE_ENABLE_REPAINT_DEBUGGING
+#ifndef JUCE_ENABLE_REPAINT_DEBUGGING
   //#define JUCE_ENABLE_REPAINT_DEBUGGING 1
 #endif
+
 
 //==============================================================================
 

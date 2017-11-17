@@ -2,29 +2,30 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2013 - Raw Material Software Ltd.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission is granted to use this software under the terms of either:
-   a) the GPL v2 (or any later version)
-   b) the Affero GPL v3
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   Details of these licenses can be found at: www.gnu.org/licenses
+   By using JUCE, you agree to the terms of both the JUCE 5 End-User License
+   Agreement and JUCE 5 Privacy Policy (both updated and effective as of the
+   27th April 2017).
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+   End User License Agreement: www.juce.com/juce-5-licence
+   Privacy Policy: www.juce.com/juce-5-privacy-policy
 
-   ------------------------------------------------------------------------------
+   Or: You may also use this code under the terms of the GPL v3 (see
+   www.gnu.org/licenses).
 
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.juce.com for more information.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
 
-#ifndef JUCE_FONT_H_INCLUDED
-#define JUCE_FONT_H_INCLUDED
-
+namespace juce
+{
 
 //==============================================================================
 /**
@@ -36,7 +37,7 @@
 
     @see Typeface
 */
-class JUCE_API  Font
+class JUCE_API  Font  final
 {
 public:
     //==============================================================================
@@ -95,10 +96,11 @@ public:
     */
     Font();
 
-   #if JUCE_COMPILER_SUPPORTS_MOVE_SEMANTICS
+    /** Move constructor */
     Font (Font&& other) noexcept;
+
+    /** Move assignment operator */
     Font& operator= (Font&& other) noexcept;
-   #endif
 
     /** Copies this font from another one. */
     Font& operator= (const Font& other) noexcept;
@@ -279,8 +281,12 @@ public:
     //==============================================================================
     /** Makes the font bold or non-bold. */
     void setBold (bool shouldBeBold);
-    /** Returns a copy of this font with the bold attribute set. */
+
+    /** Returns a copy of this font with the bold attribute set.
+        If the font does not have a bold version, this will return the default font.
+     */
     Font boldened() const;
+
     /** Returns true if the font is bold. */
     bool isBold() const noexcept;
 
@@ -318,6 +324,18 @@ public:
                             narrower, greater than 1.0 will be stretched out.
     */
     void setHorizontalScale (float scaleFactor);
+
+    /** Returns the minimum horizontal scale to which fonts may be squashed when trying to
+        create a layout.
+        @see setDefaultMinimumHorizontalScaleFactor
+    */
+    static float getDefaultMinimumHorizontalScaleFactor() noexcept;
+
+    /** Sets the minimum horizontal scale to which fonts may be squashed when trying to
+        create a text layout.
+        @see getDefaultMinimumHorizontalScaleFactor
+    */
+    static void setDefaultMinimumHorizontalScaleFactor (float newMinimumScaleFactor) noexcept;
 
     /** Returns the font's kerning.
 
@@ -374,7 +392,7 @@ public:
         An extra x offset is added at the end of the run, to indicate where the right hand
         edge of the last character is.
     */
-    void getGlyphPositions (const String& text, Array <int>& glyphs, Array <float>& xOffsets) const;
+    void getGlyphPositions (const String& text, Array<int>& glyphs, Array<float>& xOffsets) const;
 
     //==============================================================================
     /** Returns the typeface used by this font.
@@ -457,4 +475,4 @@ private:
     JUCE_LEAK_DETECTOR (Font)
 };
 
-#endif   // JUCE_FONT_H_INCLUDED
+} // namespace juce

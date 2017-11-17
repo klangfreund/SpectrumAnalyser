@@ -2,25 +2,30 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2013 - Raw Material Software Ltd.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission is granted to use this software under the terms of either:
-   a) the GPL v2 (or any later version)
-   b) the Affero GPL v3
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   Details of these licenses can be found at: www.gnu.org/licenses
+   By using JUCE, you agree to the terms of both the JUCE 5 End-User License
+   Agreement and JUCE 5 Privacy Policy (both updated and effective as of the
+   27th April 2017).
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+   End User License Agreement: www.juce.com/juce-5-licence
+   Privacy Policy: www.juce.com/juce-5-privacy-policy
 
-   ------------------------------------------------------------------------------
+   Or: You may also use this code under the terms of the GPL v3 (see
+   www.gnu.org/licenses).
 
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.juce.com for more information.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
+
+namespace juce
+{
 
 Label::Label (const String& name, const String& labelText)
     : Component (name),
@@ -29,7 +34,8 @@ Label::Label (const String& name, const String& labelText)
       font (15.0f),
       justification (Justification::centredLeft),
       border (1, 5, 1, 5),
-      minimumHorizontalScale (0.7f),
+      minimumHorizontalScale (0.0f),
+      keyboardType (TextEditor::textKeyboard),
       editSingleClick (false),
       editDoubleClick (false),
       lossOfFocusDiscardsChanges (false)
@@ -161,7 +167,8 @@ void Label::componentMovedOrResized (Component& component, bool /*wasMoved*/, bo
 
     if (leftOfOwnerComp)
     {
-        setSize (jmin (f.getStringWidth (textValue.toString()) + 8, component.getX()),
+        setSize (jmin (roundToInt (f.getStringWidthFloat (textValue.toString()) + 0.5f) + getBorderSize().getLeftAndRight(),
+                       component.getX()),
                  component.getHeight());
 
         setTopRightPosition (component.getX(), component.getY());
@@ -169,7 +176,7 @@ void Label::componentMovedOrResized (Component& component, bool /*wasMoved*/, bo
     else
     {
         setSize (component.getWidth(),
-                 8 + roundToInt (f.getHeight()));
+                 getBorderSize().getTopAndBottom() + 6 + roundToInt (f.getHeight() + 0.5f));
 
         setTopLeftPosition (component.getX(), component.getY() - getHeight());
     }
@@ -196,10 +203,13 @@ void Label::editorShown (TextEditor* textEditor)
     listeners.callChecked (checker, &LabelListener::editorShown, this, *textEditor);
 }
 
-void Label::editorAboutToBeHidden (TextEditor*)
+void Label::editorAboutToBeHidden (TextEditor* textEditor)
 {
     if (ComponentPeer* const peer = getPeer())
         peer->dismissPendingTextInput();
+
+    Component::BailOutChecker checker (this);
+    listeners.callChecked (checker, &LabelListener::editorHidden, this, *textEditor);
 }
 
 void Label::showEditor()
@@ -208,6 +218,7 @@ void Label::showEditor()
     {
         addAndMakeVisible (editor = createEditorComponent());
         editor->setText (getText(), false);
+        editor->setKeyboardType (keyboardType);
         editor->addListener (this);
         editor->grabKeyboardFocus();
 
@@ -303,7 +314,7 @@ TextEditor* Label::createEditorComponent()
 
     copyColourIfSpecified (*this, *ed, textWhenEditingColourId, TextEditor::textColourId);
     copyColourIfSpecified (*this, *ed, backgroundWhenEditingColourId, TextEditor::backgroundColourId);
-    copyColourIfSpecified (*this, *ed, outlineWhenEditingColourId, TextEditor::outlineColourId);
+    copyColourIfSpecified (*this, *ed, outlineWhenEditingColourId, TextEditor::focusedOutlineColourId);
 
     return ed;
 }
@@ -322,9 +333,9 @@ void Label::paint (Graphics& g)
 void Label::mouseUp (const MouseEvent& e)
 {
     if (editSingleClick
-         && e.mouseWasClicked()
+         && isEnabled()
          && contains (e.getPosition())
-         && ! e.mods.isPopupMenu())
+         && ! (e.mouseWasDraggedSinceMouseDown() || e.mods.isPopupMenu()))
     {
         showEditor();
     }
@@ -332,7 +343,9 @@ void Label::mouseUp (const MouseEvent& e)
 
 void Label::mouseDoubleClick (const MouseEvent& e)
 {
-    if (editDoubleClick && ! e.mods.isPopupMenu())
+    if (editDoubleClick
+         && isEnabled()
+         && ! e.mods.isPopupMenu())
         showEditor();
 }
 
@@ -344,7 +357,9 @@ void Label::resized()
 
 void Label::focusGained (FocusChangeType cause)
 {
-    if (editSingleClick && cause == focusChangedByTabKey)
+    if (editSingleClick
+         && isEnabled()
+         && cause == focusChangedByTabKey)
         showEditor();
 }
 
@@ -380,7 +395,7 @@ public:
 
     static Component* getComp (Component* current)
     {
-        return dynamic_cast <TextEditor*> (current) != nullptr
+        return dynamic_cast<TextEditor*> (current) != nullptr
                  ? current->getParentComponent() : current;
     }
 };
@@ -404,7 +419,7 @@ void Label::removeListener (LabelListener* const listener)
 void Label::callChangeListeners()
 {
     Component::BailOutChecker checker (this);
-    listeners.callChecked (checker, &LabelListener::labelTextChanged, this);  // (can't use Label::Listener due to idiotic VC2005 bug)
+    listeners.callChecked (checker, &Label::Listener::labelTextChanged, this);
 }
 
 //==============================================================================
@@ -449,7 +464,7 @@ void Label::textEditorEscapeKeyPressed (TextEditor& ed)
     if (editor != nullptr)
     {
         jassert (&ed == editor);
-        (void) ed;
+        ignoreUnused (ed);
 
         editor->setText (textValue.toString(), false);
         hideEditor (true);
@@ -461,4 +476,4 @@ void Label::textEditorFocusLost (TextEditor& ed)
     textEditorTextChanged (ed);
 }
 
-void Label::Listener::editorShown (Label*, TextEditor&) {}
+} // namespace juce

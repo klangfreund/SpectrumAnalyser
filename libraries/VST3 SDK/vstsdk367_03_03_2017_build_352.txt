@@ -1,0 +1,2 @@
+This is version:
+vstsdk367_03_03_2017_build_352

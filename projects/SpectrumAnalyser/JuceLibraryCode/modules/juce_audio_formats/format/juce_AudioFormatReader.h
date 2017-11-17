@@ -2,28 +2,32 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2013 - Raw Material Software Ltd.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission is granted to use this software under the terms of either:
-   a) the GPL v2 (or any later version)
-   b) the Affero GPL v3
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   Details of these licenses can be found at: www.gnu.org/licenses
+   By using JUCE, you agree to the terms of both the JUCE 5 End-User License
+   Agreement and JUCE 5 Privacy Policy (both updated and effective as of the
+   27th April 2017).
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+   End User License Agreement: www.juce.com/juce-5-licence
+   Privacy Policy: www.juce.com/juce-5-privacy-policy
 
-   ------------------------------------------------------------------------------
+   Or: You may also use this code under the terms of the GPL v3 (see
+   www.gnu.org/licenses).
 
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.juce.com for more information.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
 
-#ifndef JUCE_AUDIOFORMATREADER_H_INCLUDED
-#define JUCE_AUDIOFORMATREADER_H_INCLUDED
+namespace juce
+{
+
+class AudioFormat;
 
 
 //==============================================================================
@@ -44,7 +48,7 @@ protected:
         @param sourceStream     the stream to read from - this will be deleted
                                 by this object when it is no longer needed. (Some
                                 specialised readers might not use this parameter and
-                                can leave it as 0).
+                                can leave it as nullptr).
         @param formatName       the description that will be returned by the getFormatName()
                                 method
     */
@@ -127,6 +131,25 @@ public:
         highest and lowest sample levels from the channels in that section, returning
         these as normalised floating-point levels.
 
+        @param startSample  the offset into the audio stream to start reading from. It's
+                            ok for this to be beyond the start or end of the stream.
+        @param numSamples   how many samples to read
+        @param results      this array will be filled with Range values for each channel.
+                            The array must contain numChannels elements.
+        @param numChannelsToRead  the number of channels of data to scan. This must be
+                            more than zero, but not more than the total number of channels
+                            that the reader contains
+        @see read
+    */
+    virtual void readMaxLevels (int64 startSample, int64 numSamples,
+                                Range<float>* results, int numChannelsToRead);
+
+    /** Finds the highest and lowest sample levels from a section of the audio stream.
+
+        This will read a block of samples from the stream, and measure the
+        highest and lowest sample levels from the channels in that section, returning
+        these as normalised floating-point levels.
+
         @param startSample          the offset into the audio stream to start reading from. It's
                                     ok for this to be beyond the start or end of the stream.
         @param numSamples           how many samples to read
@@ -138,12 +161,9 @@ public:
                                     channel (if there is one)
         @see read
     */
-    virtual void readMaxLevels (int64 startSample,
-                                int64 numSamples,
-                                float& lowestLeft,
-                                float& highestLeft,
-                                float& lowestRight,
-                                float& highestRight);
+    virtual void readMaxLevels (int64 startSample, int64 numSamples,
+                                float& lowestLeft,  float& highestLeft,
+                                float& lowestRight, float& highestRight);
 
     /** Scans the source looking for a sample whose magnitude is in a specified range.
 
@@ -176,19 +196,19 @@ public:
 
     //==============================================================================
     /** The sample-rate of the stream. */
-    double sampleRate;
+    double sampleRate = 0;
 
     /** The number of bits per sample, e.g. 16, 24, 32. */
-    unsigned int bitsPerSample;
+    unsigned int bitsPerSample = 0;
 
     /** The total number of samples in the audio stream. */
-    int64 lengthInSamples;
+    int64 lengthInSamples = 0;
 
     /** The total number of channels in the audio stream. */
-    unsigned int numChannels;
+    unsigned int numChannels = 0;
 
     /** Indicates whether the data is floating-point or fixed. */
-    bool usesFloatingPointData;
+    bool usesFloatingPointData = false;
 
     /** A set of metadata values that the reader has pulled out of the stream.
 
@@ -201,6 +221,9 @@ public:
     /** The input stream, for use by subclasses. */
     InputStream* input;
 
+    //==============================================================================
+    /** Get the channel layout of the audio stream. */
+    virtual AudioChannelSet getChannelLayout();
 
     //==============================================================================
     /** Subclasses must implement this method to perform the low-level read operation.
@@ -231,8 +254,8 @@ protected:
     template <class DestSampleType, class SourceSampleType, class SourceEndianness>
     struct ReadHelper
     {
-        typedef AudioData::Pointer <DestSampleType, AudioData::NativeEndian, AudioData::NonInterleaved, AudioData::NonConst>    DestType;
-        typedef AudioData::Pointer <SourceSampleType, SourceEndianness, AudioData::Interleaved, AudioData::Const>               SourceType;
+        typedef AudioData::Pointer<DestSampleType, AudioData::NativeEndian, AudioData::NonInterleaved, AudioData::NonConst>    DestType;
+        typedef AudioData::Pointer<SourceSampleType, SourceEndianness, AudioData::Interleaved, AudioData::Const>               SourceType;
 
         template <typename TargetType>
         static void read (TargetType* const* destData, int destOffset, int numDestChannels,
@@ -280,5 +303,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioFormatReader)
 };
 
-
-#endif   // JUCE_AUDIOFORMATREADER_H_INCLUDED
+} // namespace juce

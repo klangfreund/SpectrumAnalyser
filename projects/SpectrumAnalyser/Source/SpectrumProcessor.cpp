@@ -16,7 +16,7 @@ SpectrumProcessor::SpectrumProcessor (int fftSizeLog2)
   : fftEngine         {fftSizeLog2},
     tempBlock         (fftEngine.getFFTSize()),
 // TODO: Make the circularBuffer dependant of the buffer size of the incoming audio stream.
-    circularBuffer    (jmax (fftEngine.getMagnitudesBuffer().getSize() * 4, 2048)),
+    circularBuffer    (jmax (int (fftEngine.getMagnitudesBuffer().getSize() * 4), 2048)),
     needToProcess     {false},
     detectedFrequency {var(0)},
     repaintViewer     (var(false))

@@ -1,4 +1,5 @@
 # Ignore everything in this directory
 *
-# Except this file
+# Except:
 !.gitignore
+!vstsdk367_03_03_2017_build_352.txt

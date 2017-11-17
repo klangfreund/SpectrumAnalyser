@@ -1,5 +1,5 @@
 /* libFLAC - Free Lossless Audio Codec library
- * Copyright (C) 2012  Xiph.org Foundation
+ * Copyright (C) 2012-2014  Xiph.org Foundation
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -39,15 +39,7 @@
 #ifndef FLAC__SHARE__COMPAT_H
 #define FLAC__SHARE__COMPAT_H
 
-#if defined _WIN32 && !defined __CYGWIN__
-/* where MSVC puts unlink() */
-# include <io.h>
-#else
-# include <unistd.h>
-#endif
-
 #if defined _MSC_VER || defined __BORLANDC__ || defined __MINGW32__
-#include <sys/types.h> /* for off_t */
 #define FLAC__off_t __int64 /* use this instead of off_t to fix the 2 GB limit */
 #if !defined __MINGW32__
 #define fseeko _fseeki64
@@ -62,64 +54,41 @@
 #define FLAC__off_t off_t
 #endif
 
-#if HAVE_INTTYPES_H
-#define __STDC_FORMAT_MACROS
-#include <inttypes.h>
-#endif
-
 #if defined(_MSC_VER)
 #define strtoll _strtoi64
 #define strtoull _strtoui64
 #endif
 
 #if defined(_MSC_VER)
-#if _MSC_VER < 1500
-/* Visual Studio 2008 has restrict. */
-#define restrict __restrict
-#endif
 #define inline __inline
 #endif
 
-/* adjust for compilers that can't understand using LLU suffix for uint64_t literals */
-#ifdef _MSC_VER
-#define FLAC__U64L(x) x
+#if defined __INTEL_COMPILER || (defined _MSC_VER && defined _WIN64)
+/* MSVS generates VERY slow 32-bit code with __restrict */
+#define flac_restrict __restrict
+#elif defined __GNUC__
+#define flac_restrict __restrict__
 #else
-#define FLAC__U64L(x) x##LLU
+#define flac_restrict
 #endif
 
+#define FLAC__U64L(x) x##ULL
+
 #if defined _MSC_VER || defined __BORLANDC__ || defined __MINGW32__
+#define FLAC__STRCASECMP stricmp
 #define FLAC__STRNCASECMP strnicmp
 #else
+#define FLAC__STRCASECMP strcasecmp
 #define FLAC__STRNCASECMP strncasecmp
-#endif
-
-#if defined _MSC_VER || defined __MINGW32__ || defined __CYGWIN__ || defined __EMX__
-#include <io.h> /* for _setmode(), chmod() */
-#include <fcntl.h> /* for _O_BINARY */
-#else
-#include <unistd.h> /* for chown(), unlink() */
-#endif
-
-#if defined _MSC_VER || defined __BORLANDC__ || defined __MINGW32__
-#if defined __BORLANDC__
-#include <utime.h> /* for utime() */
-#else
-#include <sys/utime.h> /* for utime() */
-#endif
-#else
-#include <sys/types.h> /* some flavors of BSD (like OS X) require this to get time_t */
-#include <utime.h> /* for utime() */
 #endif
 
 #if defined _MSC_VER
 #  if _MSC_VER >= 1600
 /* Visual Studio 2010 has decent C99 support */
-#    include <stdint.h>
 #    define PRIu64 "llu"
 #    define PRId64 "lld"
 #    define PRIx64 "llx"
 #  else
-#    include <limits.h>
 #    ifndef UINT32_MAX
 #      define UINT32_MAX _UI32_MAX
 #    endif
@@ -139,6 +108,7 @@
 
 #ifdef _WIN32
 /* All char* strings are in UTF-8 format. Added to support Unicode files on Windows */
+#include "win_utf8_io.h"
 
 #define flac_printf printf_utf8
 #define flac_fprintf fprintf_utf8
@@ -160,12 +130,7 @@
 #define flac_utime utime
 #define flac_unlink unlink
 #define flac_rename rename
-
-#ifdef _WIN32
-#define flac_stat _stat64
-#else
 #define flac_stat stat
-#endif
 
 #endif
 
@@ -177,8 +142,14 @@
 #define flac_fstat fstat
 #endif
 
+#ifndef M_LN2
+#define M_LN2 0.69314718055994530942
+#endif
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
-/* FLAC needs to compile and work correctly on systems with a norrmal ISO C99
+/* FLAC needs to compile and work correctly on systems with a normal ISO C99
  * snprintf as well as Microsoft Visual Studio which has an non-standards
  * conformant snprint_s function.
  *
@@ -188,8 +159,9 @@
 extern "C" {
 #endif
 int flac_snprintf(char *str, size_t size, const char *fmt, ...);
+int flac_vsnprintf(char *str, size_t size, const char *fmt, va_list va);
 #ifdef __cplusplus
-};
+}
 #endif
 
 #endif /* FLAC__SHARE__COMPAT_H */

@@ -1,30 +1,27 @@
 /*
   ==============================================================================
 
-   This file is part of the juce_core module of the JUCE library.
-   Copyright (c) 2013 - Raw Material Software Ltd.
+   This file is part of the JUCE library.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission to use, copy, modify, and/or distribute this software for any purpose with
-   or without fee is hereby granted, provided that the above copyright notice and this
-   permission notice appear in all copies.
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD
-   TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN
-   NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
-   DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER
-   IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
-   CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+   The code included in this file is provided under the terms of the ISC license
+   http://www.isc.org/downloads/software-support-policy/isc-license. Permission
+   To use, copy, modify, and/or distribute this software for any purpose with or
+   without fee is hereby granted provided that the above copyright notice and
+   this permission notice appear in all copies.
 
-   ------------------------------------------------------------------------------
-
-   NOTE! This permissive ISC license applies ONLY to files within the juce_core module!
-   All other JUCE modules are covered by a dual GPL/commercial license, so if you are
-   using any other modules, be sure to check that you also comply with their license.
-
-   For more details, visit www.juce.com
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
+
+namespace juce
+{
 
 class Expression::Term  : public SingleThreadedReferenceCountedObject
 {
@@ -53,7 +50,7 @@ public:
     virtual String getName() const
     {
         jassertfalse; // You shouldn't call this for an expression that's not actually a function!
-        return String();
+        return {};
     }
 
     virtual void renameSymbol (const Symbol& oldSymbol, const String& newName, const Scope& scope, int recursionDepth)
@@ -248,10 +245,12 @@ struct Expression::Helpers
         {
             checkRecursionDepth (recursionDepth);
             double result = 0;
-            const int numParams = parameters.size();
+            auto numParams = parameters.size();
+
             if (numParams > 0)
             {
-                HeapBlock<double> params ((size_t) numParams);
+                HeapBlock<double> params (numParams);
+
                 for (int i = 0; i < numParams; ++i)
                     params[i] = parameters.getReference(i).term->resolve (scope, recursionDepth + 1)->toDouble();
 
@@ -397,7 +396,7 @@ struct Expression::Helpers
             JUCE_DECLARE_NON_COPYABLE (SymbolRenamingVisitor)
         };
 
-        SymbolTerm* getSymbol() const  { return static_cast <SymbolTerm*> (left.get()); }
+        SymbolTerm* getSymbol() const  { return static_cast<SymbolTerm*> (left.get()); }
 
         JUCE_DECLARE_NON_COPYABLE (DotOperator)
     };
@@ -427,7 +426,7 @@ struct Expression::Helpers
 
         TermPtr createTermToEvaluateInput (const Scope& scope, const Term* t, double overallTarget, Term* topLevelTerm) const
         {
-            (void) t;
+            ignoreUnused (t);
             jassert (t == input);
 
             const Term* const dest = findDestinationFor (topLevelTerm, this);
@@ -627,10 +626,10 @@ struct Expression::Helpers
     class SymbolCheckVisitor  : public Term::SymbolVisitor
     {
     public:
-        SymbolCheckVisitor (const Symbol& symbol_) : wasFound (false), symbol (symbol_) {}
+        SymbolCheckVisitor (const Symbol& s) : symbol (s) {}
         void useSymbol (const Symbol& s)    { wasFound = wasFound || s == symbol; }
 
-        bool wasFound;
+        bool wasFound = false;
 
     private:
         const Symbol& symbol;
@@ -656,8 +655,7 @@ struct Expression::Helpers
     {
     public:
         //==============================================================================
-        Parser (String::CharPointerType& stringToParse)
-            : text (stringToParse)
+        Parser (String::CharPointerType& stringToParse)  : text (stringToParse)
         {
         }
 
@@ -669,13 +667,23 @@ struct Expression::Helpers
             const TermPtr e (readExpression());
 
             if (e == nullptr || ((! readOperator (",")) && ! text.isEmpty()))
-                throw ParseError ("Syntax error: \"" + String (text) + "\"");
+                return parseError ("Syntax error: \"" + String (text) + "\"");
 
             return e;
         }
 
+        String error;
+
     private:
         String::CharPointerType& text;
+
+        Term* parseError (const String& message)
+        {
+            if (error.isEmpty())
+                error = message;
+
+            return nullptr;
+        }
 
         //==============================================================================
         static inline bool isDecimalDigit (const juce_wchar c) noexcept
@@ -717,7 +725,7 @@ struct Expression::Helpers
         bool readIdentifier (String& identifier) noexcept
         {
             text = text.findEndOfWhitespace();
-            String::CharPointerType t (text);
+            auto t = text;
             int numChars = 0;
 
             if (t.isLetter() || *t == '_')
@@ -745,9 +753,9 @@ struct Expression::Helpers
         Term* readNumber() noexcept
         {
             text = text.findEndOfWhitespace();
-            String::CharPointerType t (text);
+            auto t = text;
+            bool isResolutionTarget = (*t == '@');
 
-            const bool isResolutionTarget = (*t == '@');
             if (isResolutionTarget)
             {
                 ++t;
@@ -777,7 +785,7 @@ struct Expression::Helpers
                 TermPtr rhs (readMultiplyOrDivideExpression());
 
                 if (rhs == nullptr)
-                    throw ParseError ("Expected expression after \"" + String::charToString ((juce_wchar) (uint8) opType) + "\"");
+                    return parseError ("Expected expression after \"" + String::charToString ((juce_wchar) (uint8) opType) + "\"");
 
                 if (opType == '+')
                     lhs = new Add (lhs, rhs);
@@ -798,7 +806,7 @@ struct Expression::Helpers
                 TermPtr rhs (readUnaryExpression());
 
                 if (rhs == nullptr)
-                    throw ParseError ("Expected expression after \"" + String::charToString ((juce_wchar) (uint8) opType) + "\"");
+                    return parseError ("Expected expression after \"" + String::charToString ((juce_wchar) (uint8) opType) + "\"");
 
                 if (opType == '*')
                     lhs = new Multiply (lhs, rhs);
@@ -817,7 +825,7 @@ struct Expression::Helpers
                 TermPtr e (readUnaryExpression());
 
                 if (e == nullptr)
-                    throw ParseError ("Expected expression after \"" + String::charToString ((juce_wchar) (uint8) opType) + "\"");
+                    return parseError ("Expected expression after \"" + String::charToString ((juce_wchar) (uint8) opType) + "\"");
 
                 if (opType == '-')
                     e = e->negated();
@@ -858,7 +866,7 @@ struct Expression::Helpers
                         if (readOperator (")"))
                             return func.release();
 
-                        throw ParseError ("Expected parameters after \"" + identifier + " (\"");
+                        return parseError ("Expected parameters after \"" + identifier + " (\"");
                     }
 
                     f->parameters.add (Expression (param));
@@ -868,7 +876,7 @@ struct Expression::Helpers
                         param = readExpression();
 
                         if (param == nullptr)
-                            throw ParseError ("Expected expression after \",\"");
+                            return parseError ("Expected expression after \",\"");
 
                         f->parameters.add (Expression (param));
                     }
@@ -876,7 +884,7 @@ struct Expression::Helpers
                     if (readOperator (")"))
                         return func.release();
 
-                    throw ParseError ("Expected \")\"");
+                    return parseError ("Expected \")\"");
                 }
 
                 if (readOperator ("."))
@@ -884,7 +892,7 @@ struct Expression::Helpers
                     TermPtr rhs (readSymbolOrFunction());
 
                     if (rhs == nullptr)
-                        throw ParseError ("Expected symbol or function after \".\"");
+                        return parseError ("Expected symbol or function after \".\"");
 
                     if (identifier == "this")
                         return rhs;
@@ -926,8 +934,7 @@ Expression::~Expression()
 {
 }
 
-Expression::Expression (Term* const term_)
-    : term (term_)
+Expression::Expression (Term* t) : term (t)
 {
     jassert (term != nullptr);
 }
@@ -948,30 +955,31 @@ Expression& Expression::operator= (const Expression& other)
     return *this;
 }
 
-#if JUCE_COMPILER_SUPPORTS_MOVE_SEMANTICS
 Expression::Expression (Expression&& other) noexcept
-    : term (static_cast <ReferenceCountedObjectPtr<Term>&&> (other.term))
+    : term (static_cast<ReferenceCountedObjectPtr<Term>&&> (other.term))
 {
 }
 
 Expression& Expression::operator= (Expression&& other) noexcept
 {
-    term = static_cast <ReferenceCountedObjectPtr<Term>&&> (other.term);
+    term = static_cast<ReferenceCountedObjectPtr<Term>&&> (other.term);
     return *this;
 }
-#endif
 
-Expression::Expression (const String& stringToParse)
+Expression::Expression (const String& stringToParse, String& parseError)
 {
-    String::CharPointerType text (stringToParse.getCharPointer());
+    auto text = stringToParse.getCharPointer();
     Helpers::Parser parser (text);
     term = parser.readUpToComma();
+    parseError = parser.error;
 }
 
-Expression Expression::parse (String::CharPointerType& stringToParse)
+Expression Expression::parse (String::CharPointerType& stringToParse, String& parseError)
 {
     Helpers::Parser parser (stringToParse);
-    return Expression (parser.readUpToComma());
+    Expression e (parser.readUpToComma());
+    parseError = parser.error;
+    return e;
 }
 
 double Expression::evaluate() const
@@ -981,14 +989,8 @@ double Expression::evaluate() const
 
 double Expression::evaluate (const Expression::Scope& scope) const
 {
-    try
-    {
-        return term->resolve (scope, 0)->toDouble();
-    }
-    catch (Helpers::EvaluationError&)
-    {}
-
-    return 0;
+    String err;
+    return evaluate (scope, err);
 }
 
 double Expression::evaluate (const Scope& scope, String& evaluationError) const
@@ -1034,20 +1036,16 @@ Expression Expression::adjustedToGiveNewResult (const double targetValue, const 
 
     jassert (termToAdjust != nullptr);
 
-    const Term* const parent = Helpers::findDestinationFor (newTerm, termToAdjust);
-
-    if (parent == nullptr)
+    if (const Term* parent = Helpers::findDestinationFor (newTerm, termToAdjust))
     {
-        termToAdjust->value = targetValue;
+        if (const Helpers::TermPtr reverseTerm = parent->createTermToEvaluateInput (scope, termToAdjust, targetValue, newTerm))
+            termToAdjust->value = Expression (reverseTerm).evaluate (scope);
+        else
+            return Expression (targetValue);
     }
     else
     {
-        const Helpers::TermPtr reverseTerm (parent->createTermToEvaluateInput (scope, termToAdjust, targetValue, newTerm));
-
-        if (reverseTerm == nullptr)
-            return Expression (targetValue);
-
-        termToAdjust->value = reverseTerm->resolve (scope, 0)->toDouble();
+        termToAdjust->value = targetValue;
     }
 
     return Expression (newTerm.release());
@@ -1104,15 +1102,8 @@ ReferenceCountedObjectPtr<Expression::Term> Expression::Term::negated()
 }
 
 //==============================================================================
-Expression::ParseError::ParseError (const String& message)
-    : description (message)
-{
-    DBG ("Expression::ParseError: " + message);
-}
-
-//==============================================================================
-Expression::Symbol::Symbol (const String& scopeUID_, const String& symbolName_)
-    : scopeUID (scopeUID_), symbolName (symbolName_)
+Expression::Symbol::Symbol (const String& scope, const String& symbol)
+    : scopeUID (scope), symbolName (symbol)
 {
 }
 
@@ -1162,9 +1153,9 @@ double Expression::Scope::evaluateFunction (const String& functionName, const do
 
         if (numParams == 1)
         {
-            if (functionName == "sin")  return sin (parameters[0]);
-            if (functionName == "cos")  return cos (parameters[0]);
-            if (functionName == "tan")  return tan (parameters[0]);
+            if (functionName == "sin")  return std::sin (parameters[0]);
+            if (functionName == "cos")  return std::cos (parameters[0]);
+            if (functionName == "tan")  return std::tan (parameters[0]);
             if (functionName == "abs")  return std::abs (parameters[0]);
         }
     }
@@ -1179,5 +1170,7 @@ void Expression::Scope::visitRelativeScope (const String& scopeName, Visitor&) c
 
 String Expression::Scope::getScopeUID() const
 {
-    return String();
+    return {};
 }
+
+} // namespace juce

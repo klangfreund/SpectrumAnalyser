@@ -48,16 +48,16 @@ void SamWithBubble::paint (Graphics& g)
     g.strokePath (bubblePath, PathStrokeType (2.5f));
 
     // bubble label and text
-    pitchLabel.setBounds (44, 23, getWidth() - 80, 20);
+    pitchLabel.setBounds (44, 20, getWidth() - 80, 20);
     
     g.setColour (Colours::lightgoldenrodyellow);
     g.setFont (12.0f);
-    Rectangle<int> bubblePathBounds = bubblePath.getBounds().getSmallestIntegerContainer();
-    bubblePathBounds.removeFromTop (50);
-    bubblePathBounds.removeFromLeft (20);
-    const int maximumNumberOfLines = 3;
-    const String bubbleText = String("Zviel Arbet? Plugin Idea?\n") + "078 624 68 64\n" + "sam@klangfreund.com";
-    g.drawFittedText(bubbleText, bubblePathBounds, Justification::horizontallyCentred, maximumNumberOfLines);
+//    Rectangle<int> bubblePathBounds = bubblePath.getBounds().getSmallestIntegerContainer();
+//    bubblePathBounds.removeFromTop (50);
+//    bubblePathBounds.removeFromLeft (20);
+//    const int maximumNumberOfLines = 3;
+//    const String bubbleText = String("Zviel Arbet? Plugin Idea?\n") + "078 624 68 64\n" + "sam@klangfreund.com";
+//    g.drawFittedText(bubbleText, bubblePathBounds, Justification::horizontallyCentred, maximumNumberOfLines);
 
     
     //    g.setColour (Colours::black);
@@ -90,7 +90,7 @@ void SamWithBubble::resized()
     //    bubblePath.closeSubPath();
     float mostRight = getWidth() - 10.0f;
     float width = getWidth() - 30.0f;
-    float height = 130.0f;
+    float height = 70.0f;
     bubblePath.startNewSubPath (mostRight - width, 0.292f * height);
     bubblePath.quadraticTo (mostRight - 0.881f * width, 0.0f, mostRight - 0.429f * width, 0.042f * height);
     bubblePath.quadraticTo (mostRight, 0.083f * height, mostRight, 0.416f * height);
@@ -112,7 +112,7 @@ void SamWithBubble::valueChanged (Value & value)
     if (value.refersToSameSourceAs(frequencyValue))
     {
         const int frequency = frequencyValue.getValue();
-        String pitchString = frequencyValue.toString();
+        String pitchString = String (frequency);
         pitchString << " Hz";
         
         if (frequency > 7)
@@ -121,7 +121,7 @@ void SamWithBubble::valueChanged (Value & value)
             pitchString << " (" << drow::Pitch::fromFrequency (frequency).getMidiNoteName() << ")";
         }
 
-        pitchLabel.setText(pitchString, NotificationType::dontSendNotification);
+        pitchLabel.setText (pitchString, NotificationType::dontSendNotification);
     }
     
 }

@@ -1,0 +1,47 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2013
+
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SpectrumAnalyser - Standalone Plugin", "SpectrumAnalyser_StandalonePlugin.vcxproj", "{5AAFE07D-8D46-59EA-6532-185C188E1597}"
+	ProjectSection(ProjectDependencies) = postProject
+		{729B57F0-C755-6E92-3E65-9E2F5B77D5A1} = {729B57F0-C755-6E92-3E65-9E2F5B77D5A1}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SpectrumAnalyser - VST", "SpectrumAnalyser_VST.vcxproj", "{B2D86C82-660B-4A33-D54B-BAC7D9520B83}"
+	ProjectSection(ProjectDependencies) = postProject
+		{729B57F0-C755-6E92-3E65-9E2F5B77D5A1} = {729B57F0-C755-6E92-3E65-9E2F5B77D5A1}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SpectrumAnalyser - VST3", "SpectrumAnalyser_VST3.vcxproj", "{37C95B55-D8AC-6A64-CC1C-FD1C09437F38}"
+	ProjectSection(ProjectDependencies) = postProject
+		{729B57F0-C755-6E92-3E65-9E2F5B77D5A1} = {729B57F0-C755-6E92-3E65-9E2F5B77D5A1}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SpectrumAnalyser - Shared Code", "SpectrumAnalyser_SharedCode.vcxproj", "{729B57F0-C755-6E92-3E65-9E2F5B77D5A1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B2D86C82-660B-4A33-D54B-BAC7D9520B83}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B2D86C82-660B-4A33-D54B-BAC7D9520B83}.Debug|Win32.Build.0 = Debug|Win32
+		{B2D86C82-660B-4A33-D54B-BAC7D9520B83}.Release|Win32.ActiveCfg = Release|Win32
+		{B2D86C82-660B-4A33-D54B-BAC7D9520B83}.Release|Win32.Build.0 = Release|Win32
+		{37C95B55-D8AC-6A64-CC1C-FD1C09437F38}.Debug|Win32.ActiveCfg = Debug|Win32
+		{37C95B55-D8AC-6A64-CC1C-FD1C09437F38}.Debug|Win32.Build.0 = Debug|Win32
+		{37C95B55-D8AC-6A64-CC1C-FD1C09437F38}.Release|Win32.ActiveCfg = Release|Win32
+		{37C95B55-D8AC-6A64-CC1C-FD1C09437F38}.Release|Win32.Build.0 = Release|Win32
+		{5AAFE07D-8D46-59EA-6532-185C188E1597}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5AAFE07D-8D46-59EA-6532-185C188E1597}.Debug|Win32.Build.0 = Debug|Win32
+		{5AAFE07D-8D46-59EA-6532-185C188E1597}.Release|Win32.ActiveCfg = Release|Win32
+		{5AAFE07D-8D46-59EA-6532-185C188E1597}.Release|Win32.Build.0 = Release|Win32
+		{729B57F0-C755-6E92-3E65-9E2F5B77D5A1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{729B57F0-C755-6E92-3E65-9E2F5B77D5A1}.Debug|Win32.Build.0 = Debug|Win32
+		{729B57F0-C755-6E92-3E65-9E2F5B77D5A1}.Release|Win32.ActiveCfg = Release|Win32
+		{729B57F0-C755-6E92-3E65-9E2F5B77D5A1}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

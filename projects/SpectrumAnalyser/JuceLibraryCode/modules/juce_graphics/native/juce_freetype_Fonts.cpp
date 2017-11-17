@@ -2,25 +2,30 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2013 - Raw Material Software Ltd.
+   Copyright (c) 2017 - ROLI Ltd.
 
-   Permission is granted to use this software under the terms of either:
-   a) the GPL v2 (or any later version)
-   b) the Affero GPL v3
+   JUCE is an open source library subject to commercial or open-source
+   licensing.
 
-   Details of these licenses can be found at: www.gnu.org/licenses
+   By using JUCE, you agree to the terms of both the JUCE 5 End-User License
+   Agreement and JUCE 5 Privacy Policy (both updated and effective as of the
+   27th April 2017).
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+   End User License Agreement: www.juce.com/juce-5-licence
+   Privacy Policy: www.juce.com/juce-5-privacy-policy
 
-   ------------------------------------------------------------------------------
+   Or: You may also use this code under the terms of the GPL v3 (see
+   www.gnu.org/licenses).
 
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.juce.com for more information.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
+
+namespace juce
+{
 
 struct FTLibWrapper     : public ReferenceCountedObject
 {
@@ -41,7 +46,7 @@ struct FTLibWrapper     : public ReferenceCountedObject
 
     FT_Library library;
 
-    typedef ReferenceCountedObjectPtr <FTLibWrapper> Ptr;
+    typedef ReferenceCountedObjectPtr<FTLibWrapper> Ptr;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FTLibWrapper)
 };
@@ -224,7 +229,7 @@ public:
                 sansSerif.addIfNotAlreadyThere (faces.getUnchecked(i)->family);
     }
 
-    juce_DeclareSingleton_SingleThreaded_Minimal (FTTypefaceList);
+    juce_DeclareSingleton_SingleThreaded_Minimal (FTTypefaceList)
 
 private:
     FTLibWrapper::Ptr library;
@@ -244,7 +249,7 @@ private:
             if (face.face != 0)
             {
                 if (faceIndex == 0)
-                    numFaces = face.face->num_faces;
+                    numFaces = (int) face.face->num_faces;
 
                 if ((face.face->face_flags & FT_FACE_FLAG_SCALABLE) != 0)
                     faces.add (new KnownTypeface (file, faceIndex, face));
@@ -307,9 +312,9 @@ public:
                                        faceWrapper->face->style_name);
     }
 
-    void initialiseCharacteristics (const String& name, const String& style)
+    void initialiseCharacteristics (const String& fontName, const String& fontStyle)
     {
-        setCharacteristics (name, style,
+        setCharacteristics (fontName, fontStyle,
                             faceWrapper->face->ascender / (float) (faceWrapper->face->ascender - faceWrapper->face->descender),
                             L' ');
     }
@@ -319,7 +324,7 @@ public:
         if (faceWrapper != nullptr)
         {
             FT_Face face = faceWrapper->face;
-            const unsigned int glyphIndex = FT_Get_Char_Index (face, character);
+            const unsigned int glyphIndex = FT_Get_Char_Index (face, (FT_ULong) character);
 
             if (FT_Load_Glyph (face, glyphIndex, FT_LOAD_NO_SCALE | FT_LOAD_NO_BITMAP | FT_LOAD_IGNORE_TRANSFORM | FT_LOAD_NO_HINTING) == 0
                   && face->glyph->format == ft_glyph_format_outline)
@@ -332,7 +337,7 @@ public:
                     addGlyph (character, destShape, face->glyph->metrics.horiAdvance * scale);
 
                     if ((face->face_flags & FT_FACE_FLAG_KERNING) != 0)
-                        addKerning (face, character, glyphIndex);
+                        addKerning (face, (uint32) character, glyphIndex);
 
                     return true;
                 }
@@ -437,7 +442,7 @@ private:
         const float height = (float) (face->ascender - face->descender);
 
         uint32 rightGlyphIndex;
-        uint32 rightCharCode = FT_Get_First_Char (face, &rightGlyphIndex);
+        FT_ULong rightCharCode = FT_Get_First_Char (face, &rightGlyphIndex);
 
         while (rightGlyphIndex != 0)
         {
@@ -445,7 +450,7 @@ private:
 
             if (FT_Get_Kerning (face, glyphIndex, rightGlyphIndex, ft_kerning_unscaled, &kerning) == 0
                    && kerning.x != 0)
-                addKerningPair (character, rightCharCode, kerning.x / height);
+                addKerningPair ((juce_wchar) character, (juce_wchar) rightCharCode, kerning.x / height);
 
             rightCharCode = FT_Get_Next_Char (face, rightCharCode, &rightGlyphIndex);
         }
@@ -453,3 +458,5 @@ private:
 
     JUCE_DECLARE_NON_COPYABLE (FreeTypeTypeface)
 };
+
+} // namespace juce
