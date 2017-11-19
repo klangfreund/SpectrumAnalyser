@@ -96,6 +96,82 @@
         <MODULEPATH id="juce_cryptography" path="../../../../../res/code/juceDevelop/modules"/>
       </MODULEPATHS>
     </VS2013>
+    <VS2015 targetFolder="Builds/VisualStudio2015" vst3Folder="">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
+                       debugInformationFormat="ProgramDatabase" enablePluginBinaryCopyStep="0"
+                       linkTimeOptimisation="0" isDebug="1" optimisation="1" targetName="SpectrumAnalyser"/>
+        <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
+                       debugInformationFormat="ProgramDatabase" enablePluginBinaryCopyStep="0"
+                       linkTimeOptimisation="1" isDebug="0" optimisation="3" targetName="SpectrumAnalyser"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_gui_extra" path="../../../../../res/code/juce/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../../../../res/code/juce/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../../../../res/code/juce/modules"/>
+        <MODULEPATH id="juce_events" path="../../../../../res/code/juce/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../../../../res/code/juce/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../../../../../res/code/juceDevelop/modules"/>
+        <MODULEPATH id="juce_core" path="../../../../../res/code/juce/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../../../../../res/code/juce/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../../../../res/code/juce/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../../../../../res/code/juce/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../../../../../res/code/juce/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../../../../../res/code/juce/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../../../../../res/code/juce/modules"/>
+        <MODULEPATH id="dRowAudio" path="../../../../../res/code/drowaudio_by_figbug/module"/>
+      </MODULEPATHS>
+    </VS2015>
+    <VS2017 targetFolder="Builds/VisualStudio2017" vst3Folder="">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
+                       debugInformationFormat="ProgramDatabase" enablePluginBinaryCopyStep="0"
+                       linkTimeOptimisation="0" isDebug="1" optimisation="1" targetName="SpectrumAnalyser"/>
+        <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
+                       debugInformationFormat="ProgramDatabase" enablePluginBinaryCopyStep="0"
+                       linkTimeOptimisation="1" isDebug="0" optimisation="3" targetName="SpectrumAnalyser"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_gui_extra" path="../../../../../res/code/juce/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../../../../res/code/juce/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../../../../res/code/juce/modules"/>
+        <MODULEPATH id="juce_events" path="../../../../../res/code/juce/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../../../../res/code/juce/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../../../../../res/code/juceDevelop/modules"/>
+        <MODULEPATH id="juce_core" path="../../../../../res/code/juce/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../../../../../res/code/juce/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../../../../res/code/juce/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../../../../../res/code/juce/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../../../../../res/code/juce/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../../../../../res/code/juce/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../../../../../res/code/juce/modules"/>
+        <MODULEPATH id="dRowAudio" path="../../../../../res/code/drowaudio_by_figbug/module"/>
+      </MODULEPATHS>
+    </VS2017>
+    <LINUX_MAKE targetFolder="Builds/LinuxMakefile">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" isDebug="1" optimisation="1" linkTimeOptimisation="0"
+                       targetName="SpectrumAnalyser"/>
+        <CONFIGURATION name="Release" isDebug="0" optimisation="3" linkTimeOptimisation="1"
+                       targetName="SpectrumAnalyser"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_gui_extra" path="../../../../../res/code/juce/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../../../../res/code/juce/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../../../../res/code/juce/modules"/>
+        <MODULEPATH id="juce_events" path="../../../../../res/code/juce/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../../../../res/code/juce/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../../../../../res/code/juceDevelop/modules"/>
+        <MODULEPATH id="juce_core" path="../../../../../res/code/juce/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../../../../../res/code/juce/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../../../../res/code/juce/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../../../../../res/code/juce/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../../../../../res/code/juce/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../../../../../res/code/juce/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../../../../../res/code/juce/modules"/>
+        <MODULEPATH id="dRowAudio" path="../../../../../res/code/drowaudio_by_figbug/module"/>
+      </MODULEPATHS>
+    </LINUX_MAKE>
   </EXPORTFORMATS>
   <MODULES>
     <MODULE id="dRowAudio" showAllCode="1" useLocalCopy="1" useGlobalPath="0"/>
